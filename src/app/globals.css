@@ -85,6 +85,16 @@
   --color-neutral-black-80: #313131;
 }
 
+@layer components {
+  @media (min-width: 999px) and (max-width: 1422px) {
+    .card-center-span {
+      grid-column: span 2;   
+      justify-self: center;  
+      max-width: 420px;       
+    }
+  }
+}
+
 body {
   @apply bg-background text-foreground;
   font-family: var(--font-family-primary);

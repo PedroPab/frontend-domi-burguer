@@ -5,12 +5,12 @@ import { LogoDesktop, HamburgerIcon, WhatsAppIcon, LogoMobile } from "./icons";
 
 export const Navbar = () => {
   return (
-    <nav className="w-full">
-      <div className="md:h-[80px] h-[62px] gap-2 py-0  mt-[20.00px] mb-[10.00px] rounded-[60px] border border-solid border-[#e6e6e6] flex items-center justify-between w-full max-w-7xl mx-auto pe-4 pl-4 lg:px-4 sm:px-6">
+    <nav className="w-full px-4">
+      <div className=" md:h-[80px] h-[62px] gap-2 py-0 mt-[20px] mb-[10px] rounded-[60px] border border-solid border-[#e6e6e6] flex items-center justify-between w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex w-[300px] h-14 px-0 py-3 rounded-[50px] overflow-hidden items-center">
           <Button
             variant="ghost"
-            className="inline-flex h-10 lg:h-12 justify-center px-[10px] lg:px-5 lg:py-2  mt-[-8.00px] mb-[-8.00px] rounded-[30px] items-center hover:bg-gray-100 bg-transparent"
+            className="inline-flex h-10 lg:h-12 justify-center px-[10px] lg:px-5 lg:py-2  mt-[-8.00px] mb-[-8.00px] rounded-[30px] items-center bg-transparent"
           >
             <UserIcon className="w-5 h-5 md:w-6 md:h-6" />
             <span className="text-neutrosblack-80 font-label hidden md:block">
@@ -19,7 +19,7 @@ export const Navbar = () => {
           </Button>
           <Button
             variant="ghost"
-            className="inline-flex h-10 lg:h-12 justify-center px-3 lg:px-5 py-2 mt-[-8.00px] mb-[-8.00px] rounded-[30px] items-center hover:bg-gray-100 bg-transparent"
+            className="inline-flex h-10 lg:h-12 justify-center px-3 lg:px-5 py-2 mt-[-8.00px] mb-[-8.00px] rounded-[30px] items-center bg-transparent"
           >
             <span className="text-neutrosblack-80 font-label font-[number:var(--label-font-weight)] text-[length:var(--label-font-size)] tracking-[var(--label-letter-spacing)] leading-[var(--label-line-height)] whitespace-nowrap [font-style:var(--label-font-style)]">
               COCINA
@@ -27,7 +27,7 @@ export const Navbar = () => {
           </Button>
         </div>
 
-        <div className="flex flex-col w-[180px] h-14 items-center justify-center gap-2">
+        <div className="flex flex-col w-[130px] h-14 items-center justify-center gap-2">
           <div className="hidden md:block w-[106px] h-14">
             <LogoDesktop />
           </div>
@@ -47,8 +47,11 @@ export const Navbar = () => {
             <WhatsAppIcon className="w-5 h-5 md:w-6 md:h-6" />
           </Button>
 
-          <Button variant="default" className="h-[42px] min-w-16 lg:h-12 py-2 ps-3 pe-1 lg:pl-5 lg:pr-2 lg:py-2 items-center justify-center gap-2 rounded-[30px] cursor-pointer hover:bg-[#E10300]">
-            <HamburgerIcon className="w-5 h-5 md:w-6 md:h-6" />
+          <Button
+            variant="default"
+            className="h-[42px] min-w-16 lg:h-12 py-2 ps-3 pe-1 lg:pl-5 lg:pr-2 lg:py-2 items-center justify-center gap-2 rounded-[30px] cursor-pointer"
+          >
+            <HamburgerIcon className="w-5 h-5 md:w-6 md:h-6 text-white" />
             <span className="text-white whitespace-nowrap font-bold hidden md:block">
               ORDENAR
             </span>
