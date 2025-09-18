@@ -103,7 +103,7 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="grid gap-y-14 grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 items-center justify-center gap-6 py-14 relative">
+        <section className="grid lg:gap-y-14 grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 items-center justify-center lg:gap-6 gap-2 gap-x-4 py-14 relative">
           <div
             className={`w-[160px] h-[160px] lg:w-[280px] lg:h-40 bg-accent-yellow-40 rounded-2xl border-0 overflow-visible`}
           >
