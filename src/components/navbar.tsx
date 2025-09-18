@@ -5,12 +5,12 @@ import { LogoDesktop, HamburgerIcon, WhatsAppIcon, LogoMobile } from "./icons";
 
 export const Navbar = () => {
   return (
-    <nav className="w-full px-4">
-      <div className=" md:h-[80px] h-[62px] gap-2 py-0 mt-[20px] mb-[10px] rounded-[60px] border border-solid border-[#e6e6e6] flex items-center justify-between w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <nav className="fixed top-0 left-0 z-300 w-full px-4">
+      <div className="max-w-[828px] md:h-[80px] h-[62px] gap-2 py-0 mt-[20px] mb-[10px] rounded-[60px] border border-solid border-[#e6e6e6] flex items-center justify-between w-full mx-auto px-4 sm:px-6 lg:px-8 bg-[#ffffff]">
         <div className="flex w-[300px] h-14 px-0 py-3 rounded-[50px] overflow-hidden items-center">
           <Button
             variant="ghost"
-            className="inline-flex h-10 lg:h-12 justify-center px-[10px] lg:px-5 lg:py-2  mt-[-8.00px] mb-[-8.00px] rounded-[30px] items-center bg-transparent"
+            className="inline-flex h-10 lg:h-12 justify-center px-[10px] lg:px-5 lg:py-2  mt-[-8.00px] mb-[-8.00px] rounded-[30px] items-center bg-transparent outline-none border-none focus:ring-0"
           >
             <UserIcon className="w-5 h-5 md:w-6 md:h-6" />
             <span className="text-neutrosblack-80 font-label hidden md:block">

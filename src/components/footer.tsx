@@ -30,8 +30,9 @@ export const Footer = () => {
         src="/footerMobile.png"
       />
 
-      <div className=" md:items-start relative flex flex-col md:flex-row justify-between px-6 py-16 md:p-16 md:px-10 md:space-x-3 lg:20 self-stretch w-full bg-primary-red border-b border-solid border-[#fff9e6] h-[522px] md:h-auto">
-        <div className="relative md:w-[170px] h-[90px] flex items-center justify-center w-full">
+      <div className=" lg:items-start relative flex flex-col lg:flex-row justify-between px-6 py-16 lg:p-16 lg:px-10 lg:space-x-3 lg:20 self-stretch w-full bg-primary-red border-b border-solid border-[#fff9e6] h-[522px] lg:h-auto">
+        
+        <div className="relative lg:w-[170px] h-[90px] flex items-center justify-center w-full">
           <LogoDesktopWhite width={170} height={90} className="min-h-20 min-w-40" />
         </div>
 
@@ -57,7 +58,7 @@ export const Footer = () => {
           ))}
         </nav>
 
-        <div className="flex md:w-[394px] w-full items-center gap-3 justify-center">
+        <div className="flex lg:w-[394px] w-full items-center gap-3 justify-center">
           <Button
             variant="ghost"
             className="flex w-12 h-12 px-3 pl-4 pt-[10px] relative items-center justify-center gap-2 rounded-[30px]"
