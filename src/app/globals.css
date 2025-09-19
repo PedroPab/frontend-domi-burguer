@@ -118,10 +118,52 @@ h1{
   @apply font-bold text-[20px] md:text-[24px] leading-[22px] md:leading-[26px] text-neutral-black-80;
 }
 
+h2{
+  @apply font-bold text-[16px] md:text-[20px] leading-[18px] md:leading-[22px] text-neutral-black-80 ;
+}
+
+.font-h2{
+  @apply font-bold text-[16px] md:text-[20px] leading-[18px] md:leading-[22px] text-neutral-black-80 ;
+}
+
 .body-font{
   @apply text-[14px] md:text-[16px] leading-[16px] md:leading-[18px] text-neutral-black-80;
 }
 
 .label-font{
   @apply text-[14px] md:text-[16px] leading-[14px] md:leading-[18px] text-neutral-black-80 font-bold;
+}
+
+@layer utilities {
+  @keyframes slide-in-from-bottom {
+    from {
+      transform: translateY(100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  @keyframes slide-out-to-bottom {
+    from {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    to {
+      transform: translateY(100%);
+      opacity: 0;
+    }
+  }
+
+  /* Animación solo en mobile */
+  @media (max-width: 639px) {
+    .dialog-content[data-state="open"] {
+      animation: slide-in-from-bottom 0.5s ease-out forwards;
+    }
+    .dialog-content[data-state="closed"] {
+      animation: slide-out-to-bottom 0.3s ease-in forwards;
+    }
+  }
 }

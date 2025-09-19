@@ -16,7 +16,6 @@ export const Footer = () => {
 
   return (
     <footer className="flex flex-col w-full items-start relative text-accent-yellow-10">
-      import Image from "next/image";
       <Image
         className="relative self-stretch w-full hidden md:block"
         alt="Sec"
@@ -43,7 +42,7 @@ export const Footer = () => {
         </div>
 
         <nav className="inline-flex flex-col items-start gap-2 relative">
-          {navigationLinks.map((link, index) => (
+          {navigationLinks.map((link) => (
             <a
               key={link}
               className={`relative self-stretch font-semibold text-accentmikado-10 text-lg tracking-[0] leading-6 h-auto p-0 hover:bg-transparent`}
@@ -54,7 +53,7 @@ export const Footer = () => {
         </nav>
 
         <nav className="inline-flex flex-col items-end gap-2 relative">
-          {legalLinks.map((link, index) => (
+          {legalLinks.map((link) => (
             <a
               key={link}
               className={`relative self-stretch font-semibold text-accentmikado-10 text-lg tracking-[0] leading-6 h-auto p-0 hover:bg-transparent`}
