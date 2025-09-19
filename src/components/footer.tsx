@@ -20,16 +20,16 @@ export const Footer = () => {
         className="relative self-stretch w-full hidden md:block"
         alt="Sec"
         src="/footerDesktop.png"
-        width={1920} 
-        height={500} 
+        width={1920}
+        height={500}
         priority
       />
       <Image
         className="relative self-stretch w-full md:hidden"
         alt="Sec"
         src="/footerMobile.png"
-        width={500} 
-        height={700} 
+        width={500}
+        height={700}
         priority
       />
       <div className=" lg:items-start relative flex flex-col lg:flex-row justify-between px-6 py-16 lg:p-16 lg:px-10 lg:space-x-3 lg:20 self-stretch w-full bg-primary-red border-b border-solid border-[#fff9e6] h-[522px] lg:h-auto">
