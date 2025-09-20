@@ -89,7 +89,7 @@ export default function Home() {
           </div>
 
           {/* Card 3 */}
-          <div className="flex-1 bg-accent-yellow-10 rounded-2xl border-0 flex flex-col items-start gap-6 p-8 max-w-[410px] card-center-span mx-auto">
+          <div className="flex-1 bg-accent-yellow-10 rounded-2xl border-0 flex flex-col items-start gap-6 p-8 max-w-[410px] h-[400px] card-center-span mx-auto">
             <div>
               <LeafIcon className="w-10 h-10 text-black" />
             </div>

@@ -3,8 +3,11 @@
 import { Button } from "@/components/button";
 import Image from "next/image";
 import { ArrowIcon, EditarIcon, HamburgerIcon } from "@/components/icons";
-import { Minus, Plus } from "lucide-react";
+import { Plus } from "lucide-react";
 import { useMenu } from "@/hooks/home/useMenu";
+import { CustomizationModalSection } from "../customizeOrderModal";
+import { useState } from "react";
+import { QuantitySelector } from "@/components/quantitySelector";
 
 export default function MenuSection() {
   const {
@@ -18,6 +21,18 @@ export default function MenuSection() {
     handleNextProduct,
     handlePrevProduct,
   } = useMenu();
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState<string>("");
+
+  const handleEditProduct = (productName?: string) => {
+    if (productName) {
+      setSelectedProduct(productName);
+    } else {
+      setSelectedProduct("");
+    }
+    setIsModalOpen(true);
+  };
 
   return (
     <>
@@ -40,14 +55,14 @@ export default function MenuSection() {
             <div className="w-full max-w-[720px] px-[13%] py-0 absolute top-[43%] left-0 flex justify-between">
               <Button
                 variant="ghost"
-                className="w-10 h-10 md:w-14 md:h-14 bg-accent-yellow-20 rounded-[30px] hover:bg-accentmikado-20 pr-5"
+                className="w-10 h-10 md:w-14 md:h-14 bg-accent-yellow-20 rounded-[30px] hover:bg-accent-yellow-40 pr-5"
                 onClick={handlePrevProduct}
               >
                 <ArrowIcon className="w-5 h-5 rotate-180 text-neutral-black-80" />
               </Button>
               <Button
                 variant="ghost"
-                className="w-10 h-10 md:w-14 md:h-14 bg-accent-yellow-20 rounded-[30px] hover:bg-accentmikado-20 pl-5"
+                className="w-10 h-10 md:w-14 md:h-14 bg-accent-yellow-20 rounded-[30px] hover:bg-accent-yellow-40 pl-5"
                 onClick={handleNextProduct}
               >
                 <ArrowIcon className="w-5 h-5 text-neutral-black-80" />
@@ -81,14 +96,23 @@ export default function MenuSection() {
             </p>
             <Button
               variant="ghost"
-              className="px-4 py-2 w-[177px] h-[40px] bg-accent-yellow-20 hover:bg-accent-yellow-40  rounded-[30px]"
+              className={`px-4 py-2 w-[177px] h-[40px] bg-accent-yellow-20 hover:bg-accent-yellow-40  rounded-[30px] ${
+                actualProduct === 2 ? "hidden" : ""
+              }`}
+              onClick={() => handleEditProduct()}
             >
               PERSONALIZAR <EditarIcon className="w-4 h-4" />
             </Button>
           </div>
 
           <div className="flex w-full max-w-[720px] items-center justify-center gap-6">
-            <div
+            <QuantitySelector
+              value={quantity}
+              onIncrease={handleIncrease}
+              onDecrease={handleDecrease}
+              size="lg"
+            />
+            {/* <div
               className={`flex items-center justify-center gap-6 px-1.5 py-2 border rounded-[50px]  h-[48px] ${
                 quantity < 10 ? "w-[142px]" : "w-[153px]"
               }`}
@@ -108,7 +132,7 @@ export default function MenuSection() {
               >
                 <Plus />
               </Button>
-            </div>
+            </div> */}
             <div>
               <h1 className="font-bold text-[28px] md:text-[32px] leading-[30px] md:leading-[28px] !important">
                 ${currentProduct.price.toLocaleString("es-CO")}
@@ -233,8 +257,8 @@ export default function MenuSection() {
             <Image
               src="/DomiburgerPapitas2.png"
               alt="Burger"
-              width={153} // ancho máximo (lg:w-[153px])
-              height={230} // alto máximo (lg:h-[230px])
+              width={153}
+              height={230}
               className="absolute top-[-0px] left-[26px] lg:top-[-38px] lg:left-[69px] w-[110px] h-[166px] lg:w-[153px] lg:h-[230px] object-cover"
             />
 
@@ -248,6 +272,11 @@ export default function MenuSection() {
             </Button>
           </div>
         </div>
+        <CustomizationModalSection
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          productName={selectedProduct ? selectedProduct : ""}
+        />
       </section>
     </>
   );
