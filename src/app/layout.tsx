@@ -3,6 +3,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Footer } from "@/components/footer";
 import { Navbar } from "@/components/navbar";
+import { HeroUIProvider } from "@heroui/system";
+import { ToastProvider } from "@heroui/toast";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,9 +31,16 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Navbar />
-        <div className="container mx-auto overflow-x-hidden px-5 sm:px-10 md:px-10 lg:px-10 xl:px-16  max-w-[1440px] min-h-screen h-full">
-          {children}
-        </div>
+        <HeroUIProvider>
+            <ToastProvider
+              placement="top-right"
+              toastOffset={110}
+              maxVisibleToasts={10}
+            />
+          <div className="container mx-auto overflow-x-hidden px-5 sm:px-10 md:px-10 lg:px-10 xl:px-16  max-w-[1440px] min-h-screen h-full">
+            {children}
+          </div>
+        </HeroUIProvider>
         <Footer />
       </body>
     </html>

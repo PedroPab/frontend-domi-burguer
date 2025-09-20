@@ -8,6 +8,7 @@ import { useMenu } from "@/hooks/home/useMenu";
 import { CustomizationModalSection } from "../customizeOrderModal";
 import { useState } from "react";
 import { QuantitySelector } from "@/components/quantitySelector";
+import { showFoodToast } from "../toastFood";
 
 export default function MenuSection() {
   const {
@@ -112,29 +113,8 @@ export default function MenuSection() {
               onDecrease={handleDecrease}
               size="lg"
             />
-            {/* <div
-              className={`flex items-center justify-center gap-6 px-1.5 py-2 border rounded-[50px]  h-[48px] ${
-                quantity < 10 ? "w-[142px]" : "w-[153px]"
-              }`}
-            >
-              <Button
-                variant="ghost"
-                className="w-[38px] h-[38px] bg-accent-yellow-40 hover:bg-accent-yellow-60 active:bg-accent-yellow-60 rounded-[30px]"
-                onClick={handleDecrease}
-              >
-                <Minus />
-              </Button>
-              <span className="label-font">{quantity}</span>
-              <Button
-                variant="ghost"
-                className="w-[38px] h-[38px] bg-accent-yellow-40 hover:bg-accent-yellow-60 active:bg-accent-yellow-60 rounded-[30px]"
-                onClick={handleIncrease}
-              >
-                <Plus />
-              </Button>
-            </div> */}
             <div>
-              <h1 className="font-bold text-[28px] md:text-[32px] leading-[30px] md:leading-[28px] !important">
+              <h1 className="font-bold! text-[28px]! md:text-[32px]! leading-[30px]! md:leading-[28px]! ">
                 ${currentProduct.price.toLocaleString("es-CO")}
               </h1>
             </div>
@@ -148,6 +128,7 @@ export default function MenuSection() {
             <Button
               variant="ghost"
               className="bg-accent-yellow-40 hover:bg-accent-yellow-60 active:bg-accent-yellow-60 rounded-[30px] flex items-center gap-2 text-[16px] w-[199px] h-[48px]"
+              onClick={() => showFoodToast(currentProduct.name)}
             >
               AÑADIR AL CARRITO
             </Button>

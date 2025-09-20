@@ -19,17 +19,17 @@ export default function Home() {
           <div className="max-w-screen-xl flex flex-col md:flex-row items-start md:items-start gap-8 md:gap-20">
             <div className="flex flex-col text-left">
               <div className="flex lg:gap-6 gap-0 lg:flex-row flex-col">
-                <h1 className="font-extrabold text-primary-red text-[65px] sm:text-[100px] md:text-[110px] lg:text-[120px] sm:leading-22 leading-13 md:leading-25 xl:leading-none">
+                <h1 className="font-extrabold! text-primary-red! text-[65px]! sm:text-[100px]! md:text-[110px]! lg:text-[120px]! sm:leading-22! leading-13! md:leading-25! xl:leading-none!">
                   HOY!{" "}
                 </h1>
-                <h1 className="font-extrabold text-primary-red text-[65px] sm:text-[100px] md:text-[110px] lg:text-[120px] sm:leading-22 leading-13 md:leading-25 xl:leading-none">
+                <h1 className="font-extrabold! text-primary-red! text-[65px]! sm:text-[100px]! md:text-[110px]! lg:text-[120px]! sm:leading-22! leading-13! md:leading-25! xl:leading-none!">
                   {" "}
                   COMEMOS
                 </h1>
               </div>
 
               <div className="flex flex-col md:flex-row md:justify-start gap-4 sm:gap-6">
-                <h2 className="font-extrabold text-primary-red text-[65px] sm:text-[100px] md:text-[110px] lg:text-[120px] sm:leading-22 leading-13 md:leading-25 lg:leading-30 xl:leading-none">
+                <h2 className="font-extrabold! text-primary-red! text-[65px]! sm:text-[100px]! md:text-[110px]! lg:text-[120px]! sm:leading-22! leading-13! md:leading-25! lg:leading-30! xl:leading-none!">
                   RICO
                 </h2>
 
