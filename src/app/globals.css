@@ -117,54 +117,23 @@ body {
   color: var(--foreground);
 }
 
-/* En móviles -> centrado */
-/* Estilos base para el elemento */
+
+
 [data-placement="top-right"] {
-  position: fixed;
-  top: 6rem;
-  max-width: calc(100vw - 2rem); /* Ajustado para que funcione bien en móvil */
-  margin-inline: auto; /* Centrado por defecto */
-  left: 1rem;
-  right: 1rem;
-}
-
-/* A partir de 1440px, lo alineamos a la derecha de un contenedor virtual */
-@media (min-width: 1440px) {
-  [data-placement="top-right"] {
-    /*
-      Calculamos el espacio a cada lado: (Ancho Total - Contenedor) / 2.
-      A eso le sumamos 1rem de separación del borde del contenedor.
-    */
-    right: calc((100vw - 1440px) / 2 + 1rem);
-    
-    /* Anulamos las propiedades de centrado */
-    left: auto;
-    margin-inline: 0;
-    max-width: 450px; /* Define un ancho máximo razonable */
-  }
-}
+  @apply left-0 right-0 mx-auto; 
+} 
 
 
-
-/* 📱 Mobile (por defecto) → centrado */
-
-/* 💻 Desktop → mueve a la derecha */
-/* [data-placement="top-right"] {
-  @apply left-0 right-0 mx-auto; /* centra */
-/*} */
-
-/* Limitar el ancho del área de toast */
-/* [data-placement="top-right"] {
-  right: max(calc((100vw - 1440px) / 2), 1rem); /* 1rem de margen mínimo */
-/*} */
+[data-placement="top-right"] {
+  right: max(calc((100vw - 1440px) / 2), 1rem); 
+} 
 
 
-/* Pero en md para arriba lo dejas como right */
-/* @media (min-width: 768px) {
+@media (min-width: 768px) {
   [data-placement="top-right"] {
     @apply right-0 left-auto mx-0;
   }
-} */
+}
 
 h1 {
   @apply font-bold text-[20px] md:text-[24px] leading-[22px] md:leading-[26px] text-neutral-black-80;
