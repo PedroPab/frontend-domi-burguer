@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/button";
 import {
   Dialog,
@@ -90,6 +90,25 @@ export const CustomizationModalSection = ({
   const [ingredients, setIngredients] = useState(ingredientsData);
 
   const [quantity, setQuantity] = useState(1);
+
+  useEffect(() => {
+    const handlePopState = () => {
+      onClose();
+    };
+
+    if (isOpen) {
+      window.history.pushState({ modalOpen: true }, "");
+      window.addEventListener("popstate", handlePopState);
+    } else {
+      if (window.history.state?.modalOpen) {
+        window.history.back();
+      }
+    }
+
+    return () => {
+      window.removeEventListener("popstate", handlePopState);
+    };
+  }, [isOpen, onClose]);
 
   //Funciones para aumentar
   const handleIncrease = () => {
