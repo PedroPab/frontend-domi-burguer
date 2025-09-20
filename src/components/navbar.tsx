@@ -29,7 +29,7 @@ export const Navbar = () => {
 
         <div className="flex flex-col w-[130px] h-14 items-center justify-center gap-2">
           <div className="hidden md:block w-[106px] h-14">
-            <LogoDesktop />
+            <LogoDesktop height={58} width={106} />
           </div>
 
           {/* Icono para móvil */}
