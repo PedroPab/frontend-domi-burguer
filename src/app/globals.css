@@ -1,5 +1,6 @@
 @import "tailwindcss";
-@import "tailwindcss" important;
+@plugin '../../hero.ts';
+@source '../../node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}';
 
 :root {
   /* Colors */
@@ -13,14 +14,15 @@
   --color-neutral-black-10: #e6e6e6;
   --color-neutral-black-50: #808080;
   --color-neutral-black-80: #313131;
-  
+
   /* Typography */
-  --font-family-primary: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-family-primary: "Montserrat", -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Roboto, sans-serif;
   --font-weight-regular: 400;
   --font-weight-semibold: 600;
   --font-weight-bold: 700;
   --font-weight-extrabold: 800;
-  
+
   /* Font Sizes - Mobile First */
   --font-size-body: 0.875rem; /* 14px */
   --font-size-label: 0.875rem; /* 14px */
@@ -28,12 +30,12 @@
   --font-size-h1: 1.5rem; /* 24px */
   --font-size-price: 1.75rem; /* 28px */
   --font-size-display: 2.5rem; /* 40px */
-  
+
   /* Line Heights */
   --line-height-tight: 1.1;
   --line-height-normal: 1.125;
   --line-height-relaxed: 1.5;
-  
+
   /* Spacing */
   --space-xs: 0.25rem; /* 4px */
   --space-sm: 0.5rem; /* 8px */
@@ -43,24 +45,25 @@
   --space-2xl: 3rem; /* 48px */
   --space-3xl: 4rem; /* 64px */
   --space-4xl: 5rem; /* 80px */
-  
+
   /* Border Radius */
   --radius-sm: 0.25rem; /* 4px */
   --radius-md: 0.5rem; /* 8px */
   --radius-lg: 1rem; /* 16px */
   --radius-xl: 1.875rem; /* 30px */
   --radius-full: 50%;
-  
+
   /* Shadows */
   --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
   --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-  
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1),
+    0 4px 6px -4px rgb(0 0 0 / 0.1);
+
   /* Transitions */
   --transition-fast: 150ms ease;
   --transition-normal: 250ms ease;
   --transition-slow: 350ms ease;
-  
+
   /* Container */
   --container-max-width: 1440px;
   --container-padding: var(--space-md);
@@ -76,14 +79,14 @@
 @theme {
   --color-background: #ffffff;
   --color-foreground: #171717;
-  --color-primary-red: #E73533;
+  --color-primary-red: #e73533;
   --color-accent-yellow-10: #fff9e6;
   --color-accent-yellow-20: #fff3cd;
   --color-accent-yellow-40: #ffe79b;
-  --color-accent-yellow-60: #FFDA69;
-  --color-accent-yellow-80: #FFCE37;
-  --color-accent-yellow-80: #FFCE37;
-  --color-accent-yellow-90: #FFC205;
+  --color-accent-yellow-60: #ffda69;
+  --color-accent-yellow-80: #ffce37;
+  --color-accent-yellow-80: #ffce37;
+  --color-accent-yellow-90: #ffc205;
   --color-neutral-white: #ffffff;
   --color-neutral-black-10: #e6e6e6;
   --color-neutral-black-50: #808080;
@@ -93,9 +96,9 @@
 @layer components {
   @media (min-width: 919px) and (max-width: 1422px) {
     .card-center-span {
-      grid-column: span 2;   
-      justify-self: center;  
-      max-width: 420px;       
+      grid-column: span 2;
+      justify-self: center;
+      max-width: 420px;
     }
   }
 }
@@ -114,23 +117,41 @@ body {
   color: var(--foreground);
 }
 
-h1{
+
+
+[data-placement="top-right"] {
+  @apply left-0 right-0 mx-auto; 
+} 
+
+
+[data-placement="top-right"] {
+  right: max(calc((100vw - 1440px) / 2), 1rem); 
+} 
+
+
+@media (min-width: 768px) {
+  [data-placement="top-right"] {
+    @apply right-0 left-auto mx-0;
+  }
+}
+
+h1 {
   @apply font-bold text-[20px] md:text-[24px] leading-[22px] md:leading-[26px] text-neutral-black-80;
 }
 
-h2{
-  @apply font-bold text-[16px] md:text-[20px] leading-[18px] md:leading-[22px] text-neutral-black-80 ;
+h2 {
+  @apply font-bold text-[16px] md:text-[20px] leading-[18px] md:leading-[22px] text-neutral-black-80;
 }
 
-.font-h2{
-  @apply font-bold text-[16px] md:text-[20px] leading-[18px] md:leading-[22px] text-neutral-black-80 ;
+.font-h2 {
+  @apply font-bold text-[16px] md:text-[20px] leading-[18px] md:leading-[22px] text-neutral-black-80;
 }
 
-.body-font{
+.body-font {
   @apply text-[14px] md:text-[16px] leading-[16px] md:leading-[18px] text-neutral-black-80;
 }
 
-.label-font{
+.label-font {
   @apply text-[14px] md:text-[16px] leading-[14px] md:leading-[18px] text-neutral-black-80 font-bold;
 }
 
