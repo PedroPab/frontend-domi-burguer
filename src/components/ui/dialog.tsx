@@ -45,7 +45,7 @@ const DialogContent = React.forwardRef<
       )}
       {...props}
     >
-      <div className="mx-auto mt-4  h-1 w-20 rounded-full bg-neutral-400/60" />
+      <div className="sm:hidden mx-auto mt-4  h-1 w-20 rounded-full bg-neutral-400/60" />
       {children}
     </DialogPrimitive.Content>
   </DialogPortal>

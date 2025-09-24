@@ -1,7 +1,7 @@
 import { UserIcon } from "lucide-react";
 import React from "react";
-import { Button } from "@/components/button";
-import { LogoDesktop, HamburgerIcon, WhatsAppIcon, LogoMobile } from "./icons";
+import { Button } from "@/components/ui/button";
+import { LogoDesktop, HamburgerIcon, WhatsAppIcon, LogoMobile } from "./ui/icons";
 import Link from "next/link";
 
 export const Navbar = () => {

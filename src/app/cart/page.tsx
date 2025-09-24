@@ -1,9 +1,9 @@
 "use client";
 
 import React, { useState } from "react";
-import { CalendarIcon, Pencil, PencilIcon, Plus } from "lucide-react";
-import { Button } from "@/components/button";
-import { Card, CardContent } from "@/components/card";
+import { CalendarIcon, PencilIcon, Plus } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import {
   BancolombiaIcon,
@@ -14,10 +14,12 @@ import {
   NequiIcon,
   ShieldIcon,
   SpikesIcon,
-} from "@/components/icons";
-import { QuantitySelector } from "@/components/quantitySelector";
+} from "@/components/ui/icons";
+import { QuantitySelector } from "@/components/ui/quantitySelector";
 import Image from "next/image";
 import { Separator } from "@/components/ui/separator";
+import { ModalAddress } from "@/components/modalAddress";
+import { Switch } from "@/components/ui/switch";
 
 export default function Cart() {
   const userDataFields = [
@@ -129,6 +131,18 @@ export default function Cart() {
     setQuantity((prev) => (prev > 1 ? prev - 1 : 1)); // evita bajar de 1
   };
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState<string>("");
+
+  const handleEditProduct = (productName?: string) => {
+    if (productName) {
+      setSelectedProduct(productName);
+    } else {
+      setSelectedProduct("");
+    }
+    setIsModalOpen(true);
+  };
+
   return (
     <div className="flex flex-col xl:flex-row w-full items-center xl:justify-around gap-5 mt-[130px] lg:mt-[130px] mb-[100px]">
       <div className="flex flex-col items-center gap-14 pb-20 w-full justify-center max-w-[500px]">
@@ -165,8 +179,15 @@ export default function Cart() {
 
           <div className="flex flex-col gap-4 w-full">
             <p className="body-font font-bold">¡Necesitamos tu dirección!</p>
-
-            <Card className="gap-6 p-4 w-full bg-accent-yellow-10 rounded-[12px] shadow-none border-0">
+            <Button
+              variant="ghost"
+              className="bg-accent-yellow-20 hover:bg-accent-yellow-40 active:bg-accent-yellow-40 rounded-[30px] flex items-center gap-2 xl:w-[260px] xl:h-[48px] h-[40px] w-full label-font"
+              onClick={() => setIsModalOpen(true)}
+            >
+              <Plus /> AGREGAR DIRECCIÓN
+            </Button>
+            {/* direccion ya creada */}
+            {/* <Card className="gap-6 p-4 w-full bg-accent-yellow-10 rounded-[12px] shadow-none border-0">
               <CardContent className="p-0">
                 <div className="flex justify-between gap-6 w-full">
                   <div className="flex gap-4">
@@ -189,7 +210,7 @@ export default function Cart() {
                   </div>
                 </div>
               </CardContent>
-            </Card>
+            </Card> */}
           </div>
 
           <div className="flex flex-col gap-4 w-full">
@@ -240,24 +261,17 @@ export default function Cart() {
                         {method.label}
                       </div>
                     </div>
-
-                    {/* label */}
                   </div>
                 </label>
               ))}
             </div>
           </div>
 
-          <div className="flex items-center gap-2 w-full rounded-xl">
-            <div className="flex flex-col w-full items-start justify-center gap-6">
-              <h5 className="body-font font-bold">
-                Guardar datos para una próxima compra
-              </h5>
-            </div>
-
-            <div className="flex w-10 h-[23px] items-center justify-end gap-2 p-1 bg-neutrosblack-20 rounded-2xl overflow-hidden -rotate-180">
-              <div className="self-stretch w-4 bg-white rounded-2xl" />
-            </div>
+          <div className="flex items-center justify-between w-full my-1">
+            <label htmlFor="include-photo" className="body-font font-bold">
+              Guardar datos para una próxima compra
+            </label>
+            <Switch id="include-photo" />
           </div>
 
           <Card className="flex flex-col items-start h-[209px] p-6 w-full bg-neutral-black-30 rounded-[12px] border-0">
@@ -440,7 +454,6 @@ export default function Cart() {
                           <div className="flex-1 font-h4">
                             SALSA DE AJO DE LA CASA
                           </div>
-
                         </div>
                       </div>
 
@@ -497,6 +510,10 @@ export default function Cart() {
           <SpikesIcon className="w-full rotate-180" />
         </Card>
       </div>
+      <ModalAddress
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
     </div>
   );
 }

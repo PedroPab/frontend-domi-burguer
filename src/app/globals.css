@@ -80,6 +80,7 @@
   --color-background: #ffffff;
   --color-foreground: #171717;
   --color-primary-red: #e73533;
+  --color-primary-red-60: #ED6866;
   --color-accent-yellow-10: #fff9e6;
   --color-accent-yellow-20: #fff3cd;
   --color-accent-yellow-40: #ffe79b;
@@ -89,6 +90,7 @@
   --color-accent-yellow-90: #ffc205;
   --color-neutral-white: #ffffff;
   --color-neutral-black-10: #e6e6e6;
+  --color-neutral-black-20: #CCCCCC;
   --color-neutral-black-30: #F7F7F7;
   --color-neutral-black-50: #808080;
   --color-neutral-black-80: #313131;
