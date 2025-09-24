@@ -9,6 +9,7 @@ import { CustomizationModalSection } from "../customizeOrderModal";
 import { useState } from "react";
 import { QuantitySelector } from "@/components/quantitySelector";
 import { showFoodToast } from "../toastFood";
+import Link from "next/link";
 
 export default function MenuSection() {
   const {
@@ -121,10 +122,12 @@ export default function MenuSection() {
           </div>
 
           <div className="flex w-full max-w-[720px] items-center justify-center gap-6">
-            <Button className="text-white rounded-[30px] flex items-center gap-2 text-[16px] w-[199px] h-[48px]">
-              <HamburgerIcon className="w-6 h-6" />
-              PAGAR AHORA
-            </Button>
+            <Link href={"/cart"}>
+              <Button className="text-white rounded-[30px] flex items-center gap-2 text-[16px] w-[199px] h-[48px]">
+                <HamburgerIcon className="w-6 h-6" />
+                PAGAR AHORA
+              </Button>
+            </Link>
             <Button
               variant="ghost"
               className="bg-accent-yellow-40 hover:bg-accent-yellow-60 active:bg-accent-yellow-60 rounded-[30px] flex items-center gap-2 text-[16px] w-[199px] h-[48px]"
