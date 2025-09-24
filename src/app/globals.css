@@ -89,6 +89,7 @@
   --color-accent-yellow-90: #ffc205;
   --color-neutral-white: #ffffff;
   --color-neutral-black-10: #e6e6e6;
+  --color-neutral-black-30: #F7F7F7;
   --color-neutral-black-50: #808080;
   --color-neutral-black-80: #313131;
 }
@@ -143,8 +144,16 @@ h2 {
   @apply font-bold text-[16px] md:text-[20px] leading-[18px] md:leading-[22px] text-neutral-black-80;
 }
 
+h4 {
+  @apply font-bold text-[14px] md:text-[16px] leading-[16px] md:leading-[18px] text-neutral-black-80;
+}
+
 .font-h2 {
   @apply font-bold text-[16px] md:text-[20px] leading-[18px] md:leading-[22px] text-neutral-black-80;
+}
+
+.font-h4 {
+  @apply font-bold text-[14px] md:text-[16px] leading-[16px] md:leading-[18px] text-neutral-black-80;
 }
 
 .body-font {

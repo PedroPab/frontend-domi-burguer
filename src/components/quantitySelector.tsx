@@ -8,7 +8,7 @@ const quantityWrapperVariants = cva(
   {
     variants: {
       size: {
-        sm: "h-8 gap-4 px-[3px] py-2 border-[1.2px] border-[#313131] w-fit",
+        sm: "h-8 gap-4 px-[3px] py-2 border-[1.2px] border-[#313131] max-w-[101px] w-fit",
         lg: "h-[48px] gap-6 px-1.5 py-2",
       },
     },
@@ -23,7 +23,7 @@ const quantityButtonVariants = cva(
   {
     variants: {
       size: {
-        sm: "w-6 h-6 p-0 rounded-[40px]",
+        sm: "w-[24px] h-[24px] p-0 rounded-[40px]",
         lg: "w-[38px] h-[38px] rounded-[30px]",
       },
     },
@@ -59,7 +59,7 @@ export function QuantitySelector({
         onClick={onDecrease}
         className={cn(quantityButtonVariants({ size }))}
       >
-        <Minus className={cn(size === "sm" ? "w-4 h-4" : "w-5 h-5")} />
+        <Minus className={cn(size === "sm" ? "w-[16px] h-[16px]" : "w-5 h-5")} />
       </Button>
 
       <span
