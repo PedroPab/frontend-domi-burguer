@@ -1,11 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import {
-  CalendarIcon,
-  Pencil,
-  PencilIcon,
-} from "lucide-react";
+import { CalendarIcon, Pencil, PencilIcon, Plus } from "lucide-react";
 import { Button } from "@/components/button";
 import { Card, CardContent } from "@/components/card";
 import { Input } from "@/components/ui/input";
@@ -445,19 +441,18 @@ export default function Cart() {
                             SALSA DE AJO DE LA CASA
                           </div>
 
-                          <PencilIcon className="w-4 h-4" />
                         </div>
                       </div>
 
                       <div className="flex h-8 items-center justify-between w-full rounded-[50px]">
                         <h4 className="">$25.000</h4>
 
-                        <QuantitySelector
-                          size="sm"
-                          value={quantity}
-                          onDecrease={handleDecrease}
-                          onIncrease={handleIncrease}
-                        />
+                        <Button
+                          size="icon"
+                          className={` w-10 h-10  rounded-[30px] p-0`}
+                        >
+                          <Plus className="text-white" />
+                        </Button>
                       </div>
                     </div>
                   </CardContent>
