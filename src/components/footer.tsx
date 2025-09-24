@@ -1,12 +1,12 @@
 import React from "react";
-import { Button } from "@/components/button";
+import { Button } from "@/components/ui/button";
 import {
   LogoDesktopWhite,
   WhatsAppIcon,
   TiktokIcon,
   InstagramIcon,
   EmailIcon,
-} from "./icons";
+} from "./ui/icons";
 import Image from "next/image";
 
 export const Footer = () => {

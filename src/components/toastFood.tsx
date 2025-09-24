@@ -1,8 +1,8 @@
 import cn from "clsx";
 import { addToast } from "@heroui/toast";
-import { Button } from "@/components/button";
+import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import { HamburgerIcon } from "./icons";
+import { HamburgerIcon } from "./ui/icons";
 
 export const showFoodToast = (productName: string) => {
     console.log(productName)

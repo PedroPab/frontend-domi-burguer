@@ -1,13 +1,13 @@
 "use client";
 
-import { Button } from "@/components/button";
+import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import { ArrowIcon, EditarIcon, HamburgerIcon } from "@/components/icons";
+import { ArrowIcon, EditarIcon, HamburgerIcon } from "@/components/ui/icons";
 import { Plus } from "lucide-react";
 import { useMenu } from "@/hooks/home/useMenu";
-import { CustomizationModalSection } from "../customizeOrderModal";
+import { CustomizationModalSection } from "./customizeOrderModal";
 import { useState } from "react";
-import { QuantitySelector } from "@/components/quantitySelector";
+import { QuantitySelector } from "@/components/ui/quantitySelector";
 import { showFoodToast } from "../toastFood";
 import Link from "next/link";
 

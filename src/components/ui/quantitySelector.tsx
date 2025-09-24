@@ -1,7 +1,7 @@
 import { Minus, Plus } from "lucide-react";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/button";
+import { Button } from "@/components/ui/button";
 
 const quantityWrapperVariants = cva(
   "flex items-center justify-center border rounded-[50px]",

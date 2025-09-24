@@ -4,8 +4,8 @@ import {
   HeartIcon,
   LeafIcon,
   LogoMobileRed,
-} from "@/components/icons";
-import { Button } from "@/components/button";
+} from "@/components/ui/icons";
+import { Button } from "@/components/ui/button";
 import MenuSection from "@/components/home/menuSection";
 import Image from "next/image";
 

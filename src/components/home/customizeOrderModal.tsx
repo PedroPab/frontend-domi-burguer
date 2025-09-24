@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Button } from "@/components/button";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from "@/components/dialog";
+} from "@/components/ui/dialog";
 import {
   CarneIcon,
   FrenchFriesIcon,
@@ -14,8 +14,8 @@ import {
   QuesoIcon,
   SouceIcon,
   TomateIcon,
-} from "./icons";
-import { QuantitySelector } from "./quantitySelector";
+} from "../ui/icons";
+import { QuantitySelector } from "../ui/quantitySelector";
 
 const ingredientsData = [
   {
@@ -121,7 +121,7 @@ export const CustomizationModalSection = ({
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose} >
+    <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className=" p-0 bg-background rounded-2xl  z-500">
         <DialogHeader className="p-10 pb-0">
           <DialogTitle className="font-bold text-[16px] md:text-[20px] text-center leading-[18px] md:leading-[22px] text-neutral-black-80">
@@ -131,8 +131,8 @@ export const CustomizationModalSection = ({
 
         <div className="flex flex-col gap-6 px-10 pb-10">
           <p className="body-font">
-            Selecciona los ingredientes que quieres agregar o los que deseas
-            retirar.
+            Si la ubicación en el mapa no es correcta, mueve el pin a la
+            posición real de tu dirección.
           </p>
 
           <div className="flex flex-col">

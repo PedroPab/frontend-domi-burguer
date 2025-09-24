@@ -10,7 +10,7 @@ import {
   FrenchFriesIcon,
   HuevoIcon,
   AjoIcon,
-} from "@/components/icons";
+} from "@/components/ui/icons";
 
 // Hook personalizado que maneja el menú de productos
 export function useMenu() {
