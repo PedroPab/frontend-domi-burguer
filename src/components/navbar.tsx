@@ -2,6 +2,7 @@ import { UserIcon } from "lucide-react";
 import React from "react";
 import { Button } from "@/components/button";
 import { LogoDesktop, HamburgerIcon, WhatsAppIcon, LogoMobile } from "./icons";
+import Link from "next/link";
 
 export const Navbar = () => {
   return (
@@ -29,12 +30,16 @@ export const Navbar = () => {
 
         <div className="flex flex-col w-[130px] h-14 items-center justify-center gap-2">
           <div className="hidden md:block w-[106px] h-14">
-            <LogoDesktop height={58} width={106} />
+            <Link href={"/"}>
+              <LogoDesktop height={58} width={106} />
+            </Link>
           </div>
 
           {/* Icono para móvil */}
           <div className="block md:hidden">
-            <LogoMobile width={28} height={40} />
+            <Link href={"/"}>
+              <LogoMobile width={28} height={40} />
+            </Link>
           </div>
         </div>
 
@@ -46,21 +51,22 @@ export const Navbar = () => {
           >
             <WhatsAppIcon className="w-5 h-5 md:w-6 md:h-6" />
           </Button>
-
-          <Button
-            variant="default"
-            className="h-[42px] min-w-16 lg:h-12 py-2 ps-3 pe-1 lg:pl-5 lg:pr-2 lg:py-2 items-center justify-center gap-2 rounded-[30px] cursor-pointer"
-          >
-            <HamburgerIcon className="w-5 h-5 md:w-6 md:h-6 text-white" />
-            <span className="text-white whitespace-nowrap font-bold hidden md:block">
-              ORDENAR
-            </span>
-            <div className="flex flex-col w-8 h-8 items-center justify-center gap-2 bg-accentmikado-10 rounded-[20px]">
-              <span className="text-black whitespace-nowrap font-bold text-[16px] bg-amber-50 h-8 w-8 rounded-[20px] text-center pt-1 lg:mr-2">
-                0
+          <Link href={"/cart"}>
+            <Button
+              variant="default"
+              className="h-[42px] min-w-16 lg:h-12 py-2 ps-3 pe-1 lg:pl-5 lg:pr-2 lg:py-2 items-center justify-center gap-2 rounded-[30px] cursor-pointer"
+            >
+              <HamburgerIcon className="w-5 h-5 md:w-6 md:h-6 text-white" />
+              <span className="text-white whitespace-nowrap font-bold hidden md:block">
+                ORDENAR
               </span>
-            </div>
-          </Button>
+              <div className="flex flex-col w-8 h-8 items-center justify-center gap-2 bg-accentmikado-10 rounded-[20px]">
+                <span className="text-black whitespace-nowrap font-bold text-[16px] bg-amber-50 h-8 w-8 rounded-[20px] text-center pt-1 lg:mr-2">
+                  0
+                </span>
+              </div>
+            </Button>
+          </Link>
         </div>
       </div>
     </nav>
