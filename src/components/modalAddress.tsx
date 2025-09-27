@@ -50,8 +50,8 @@ export const ModalAddress = ({ isOpen, onClose }: ModalAddressProps) => {
   // Estados principales
   const [address, setAddress] = useState("");
   const [coordinates, setCoordinates] = useState<{
-    lat: any;
-    lng: any;
+    lat: number;
+    lng: number;
   } | null>(null);
 
   // Ref del autocomplete
@@ -67,13 +67,18 @@ export const ModalAddress = ({ isOpen, onClose }: ModalAddressProps) => {
   const onPlaceChanged = () => {
     if (!autocompleteRef.current) return;
     const place = autocompleteRef.current.getPlace();
-    if (!place.geometry || !place.formatted_address) return;
 
-    const lat = place.geometry.location?.lat();
-    const lng = place.geometry.location?.lng();
+    if (place.geometry && place.geometry.location) {
+      const lat = place.geometry.location.lat();
+      const lng = place.geometry.location.lng();
 
-    setCoordinates({ lat, lng });
-    setAddress(place.formatted_address);
+      if (typeof lat === "number" && typeof lng === "number") {
+        setCoordinates({ lat, lng });
+        if (place.formatted_address) {
+          setAddress(place.formatted_address);
+        }
+      }
+    }
   };
 
   return (
