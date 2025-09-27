@@ -25,6 +25,8 @@ interface ModalAddressProps {
   onClose: () => void;
 }
 
+const libraries: "places"[] = ["places"];
+
 export const ModalAddress = ({ isOpen, onClose }: ModalAddressProps) => {
   useEffect(() => {
     const handlePopState = () => {
@@ -44,13 +46,6 @@ export const ModalAddress = ({ isOpen, onClose }: ModalAddressProps) => {
       window.removeEventListener("popstate", handlePopState);
     };
   }, [isOpen, onClose]);
-
-  interface ModalAddressProps {
-    isOpen: boolean;
-    onClose: () => void;
-  }
-
-  const libraries: "places"[] = ["places"];
 
   // Estados principales
   const [address, setAddress] = useState("");
@@ -136,6 +131,7 @@ export const ModalAddress = ({ isOpen, onClose }: ModalAddressProps) => {
                   </div>
                 </Autocomplete>
               )}
+
               <Input
                 className="shadow-none"
                 placeholder={"Nombre de la ubicación"}
