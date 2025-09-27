@@ -166,6 +166,11 @@ h4 {
   @apply text-[14px] md:text-[16px] leading-[14px] md:leading-[18px] text-neutral-black-80 font-bold;
 }
 
+.pac-container {
+  z-index: 99999 !important;
+  pointer-events: auto !important;
+}
+
 @layer utilities {
   @keyframes slide-in-from-bottom {
     from {
@@ -199,3 +204,4 @@ h4 {
     }
   }
 }
+
