@@ -158,16 +158,17 @@ export default function Cart() {
             <h5 className="body-font font-bold">Tus datos</h5>
 
             <div className="inline-flex flex-col gap-2 items-start w-full">
-              <Input className="" defaultValue={"Pepito Mendieta"}></Input>
+              <Input className="" placeholder="Nombres y Apellidos"></Input>
 
               <div className="flex flex-col lg:flex-row w-full gap-2">
-                <Input className="" defaultValue={"Pepito Mendieta"}></Input>
-                <Input className="" defaultValue={"+57 3222345678"}></Input>
+                <Input className="" placeholder="Correo Electrónico"></Input>
+                <Input className="" placeholder="+57 000 000 00 00"></Input>
               </div>
 
               <div className="relative w-full">
                 <textarea
                   maxLength={200}
+                  placeholder="Algún comentario?"
                   className="w-full h-[100px] shadow-sm px-5 py-4 rounded-2xl border-[1.5px] border-[#cccccc] resize-none outline-none [font-family:'Montserrat',Helvetica] font-normal text-neutrosblack-80 text-sm leading-[18px] tracking-[0]"
                 />
                 <span className="absolute bottom-3 right-3 text-gray-400 text-sm pointer-events-none">
