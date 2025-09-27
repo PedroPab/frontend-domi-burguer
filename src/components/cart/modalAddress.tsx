@@ -2,9 +2,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
-import { Input } from "./ui/input";
-import { MapPinIcon } from "./ui/icons";
-import { Switch } from "./ui/switch";
+import { Input } from "../ui/input";
+import { MapPinIcon } from "../ui/icons";
+import { Switch } from "../ui/switch";
 import {
   GoogleMap,
   Marker,
@@ -17,7 +17,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "./ui/select";
+} from "../ui/select";
 import { silverMapStyle } from "@/utils/mapStyles";
 
 interface ModalAddressProps {
