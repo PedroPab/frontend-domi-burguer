@@ -37,7 +37,7 @@ export default function RootLayout({
               toastOffset={100}
               maxVisibleToasts={10}
             />
-          <div className="container mx-auto overflow-x-hidden px-5 sm:px-10 md:px-10 lg:px-10 xl:px-16  max-w-[1440px] min-h-screen h-full">
+          <div className="container mx-auto overflow-x-hidden px-5 sm:px-10 md:px-10 lg:px-10 xl:px-16  max-w-[1440px] h-auto">
             {children}
           </div>
         </HeroUIProvider>

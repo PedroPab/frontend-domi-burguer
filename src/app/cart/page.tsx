@@ -18,8 +18,9 @@ import {
 import { QuantitySelector } from "@/components/ui/quantitySelector";
 import Image from "next/image";
 import { Separator } from "@/components/ui/separator";
-import { ModalAddress } from "@/components/modalAddress";
+import { ModalAddress } from "@/components/cart/modalAddress";
 import { Switch } from "@/components/ui/switch";
+import Link from "next/link";
 
 export default function Cart() {
   const userDataFields = [
@@ -501,9 +502,11 @@ export default function Cart() {
                 </div>
 
                 <div className="flex items-start justify-end gap-6 w-full">
-                  <Button className="text-white rounded-[30px] flex items-center gap-2 text-[16px] w-[128px] h-[48px]">
-                    COMPRAR
-                  </Button>
+                  <Link href={"/thankyou"}>
+                    <Button className="text-white rounded-[30px] flex items-center gap-2 text-[16px] w-[128px] h-[48px]">
+                      COMPRAR
+                    </Button>
+                  </Link>
                 </div>
               </div>
             </div>
