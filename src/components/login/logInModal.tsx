@@ -1,32 +1,15 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "../ui/input";
-import { GoogleIcon, MapPinIcon } from "../ui/icons";
-import { Switch } from "../ui/switch";
-import {
-  GoogleMap,
-  Marker,
-  Autocomplete,
-  useLoadScript,
-} from "@react-google-maps/api";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../ui/select";
-import { silverMapStyle } from "@/utils/mapStyles";
+import { GoogleIcon } from "../ui/icons";
 import { Separator } from "../ui/separator";
 
 interface ModalAddressProps {
   isOpen: boolean;
   onClose: () => void;
 }
-
-const libraries: "places"[] = ["places"];
 
 export const LogInModal = ({ isOpen, onClose }: ModalAddressProps) => {
   useEffect(() => {
@@ -47,40 +30,6 @@ export const LogInModal = ({ isOpen, onClose }: ModalAddressProps) => {
       window.removeEventListener("popstate", handlePopState);
     };
   }, [isOpen, onClose]);
-
-  // Estados principales
-  const [address, setAddress] = useState("");
-  const [coordinates, setCoordinates] = useState<{
-    lat: number;
-    lng: number;
-  } | null>(null);
-
-  // Ref del autocomplete
-  const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
-
-  // Cargar script de Google Maps
-  const { isLoaded } = useLoadScript({
-    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY as string,
-    libraries,
-  });
-
-  // Cuando se elige un lugar del autocomplete
-  const onPlaceChanged = () => {
-    if (!autocompleteRef.current) return;
-    const place = autocompleteRef.current.getPlace();
-
-    if (place.geometry && place.geometry.location) {
-      const lat = place.geometry.location.lat();
-      const lng = place.geometry.location.lng();
-
-      if (typeof lat === "number" && typeof lng === "number") {
-        setCoordinates({ lat, lng });
-        if (place.formatted_address) {
-          setAddress(place.formatted_address);
-        }
-      }
-    }
-  };
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -155,17 +104,6 @@ export const LogInModal = ({ isOpen, onClose }: ModalAddressProps) => {
             </Button>
           </div>
         </div>
-        {/*<div className="flex pr-[32px] w-full justify-between pl-[20px] pb-[24px] mt-[16px] lg:pl-[32px] lg:pb-[32px] lg:mt-[32px]">
-          <Button
-            className="text-neutral-black-80 bg-accent-yellow-40 hover:bg-accent-yellow-60 active:bg-accent-yellow-60 rounded-[30px] flex items-center gap-2 text-[16px] w-[200px] h-[48px]"
-            onClick={onClose}
-          >
-            CERRAR
-          </Button>
-          <Button className="text-white rounded-[30px] flex items-center gap-2 text-[16px] w-[200px] h-[48px]">
-            CONFIRMAR
-          </Button>
-        </div> */}
       </DialogContent>
     </Dialog>
   );
