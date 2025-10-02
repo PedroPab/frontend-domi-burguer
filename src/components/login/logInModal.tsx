@@ -20,14 +20,14 @@ export const LogInModal = ({ isOpen, onClose }: ModalAddressProps) => {
     if (isOpen) {
       window.history.pushState({ modalOpen: true }, "");
       window.addEventListener("popstate", handlePopState);
-    } else {
-      if (window.history.state?.modalOpen) {
-        window.history.back();
-      }
     }
 
     return () => {
       window.removeEventListener("popstate", handlePopState);
+      // Solo hacer back si el modal se está cerrando y el estado actual es modalOpen
+      if (!isOpen && window.history.state?.modalOpen) {
+        window.history.back();
+      }
     };
   }, [isOpen, onClose]);
 
