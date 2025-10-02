@@ -11,22 +11,26 @@ import {
 } from "./ui/icons";
 import Link from "next/link";
 import { LogInModal } from "./login/logInModal";
+import { KitchenModal } from "./kitchen/kitchenModal";
 
 export const Navbar = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isAcountModalOpen, setIsAcountModalOpen] = useState(false);
+  const [isKitchenModalOpen, setIsKitchenModalOpen] = useState(false);
   return (
     <>
       <nav
         className={`fixed top-0 left-0  ${
-          isModalOpen ? "z-600" : "z-300"
+          isAcountModalOpen ? "z-600" : "z-300"
         } w-full px-4`}
       >
         <div className="max-w-[828px] md:h-[80px] h-[62px] gap-2 py-0 mt-[20px] mb-[10px] rounded-[60px] border border-solid border-[#e6e6e6] flex items-center justify-between w-full mx-auto px-4 sm:px-6 lg:px-8 bg-[#ffffff]">
           <div className="flex w-[300px] h-14 px-0 py-3 rounded-[50px] overflow-hidden items-center">
             <Button
-              onClick={() => setIsModalOpen(true)}
+              onClick={() => setIsAcountModalOpen(true)}
               variant="ghost"
-              className={`inline-flex h-10 lg:h-12 justify-center px-[10px] lg:px-5 lg:py-2  mt-[-8.00px] mb-[-8.00px] rounded-[30px] items-center bg-transparent outline-none border-none focus:ring-0 ${isModalOpen ? "bg-accent-yellow-20": ""}`}
+              className={`inline-flex h-10 lg:h-12 justify-center px-[10px] lg:px-5 lg:py-2  mt-[-8.00px] mb-[-8.00px] rounded-[30px] items-center bg-transparent outline-none border-none focus:ring-0 ${
+                isAcountModalOpen ? "bg-accent-yellow-20" : ""
+              }`}
             >
               <UserIcon className="w-5 h-5 md:w-6 md:h-6" />
               <span className="text-neutrosblack-80 font-label hidden md:block">
@@ -34,6 +38,7 @@ export const Navbar = () => {
               </span>
             </Button>
             <Button
+              onClick={() => setIsKitchenModalOpen(true)}
               variant="ghost"
               className="inline-flex h-10 lg:h-12 justify-center px-3 lg:px-5 py-2 mt-[-8.00px] mb-[-8.00px] rounded-[30px] items-center bg-transparent"
             >
@@ -87,8 +92,14 @@ export const Navbar = () => {
       </nav>
       <div>
         <LogInModal
-          isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
+          isOpen={isAcountModalOpen}
+          onClose={() => setIsAcountModalOpen(false)}
+        />
+      </div>
+      <div>
+        <KitchenModal
+          isOpen={isKitchenModalOpen}
+          onClose={() => setIsKitchenModalOpen(false)}
         />
       </div>
     </>

@@ -196,14 +196,14 @@ export const ModalAddress = ({ isOpen, onClose }: ModalAddressProps) => {
                   streetViewControl: false,
                   mapTypeControl: false,
                   fullscreenControl: false,
-                  styles: silverMapStyle, // 👈 usa el estilo importado
+                  styles: silverMapStyle,
                 }}
               >
                 {coordinates && (
                   <Marker
                     position={coordinates}
                     icon={{
-                      url: "/Pin.png", // ruta de tu ícono
+                      url: "/Pin.png", 
                       scaledSize: new google.maps.Size(70, 80), // tamaño
                       anchor: new google.maps.Point(20, 40), // punto de anclaje
                     }}
