@@ -434,7 +434,7 @@ export default function Cart() {
                   ))}
                 </div>
 
-                <Separator orientation="horizontal" />
+                <Separator orientation="horizontal" className="w-full!" />
 
                 <h2 className="">ACOMPAÑA TU BURGER</h2>
 
@@ -488,7 +488,7 @@ export default function Cart() {
                         Envío
                       </div>
 
-                      <p className="w-fit body-font font-bold">Total</p>
+                      <p className="w-fit body-font font-bold">4.400</p>
                     </div>
 
                     <Separator orientation="horizontal" />
