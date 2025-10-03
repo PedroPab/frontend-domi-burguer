@@ -47,19 +47,21 @@ export default function Thankyou() {
           </div>
 
           <div className="flex w-full max-w-[720px] items-center justify-center gap-6">
-            <Link href={"/cart"}>
+            <Link href={"/"}>
               <Button className="text-white rounded-[30px] flex items-center gap-2 text-[16px] w-[164px] h-[48px]">
                 <HamburgerIcon className="w-6 h-6" />
                 EXPLORAR
               </Button>
             </Link>
-            <Button
-              variant="ghost"
-              className="bg-accent-yellow-40 hover:bg-accent-yellow-60 active:bg-accent-yellow-60 rounded-[30px] flex items-center gap-2 text-[16px] w-[165px] h-[48px]"
-            >
-              <FrenchFriesIcon className="w-6 h-6" />
-              MI PEDIDO
-            </Button>
+            <Link href={"/info-order"}>
+              <Button
+                variant="ghost"
+                className="bg-accent-yellow-40 hover:bg-accent-yellow-60 active:bg-accent-yellow-60 rounded-[30px] flex items-center gap-2 text-[16px] w-[165px] h-[48px]"
+              >
+                <FrenchFriesIcon className="w-6 h-6" />
+                MI PEDIDO
+              </Button>
+            </Link>
           </div>
         </div>
       </section>
