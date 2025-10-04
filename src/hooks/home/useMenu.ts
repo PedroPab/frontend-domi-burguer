@@ -40,14 +40,14 @@ export function useMenu() {
       image: "/salsaAjo.png",
       icons: [HuevoIcon, AjoIcon],
     },
-    {
-      id: 3,
-      name: "PAPITAS RISADAS",
-      body: "Doradas, crujientes y hechas para el dip. La textura perfecta para acompañar tu hamburguesa.",
-      price: 6999,
-      image: "/papasRisadas.png",
-      icons: [FrenchFriesIcon],
-    },
+    // {
+    //   id: 3,
+    //   name: "PAPITAS RISADAS",
+    //   body: "Doradas, crujientes y hechas para el dip. La textura perfecta para acompañar tu hamburguesa.",
+    //   price: 6999,
+    //   image: "/papasRisadas.png",
+    //   icons: [FrenchFriesIcon],
+    // },
   ];
 
   // Estado para saber cuál producto está activo (por defecto el primero)
@@ -70,18 +70,6 @@ export function useMenu() {
     setActualProduct(index);
   };
 
-  // Ir al siguiente producto (y volver al inicio si se llega al final)
-  const handleNextProduct = () => {
-    setActualProduct((prevIndex) => (prevIndex + 1) % products.length);
-  };
-
-  // Ir al producto anterior (y saltar al último si estamos en el primero)
-  const handlePrevProduct = () => {
-    setActualProduct(
-      (prevIndex) => (prevIndex - 1 + products.length) % products.length
-    );
-  };
-
   // Producto que está actualmente seleccionado
   const currentProduct = products[actualProduct];
 
@@ -94,7 +82,5 @@ export function useMenu() {
     handleIncrease,
     handleDecrease,
     handleChangeProduct,
-    handleNextProduct,
-    handlePrevProduct,
   };
 }

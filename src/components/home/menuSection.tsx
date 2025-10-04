@@ -6,26 +6,69 @@ import { ArrowIcon, EditarIcon, HamburgerIcon } from "@/components/ui/icons";
 import { Plus } from "lucide-react";
 import { useMenu } from "@/hooks/home/useMenu";
 import { CustomizationModalSection } from "./customizeOrderModal";
-import { useState } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { QuantitySelector } from "@/components/ui/quantitySelector";
 import { showFoodToast } from "../toastFood";
 import Link from "next/link";
+import useEmblaCarousel from "embla-carousel-react";
 
 export default function MenuSection() {
   const {
-    // hook useMenu para manejar el producto actual y las funciones de navegación
+    products,
     actualProduct,
     currentProduct,
     quantity,
     handleIncrease,
     handleDecrease,
     handleChangeProduct,
-    handleNextProduct,
-    handlePrevProduct,
   } = useMenu();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<string>("");
+
+  // Configurar Embla Carousel para el carrusel principal
+  const [emblaRef, emblaApi] = useEmblaCarousel({ 
+    loop: true,
+    skipSnaps: false,
+    duration: 20,
+    align: 'center'
+  });
+  // Sincronizar el carrusel principal con el producto actual
+  useEffect(() => {
+    if (emblaApi) {
+      emblaApi.scrollTo(actualProduct, false);
+    }
+  }, [actualProduct, emblaApi]);
+
+  // Actualizar el producto cuando cambia el slide
+  const onSelect = useCallback(() => {
+    if (!emblaApi) return;
+    const index = emblaApi.selectedScrollSnap();
+    if (index !== actualProduct) {
+      handleChangeProduct(index);
+    }
+  }, [emblaApi, actualProduct, handleChangeProduct]);
+
+  useEffect(() => {
+    if (!emblaApi) return;
+    emblaApi.on("select", onSelect);
+    return () => {
+      emblaApi.off("select", onSelect);
+    };
+  }, [emblaApi, onSelect]);
+
+  // Manejar navegación con botones
+  const scrollPrev = useCallback(() => {
+    if (emblaApi) {
+      emblaApi.scrollPrev();
+    }
+  }, [emblaApi]);
+
+  const scrollNext = useCallback(() => {
+    if (emblaApi) {
+      emblaApi.scrollNext();
+    }
+  }, [emblaApi]);
 
   const handleEditProduct = (productName?: string) => {
     if (productName) {
@@ -36,36 +79,49 @@ export default function MenuSection() {
     setIsModalOpen(true);
   };
 
+
+
   return (
     <>
-      <section className="grid grid-cols-1 xl:grid-cols-2 gap-0 max-w-[1440px] w-screen ">
-        {/* Columna 1 */}
-        <div className="flex flex-col items-start justify-center gap-2 bg-[linear-gradient(45deg,rgba(255,194,5,1)_0%,rgba(255,194,5,0.4)_100%)] max-w-[720px] w-full mx-auto relative">
-          <div className="w-full h-[30px] xl:h-[14px]  " />
+      <section className="grid grid-cols-1 xl:grid-cols-2 gap-0 max-w-[1440px] w-screen">
+        {/* Columna 1 - Carrusel Principal */}
+        <div className="flex flex-col items-start justify-center gap-2 bg-[linear-gradient(45deg,rgba(255,194,5,1)_0%,rgba(255,194,5,0.4)_100%)] max-w-[720px] w-full mx-auto relative overflow-hidden">
+          <div className="w-full h-[30px] xl:h-[14px]" />
 
-          <div className="w-full aspect-[1/1] relative">
-            <div className="">
-              <Image
-                src={currentProduct.image}
-                alt={currentProduct.name}
-                fill
-                className="object-contain"
-                priority
-                sizes="(max-width: 768px) 400px, 720px"
-              />
+          <div className="w-full aspect-[1/1] relative" ref={emblaRef}>
+            <div className="flex touch-pan-y">
+              {products.map((product, index) => (
+                <div
+                  key={product.id}
+                  className="flex-[0_0_100%] min-w-0 relative"
+                >
+                  <div className="w-full aspect-[1/1] relative">
+                    <Image
+                      src={product.image}
+                      alt={product.name}
+                      fill
+                      className="object-contain"
+                      priority={index === 0}
+                      sizes="(max-width: 768px) 400px, 720px"
+                    />
+                  </div>
+                </div>
+              ))}
             </div>
-            <div className="w-full max-w-[720px] px-[13%] py-0 absolute top-[43%] left-0 flex justify-between">
+
+            {/* Botones de navegación */}
+            <div className="w-full max-w-[720px] px-[13%] py-0 absolute top-[43%] left-0 flex justify-between z-10 pointer-events-none">
               <Button
                 variant="ghost"
-                className="w-10 h-10 md:w-14 md:h-14 bg-accent-yellow-20 rounded-[30px] hover:bg-accent-yellow-40 pr-5"
-                onClick={handlePrevProduct}
+                className="w-10 h-10 md:w-14 md:h-14 bg-accent-yellow-20 rounded-[30px] hover:bg-accent-yellow-40 pr-5 transition-all active:scale-95 pointer-events-auto"
+                onClick={scrollPrev}
               >
                 <ArrowIcon className="w-5 h-5 rotate-180 text-neutral-black-80" />
               </Button>
               <Button
                 variant="ghost"
-                className="w-10 h-10 md:w-14 md:h-14 bg-accent-yellow-20 rounded-[30px] hover:bg-accent-yellow-40 pl-5"
-                onClick={handleNextProduct}
+                className="w-10 h-10 md:w-14 md:h-14 bg-accent-yellow-20 rounded-[30px] hover:bg-accent-yellow-40 pl-5 transition-all active:scale-95 pointer-events-auto"
+                onClick={scrollNext}
               >
                 <ArrowIcon className="w-5 h-5 text-neutral-black-80" />
               </Button>
@@ -73,10 +129,10 @@ export default function MenuSection() {
           </div>
         </div>
 
-        {/* Columna 2 */}
-        <div className="flex flex-col items-center justify-center gap-14 p-20 bg-accent-yellow-10 max-w-[720px] w-full mx-auto">
-          <div className="flex flex-col w-[400px] items-center gap-6">
-            <div>
+        {/* Columna 2 - Información del Producto */}
+        <div className="flex flex-col items-center justify-center gap-8 md:gap-14 p-10 md:p-20 bg-accent-yellow-10 max-w-[720px] w-full mx-auto">
+          <div className="flex flex-col w-full max-w-[400px] items-center gap-6">
+            <div className="transition-opacity duration-300">
               <h1 className="text-center">
                 {currentProduct.name.startsWith("HAMBURGUESA") ? (
                   <>
@@ -93,12 +149,12 @@ export default function MenuSection() {
                 <Icon key={index} />
               ))}
             </div>
-            <p className="text-center body-font max-w-[350px]">
+            <p className="text-center body-font max-w-[350px] transition-opacity duration-300">
               {currentProduct.body}
             </p>
             <Button
               variant="ghost"
-              className={`px-4 py-2 w-[177px] h-[40px] bg-accent-yellow-20 hover:bg-accent-yellow-40  rounded-[30px] ${
+              className={`px-4 py-2 w-[177px] h-[40px] bg-accent-yellow-20 hover:bg-accent-yellow-40 rounded-[30px] transition-all ${
                 actualProduct === 2 ? "hidden" : ""
               }`}
               onClick={() => handleEditProduct()}
@@ -115,22 +171,22 @@ export default function MenuSection() {
               size="lg"
             />
             <div>
-              <h1 className="font-bold! text-[28px]! md:text-[32px]! leading-[30px]! md:leading-[28px]! ">
+              <h1 className="font-bold! text-[28px]! md:text-[32px]! leading-[30px]! md:leading-[28px]!">
                 ${currentProduct.price.toLocaleString("es-CO")}
               </h1>
             </div>
           </div>
 
-          <div className="flex w-full max-w-[720px] items-center justify-center gap-6">
+          <div className="flex flex-col sm:flex-row w-full max-w-[720px] items-center justify-center gap-3 sm:gap-6">
             <Link href={"/cart"}>
-              <Button className="text-white rounded-[30px] flex items-center gap-2 text-[16px] w-[199px] h-[48px]">
+              <Button className="text-white rounded-[30px] flex items-center gap-2 text-[16px] w-[199px] h-[48px] transition-all hover:scale-105 active:scale-95">
                 <HamburgerIcon className="w-6 h-6" />
                 PAGAR AHORA
               </Button>
             </Link>
             <Button
               variant="ghost"
-              className="bg-accent-yellow-40 hover:bg-accent-yellow-60 active:bg-accent-yellow-60 rounded-[30px] flex items-center gap-2 text-[16px] w-[199px] h-[48px]"
+              className="bg-accent-yellow-40 hover:bg-accent-yellow-60 active:bg-accent-yellow-60 rounded-[30px] flex items-center gap-2 text-[16px] w-[199px] h-[48px] transition-all hover:scale-105 active:scale-95"
               onClick={() => showFoodToast(currentProduct.name)}
             >
               AÑADIR AL CARRITO
@@ -140,7 +196,7 @@ export default function MenuSection() {
       </section>
 
       {/* Sección de miniaturas de productos */}
-      <section className="grid lg:gap-y-14 grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 items-center justify-center lg:gap-6 gap-2 gap-x-4 py-14 relative">
+      <section className="grid lg:gap-y-14 grid-cols-2 lg:grid-cols-3 items-center justify-center lg:gap-6 gap-2 gap-x-4 py-14 relative">
         {/* Cada tarjeta representa un producto (ejemplo producto 0) */}
         <div
           className={`w-[160px] h-[160px] lg:w-[280px] lg:h-40 ${
@@ -149,7 +205,10 @@ export default function MenuSection() {
         >
           <div
             className={` flex relative flex-col items-center justify-center gap-[4.47px] overflow-visible p-0 h-full`}
-            onClick={() => handleChangeProduct(0)}
+            onClick={() => {
+              handleChangeProduct(0);
+              if (emblaApi) emblaApi.scrollTo(0);
+            }}
           >
             {/* Imagen flotante del producto */}
             <Image
@@ -177,7 +236,10 @@ export default function MenuSection() {
         >
           <div
             className={`${"relative gap-[4.47px]"} p-0 h-full`}
-            onClick={() => handleChangeProduct(1)}
+            onClick={() => {
+              handleChangeProduct(1);
+              if (emblaApi) emblaApi.scrollTo(1);
+            }}
           >
             <Image
               src="/Burger1.png"
@@ -209,7 +271,10 @@ export default function MenuSection() {
           className={`w-[160px] h-[160px] lg:w-[280px] lg:h-40 ${
             actualProduct === 2 ? "bg-accent-yellow-40" : "bg-accent-yellow-20"
           } rounded-2xl border-0 overflow-visible`}
-          onClick={() => handleChangeProduct(2)}
+          onClick={() => {
+            handleChangeProduct(2);
+            if (emblaApi) emblaApi.scrollTo(2);
+          }}
         >
           <div className={`${"relative gap-[4.47px]"} p-0 h-full`}>
             <Image
@@ -231,11 +296,14 @@ export default function MenuSection() {
             </Button>
           </div>
         </div>
-        <div
+        {/* <div
           className={`w-[160px] h-[160px] lg:w-[280px] lg:h-40 ${
             actualProduct === 3 ? "bg-accent-yellow-40" : "bg-accent-yellow-20"
           } rounded-2xl border-0 overflow-visible`}
-          onClick={() => handleChangeProduct(3)}
+          onClick={() => {
+            handleChangeProduct(3);
+            if (emblaApi) emblaApi.scrollTo(3);
+          }}
         >
           <div className={`${"relative gap-[4.47px]"} p-0 h-full`}>
             <Image
@@ -255,13 +323,14 @@ export default function MenuSection() {
               <Plus className="text-white" />
             </Button>
           </div>
-        </div>
-        <CustomizationModalSection
-          isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
-          productName={selectedProduct ? selectedProduct : ""}
-        />
+        </div> */}
       </section>
+
+      <CustomizationModalSection
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        productName={selectedProduct ? selectedProduct : ""}
+      />
     </>
   );
 }
