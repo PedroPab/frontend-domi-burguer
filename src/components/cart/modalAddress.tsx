@@ -14,15 +14,54 @@ import {
   SelectValue,
 } from "../ui/select";
 import { MapComponent } from "../map/map";
+import { useAddressForm } from "@/hooks/address/useAddressForm";
+import { useAddressSubmit } from "@/hooks/address/useAddressSubmit";
+import { useGooglePlaces } from "@/hooks/useGooglePlaces";
+
+import { Address, PropertyType } from "@/types/address";
+
 
 interface ModalAddressProps {
   isOpen: boolean;
   onClose: () => void;
+  addressCreated?: Address;
+  setAddressCreated?: (value: Address) => void;
 }
 
-const libraries: "places"[] = ["places"];
+export const ModalAddress = ({
+  isOpen,
+  onClose,
+  setAddressCreated,
+}: ModalAddressProps) => {
+  // Hook de formulario
+  const { formState, updateField, resetForm, isFormValid } = useAddressForm();
 
-export const ModalAddress = ({ isOpen, onClose }: ModalAddressProps) => {
+  // Hook de envío
+  const { submitAddress, isSubmitting, error } = useAddressSubmit(
+    (addressData) => {
+      setAddressCreated?.(addressData);
+      onClose();
+      resetForm();
+    },
+    (error) => {
+      console.error('Error al crear dirección:', error);
+    }
+  );
+
+  // Hook de Google Places
+  const { isLoaded, onLoad, onPlaceChanged } = useGooglePlaces((place) => {
+    if (place.geometry?.location && place.formatted_address) {
+      const lat = place.geometry.location.lat();
+      const lng = place.geometry.location.lng();
+      
+      if (typeof lat === 'number' && typeof lng === 'number') {
+        updateField('coordinates', { lat, lng });
+        updateField('address', place.formatted_address);
+      }
+    }
+  });
+
+  // Manejo de navegación del navegador
   useEffect(() => {
     const handlePopState = () => {
       onClose();
@@ -42,34 +81,14 @@ export const ModalAddress = ({ isOpen, onClose }: ModalAddressProps) => {
     };
   }, [isOpen, onClose]);
 
-  const [address, setAddress] = useState("");
-  const [coordinates, setCoordinates] = useState<{
-    lat: number;
-    lng: number;
-  } | null>(null);
-
-  const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
-
-  const { isLoaded } = useLoadScript({
-    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY as string,
-    libraries,
-  });
-
-  const onPlaceChanged = () => {
-    if (!autocompleteRef.current) return;
-    const place = autocompleteRef.current.getPlace();
-
-    if (place.geometry && place.geometry.location) {
-      const lat = place.geometry.location.lat();
-      const lng = place.geometry.location.lng();
-
-      if (typeof lat === "number" && typeof lng === "number") {
-        setCoordinates({ lat, lng });
-        if (place.formatted_address) {
-          setAddress(place.formatted_address);
-        }
-      }
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    
+    if (!isFormValid()) {
+      return;
     }
+    
+    await submitAddress(formState);
   };
 
   return (
@@ -86,107 +105,141 @@ export const ModalAddress = ({ isOpen, onClose }: ModalAddressProps) => {
         }}
         className="flex-col flex p-0 bg-background h-auto rounded-2xl lg:w-[900px] lg:h-[680px] z-600"
       >
-        <DialogTitle className="mb-4 pt-[24px] pl-[20px] lg:pl-[32px] lg:pt-[32px] font-bold text-[18px]! md:text-[20px]! leading-[20px]! md:leading-[22px]! text-neutral-black-80">
-          NUEVA DIRECCIÓN
-        </DialogTitle>
-        <div className="flex flex-col lg:flex-row gap-2 lg:gap-6 h-full">
-          <div className="flex flex-1 flex-col px-[20px] lg:pl-[32px] lg:pr-0">
-            <p className="body-font mb-5">
-              Selecciona los ingredientes que quieres agregar o los que deseas
-              retirar.
-            </p>
-            <div className="flex flex-col gap-2">
-              {isLoaded && (
-                <Autocomplete
-                  onLoad={(autocomplete) =>
-                    (autocompleteRef.current = autocomplete)
-                  }
-                  onPlaceChanged={onPlaceChanged}
-                  fields={[
-                    "geometry",
-                    "name",
-                    "formatted_address",
-                    "address_components",
-                    "types",
-                  ]}
-                  options={{
-                    componentRestrictions: { country: ["CO"] },
-                    strictBounds: true,
-                  }}
-                >
-                  <div className="relative">
-                    <Input
-                      className="shadow-none pr-12"
-                      placeholder="Nueva dirección"
-                      defaultValue={address}
-                      onChange={(e) => setAddress(e.target.value)}
-                    />
-                    <MapPinIcon className="w-[22px] h-[22px] absolute right-5 top-1/2 -translate-y-1/2" />
-                  </div>
-                </Autocomplete>
-              )}
+        <form
+          className="flex-col flex p-0 h-auto lg:w-[900px] lg:h-[680px]"
+          onSubmit={handleSubmit}
+        >
+          <DialogTitle className="mb-4 pt-[24px] pl-[20px] lg:pl-[32px] lg:pt-[32px] font-bold text-[18px]! md:text-[20px]! leading-[20px]! md:leading-[22px]! text-neutral-black-80">
+            NUEVA DIRECCIÓN
+          </DialogTitle>
+          
+          {error && (
+            <div className="mx-[20px] lg:mx-[32px] mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+              {error}
+            </div>
+          )}
 
-              <Input
-                className="shadow-none"
-                placeholder={"Nombre de la ubicación"}
-              />
-              <div className="flex gap-2">
-                <Select>
-                  <SelectTrigger className="text-neutral-black-50! body-font">
-                    <SelectValue placeholder="Tipo" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="op1">Casa</SelectItem>
-                    <SelectItem value="op2">Edificio</SelectItem>
-                    <SelectItem value="op3">Urbanización</SelectItem>
-                    <SelectItem value="op4">Oficina</SelectItem>
-                  </SelectContent>
-                </Select>
+          <div className="flex flex-col lg:flex-row gap-2 lg:gap-6 h-full">
+            <div className="flex flex-1 flex-col px-[20px] lg:pl-[32px] lg:pr-0">
+              <p className="body-font mb-5">
+                Selecciona la ubicación en el mapa y completa los datos de tu dirección.
+              </p>
+              
+              <div className="flex flex-col gap-2">
+                {isLoaded && (
+                  <Autocomplete
+                    onLoad={onLoad}
+                    onPlaceChanged={onPlaceChanged}
+                    fields={[
+                      "geometry",
+                      "name",
+                      "formatted_address",
+                      "address_components",
+                      "types",
+                    ]}
+                    options={{
+                      componentRestrictions: { country: ["CO"] },
+                      strictBounds: true,
+                    }}
+                  >
+                    <div className="relative">
+                      <Input
+                        className="shadow-none pr-12"
+                        placeholder="Nueva dirección"
+                        value={formState.address}
+                        onChange={(e) => updateField('address', e.target.value)}
+                      />
+                      <MapPinIcon className="w-[22px] h-[22px] absolute right-5 top-1/2 -translate-y-1/2" />
+                    </div>
+                  </Autocomplete>
+                )}
 
                 <Input
                   className="shadow-none"
-                  placeholder={"Unidad, piso, apto"}
+                  placeholder="Nombre de la ubicación (ej: Casa, Oficina)"
+                  value={formState.addressName}
+                  onChange={(e) => updateField('addressName', e.target.value)}
+                  id="name"
+                  name="name"
+                  required
                 />
-              </div>
-              <div className="relative w-full">
-                <textarea
-                  placeholder="Alguna referencia?"
-                  maxLength={200}
-                  className="body-font w-full placeholder:text-neutral-black-50 h-[100px] shadow-sm px-5 py-4 rounded-2xl border-[1.5px] border-[#cccccc] resize-none outline-none text-neutrosblack-80"
-                />
-                <span className="absolute bottom-3 right-3 text-gray-400 text-sm pointer-events-none">
-                  0/100
-                </span>
-              </div>
-              <div className="flex items-center justify-between mb-1 lg:mb-6">
-                <label
-                  htmlFor="include-photo"
-                  className="body-font text-[16px]! font-bold"
-                >
-                  Incluir foto de tu ubicación
-                </label>
-                <Switch id="include-photo" />
+
+                <div className="flex gap-2">
+                  <Select 
+                    onValueChange={(value) => updateField('selectedType', value as PropertyType)} 
+                    value={formState.selectedType}
+                  >
+                    <SelectTrigger className="text-neutral-black-50! body-font">
+                      <SelectValue placeholder="Tipo" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="house">Casa</SelectItem>
+                      <SelectItem value="building">Edificio</SelectItem>
+                      <SelectItem value="urbanization">Urbanización</SelectItem>
+                      <SelectItem value="office">Oficina</SelectItem>
+                    </SelectContent>
+                  </Select>
+
+                  <Input
+                    className="shadow-none"
+                    value={formState.floor}
+                    id="floor"
+                    name="floor"
+                    onChange={(e) => updateField('floor', e.target.value)}
+                    placeholder="Unidad, piso, apto"
+                  />
+                </div>
+
+                <div className="relative w-full">
+                  <textarea
+                    placeholder="Alguna referencia?"
+                    value={formState.comment}
+                    onChange={(e) => updateField('comment', e.target.value)}
+                    id="comment"
+                    name="comment"
+                    maxLength={200}
+                    className="body-font w-full placeholder:text-neutral-black-50 h-[100px] shadow-sm px-5 py-4 rounded-2xl border-[1.5px] border-[#cccccc] resize-none outline-none text-neutrosblack-80"
+                  />
+                  <span className="absolute bottom-3 right-3 text-gray-400 text-sm pointer-events-none">
+                    {formState.comment.length}/200
+                  </span>
+                </div>
+
+                <div className="flex items-center justify-between mb-1 lg:mb-6">
+                  <label
+                    htmlFor="include-photo"
+                    className="body-font text-[16px]! font-bold"
+                  >
+                    Incluir foto de tu ubicación
+                  </label>
+                  <Switch id="include-photo" />
+                </div>
               </div>
             </div>
+
+            <div className="flex-1 min-h-[223px] w-full bg-accent-yellow-40">
+              <MapComponent coordinates={formState.coordinates} minHeight="223px" />
+            </div>
           </div>
-          <div className="flex-1 min-h-[223px] w-full bg-accent-yellow-40">
-            <MapComponent
-              coordinates={coordinates}
-              minHeight="223px"
-            />
+
+          <div className="flex pr-[32px] w-full justify-between pl-[20px] pb-[24px] mt-[16px] lg:pl-[32px] lg:pb-[32px] lg:mt-[32px]">
+            <Button
+              type="button"
+              className="text-neutral-black-80 bg-accent-yellow-40 hover:bg-accent-yellow-60 active:bg-accent-yellow-60 rounded-[30px] flex items-center gap-2 text-[16px] w-[200px] h-[48px]"
+              onClick={onClose}
+              disabled={isSubmitting}
+            >
+              CERRAR
+            </Button>
+            <Button 
+              type="submit"
+              className="text-white rounded-[30px] flex items-center gap-2 text-[16px] w-[200px] h-[48px]"
+              disabled={isSubmitting || !isFormValid()}
+            >
+              {isSubmitting ? 'GUARDANDO...' : 'CONFIRMAR'}
+            </Button>
           </div>
-        </div>
-        <div className="flex pr-[32px] w-full justify-between pl-[20px] pb-[24px] mt-[16px] lg:pl-[32px] lg:pb-[32px] lg:mt-[32px]">
-          <Button
-            className="text-neutral-black-80 bg-accent-yellow-40 hover:bg-accent-yellow-60 active:bg-accent-yellow-60 rounded-[30px] flex items-center gap-2 text-[16px] w-[200px] h-[48px]"
-            onClick={onClose}
-          >
-            CERRAR
-          </Button>
-          <Button className="text-white rounded-[30px] flex items-center gap-2 text-[16px] w-[200px] h-[48px]">
-            CONFIRMAR
-          </Button>
-        </div>
+        </form>
       </DialogContent>
     </Dialog>
   );

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { CalendarIcon, PencilIcon, Plus } from "lucide-react";
+import { CalendarIcon, Pencil, PencilIcon, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -21,6 +21,8 @@ import { Separator } from "@/components/ui/separator";
 import { ModalAddress } from "@/components/cart/modalAddress";
 import { Switch } from "@/components/ui/switch";
 import Link from "next/link";
+
+import { Address, createEmptyAddress } from "@/types/address";
 
 export default function Cart() {
   const userDataFields = [
@@ -144,6 +146,10 @@ export default function Cart() {
     setIsModalOpen(true);
   };
 
+  const [addressCreated, setAddressCreated] = useState<Address>(
+    createEmptyAddress()
+  );
+
   return (
     <div className="flex flex-col xl:flex-row w-full items-center xl:justify-around gap-5 mt-[130px] lg:mt-[130px] mb-[100px]">
       <div className="flex flex-col items-center gap-14 pb-20 w-full justify-center max-w-[500px]">
@@ -189,30 +195,34 @@ export default function Cart() {
               <Plus /> AGREGAR DIRECCIÓN
             </Button>
             {/* direccion ya creada */}
-            {/* <Card className="gap-6 p-4 w-full bg-accent-yellow-10 rounded-[12px] shadow-none border-0">
-              <CardContent className="p-0">
-                <div className="flex justify-between gap-6 w-full">
-                  <div className="flex gap-4">
-                    <div className="flex flex-col gap-2">
-                      <h5 className="body-font font-bold">Casa de mamá</h5>
+            {addressCreated.coordinates && addressCreated.country && (
+              <Card className="gap-6 p-5 w-full bg-accent-yellow-10 rounded-[12px] shadow-none border-0">
+                <CardContent className="p-0">
+                  <div className="flex justify-between gap-6 w-full">
+                    <div className="flex gap-4">
+                      <div className="flex flex-col gap-2">
+                        <h5 className="body-font font-bold">
+                          {addressCreated.name}
+                        </h5>
 
-                      <div className="body-font">
-                        Medellín, Antioquia
-                        <br />
-                        Cra 66 # 33 - 77
-                        <br />
-                        Int 6 Apto 606
+                        <div className="body-font flex flex-col gap-1">
+                          <span>
+                            {addressCreated.city}, {addressCreated.country}
+                          </span>
+                          <span>{addressCreated.address}</span>
+                          <span>{addressCreated.floor}</span>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  <div className="flex gap-5">
-                    <h2 className="">$4.400</h2>
+                    <div className="flex gap-5">
+                      <h2 className="">$4.400</h2>
 
-                    <Pencil className="h-[18px] w-[18px] xl:mt-[2px]" />
+                      <Pencil className="h-[18px] w-[18px] xl:mt-[2px]" />
+                    </div>
                   </div>
-                </div>
-              </CardContent>
-            </Card> */}
+                </CardContent>
+              </Card>
+            )}
           </div>
 
           <div className="flex flex-col gap-4 w-full">
@@ -517,6 +527,8 @@ export default function Cart() {
       <ModalAddress
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
+        addressCreated={addressCreated}
+        setAddressCreated={setAddressCreated}
       />
     </div>
   );
