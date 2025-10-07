@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { AddressService } from '@/services/addressService';
 import { AddressFormState } from './useAddressForm';
+import { Address } from '@/types/address';
 
 export const useAddressSubmit = (
-  // onSuccess?: (address: any) => void,
+  onSuccess?: (address: Address) => void,
   onError?: (error: Error) => void
 ) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -40,7 +41,7 @@ export const useAddressSubmit = (
         name: formState.addressName,
       };
 
-      // onSuccess?.(addressData);
+      onSuccess?.(addressData);
       return addressData;
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Error al crear la dirección';
