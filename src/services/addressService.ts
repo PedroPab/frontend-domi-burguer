@@ -38,25 +38,25 @@ export class AddressService {
     }
   }
   
-  static async createDeliveryPrice(addressId: string): Promise<any> {
-    try {
-      const response = await fetch(``, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+  // static async createDeliveryPrice(addressId: string): Promise<any> {
+  //   try {
+  //     const response = await fetch(``, {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //     });
 
-      if (!response.ok) {
-        throw new Error(`Error al crear el precio del domicilio: ${response.statusText}`);
-      }
+  //     if (!response.ok) {
+  //       throw new Error(`Error al crear el precio del domicilio: ${response.statusText}`);
+  //     }
 
-      return await response.json();
-    } catch (error) {
-      console.error('Error en createDeliveryPrice:', error);
-      throw error;
-    }
-  }
+  //     return await response.json();
+  //   } catch (error) {
+  //     console.error('Error en createDeliveryPrice:', error);
+  //     throw error;
+  //   }
+  // }
 
   static parseAddress(fullAddress: string) {
     const parts = fullAddress.split(',').map(part => part.trim());

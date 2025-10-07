@@ -3,7 +3,7 @@ import { AddressService } from '@/services/addressService';
 import { AddressFormState } from './useAddressForm';
 
 export const useAddressSubmit = (
-  onSuccess?: (address: any) => void,
+  // onSuccess?: (address: any) => void,
   onError?: (error: Error) => void
 ) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -40,7 +40,7 @@ export const useAddressSubmit = (
         name: formState.addressName,
       };
 
-      onSuccess?.(addressData);
+      // onSuccess?.(addressData);
       return addressData;
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Error al crear la dirección';
