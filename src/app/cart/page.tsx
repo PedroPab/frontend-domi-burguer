@@ -215,7 +215,15 @@ export default function Cart() {
                       </div>
                     </div>
                     <div className="flex gap-5">
-                      <h2 className="">$4.400</h2>
+                      <div className="flex flex-col">
+                        <h2 className="flex-1">
+                          $
+                          {(addressCreated.deliveryPrice ?? 0).toLocaleString(
+                            "es-CO"
+                          )}
+                        </h2>
+                        <span>{addressCreated.kitchen}</span>
+                      </div>
 
                       <Pencil className="h-[18px] w-[18px] xl:mt-[2px]" />
                     </div>

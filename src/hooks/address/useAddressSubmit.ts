@@ -33,12 +33,15 @@ export const useAddressSubmit = (
       };
 
       const response = await AddressService.createAddress(formData);
-    //   const responseDeliveryPrice = await AddressService.createDeliveryPrice(response.body.id || '');
+      const responseDelivery = await AddressService.createDelivery(response.body.id || '');
+      console.log('Respuesta de createDelivery:', responseDelivery);
 
       const addressData = {
         ...response.body,
         address: street,
         name: formState.addressName,
+        deliveryPrice: responseDelivery.body.delivery.price || 0,
+        kitchen: responseDelivery.body.kitchen.name || '',
       };
 
       onSuccess?.(addressData);

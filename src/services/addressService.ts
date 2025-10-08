@@ -15,11 +15,11 @@ interface AddressResponse {
 }
 
 export class AddressService {
-  private static readonly API_URL = `${process.env.NEXT_PUBLIC_API_URL}api/v2/locations/public`;
+  private static readonly API_URL = `${process.env.NEXT_PUBLIC_API_URL}`;
 
   static async createAddress(data: AddressFormData): Promise<AddressResponse> {
     try {
-      const response = await fetch(this.API_URL, {
+      const response = await fetch(`${this.API_URL}api/v2/locations/public`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -38,25 +38,25 @@ export class AddressService {
     }
   }
   
-  // static async createDeliveryPrice(addressId: string): Promise<any> {
-  //   try {
-  //     const response = await fetch(``, {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //       },
-  //     });
+  static async createDelivery(addressId: string): Promise<any> {
+    try {
+      const response = await fetch(`${this.API_URL}api/v2/kitchens/selectKitchen/location?locationId=${addressId}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
 
-  //     if (!response.ok) {
-  //       throw new Error(`Error al crear el precio del domicilio: ${response.statusText}`);
-  //     }
+      if (!response.ok) {
+        throw new Error(`Error al crear el precio del domicilio: ${response.statusText}`);
+      }
 
-  //     return await response.json();
-  //   } catch (error) {
-  //     console.error('Error en createDeliveryPrice:', error);
-  //     throw error;
-  //   }
-  // }
+      return await response.json();
+    } catch (error) {
+      console.error('Error en createDeliveryPrice:', error);
+      throw error;
+    }
+  }
 
   static parseAddress(fullAddress: string) {
     const parts = fullAddress.split(',').map(part => part.trim());
