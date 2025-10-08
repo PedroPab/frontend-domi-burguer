@@ -34,7 +34,6 @@ export const useAddressSubmit = (
 
       const response = await AddressService.createAddress(formData);
       const responseDelivery = await AddressService.createDelivery(response.body.id || '');
-      console.log('Respuesta de createDelivery:', responseDelivery);
 
       const addressData = {
         ...response.body,
