@@ -38,7 +38,7 @@ export class AddressService {
     }
   }
   
-  static async createDelivery(addressId: string): Promise<any> {
+  static async createDelivery(addressId: string): Promise<AddressResponse> {
     try {
       const response = await fetch(`${this.API_URL}api/v2/kitchens/selectKitchen/location?locationId=${addressId}`, {
         method: 'GET',
