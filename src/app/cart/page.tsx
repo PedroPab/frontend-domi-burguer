@@ -149,6 +149,17 @@ export default function Cart() {
   const [addressCreated, setAddressCreated] = useState<Address>(
     createEmptyAddress()
   );
+  const [addressToEdit, setAddressToEdit] = useState<Address | null>(null);
+
+  const handleEditAddress = () => {
+    setAddressToEdit(addressCreated);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setAddressToEdit(null);
+  };
 
   return (
     <div className="flex flex-col xl:flex-row w-full items-center xl:justify-around gap-5 mt-[130px] lg:mt-[130px] mb-[100px]">
@@ -215,9 +226,20 @@ export default function Cart() {
                       </div>
                     </div>
                     <div className="flex gap-5">
-                      <h2 className="">$4.400</h2>
+                      <div className="flex flex-col">
+                        <h2 className="flex-1">
+                          $
+                          {(addressCreated.deliveryPrice ?? 0).toLocaleString(
+                            "es-CO"
+                          )}
+                        </h2>
+                        <span>{addressCreated.kitchen}</span>
+                      </div>
 
-                      <Pencil className="h-[18px] w-[18px] xl:mt-[2px]" />
+                      <Pencil 
+                        className="h-[18px] w-[18px] xl:mt-[2px] cursor-pointer hover:text-neutral-black-60" 
+                        onClick={handleEditAddress}
+                      />
                     </div>
                   </div>
                 </CardContent>
@@ -526,9 +548,10 @@ export default function Cart() {
       </div>
       <ModalAddress
         isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        onClose={handleCloseModal}
         addressCreated={addressCreated}
         setAddressCreated={setAddressCreated}
+        addressToEdit={addressToEdit}
       />
     </div>
   );

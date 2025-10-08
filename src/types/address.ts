@@ -15,6 +15,9 @@ export interface Address {
   coordinates: Coordinates;
   comment?: string;
   propertyType: PropertyType | '';
+  deliveryPrice?: number;
+  kitchen?: string;
+  fullAddress: string;
 }
 
 // Helper para crear dirección vacía
@@ -28,4 +31,7 @@ export const createEmptyAddress = (): Address => ({
     lat: 0,
   },
   propertyType: "",
+  deliveryPrice: 0,
+  fullAddress: "",
+  kitchen: "",
 });

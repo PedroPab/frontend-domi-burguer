@@ -26,15 +26,26 @@ interface ModalAddressProps {
   onClose: () => void;
   addressCreated?: Address;
   setAddressCreated?: (value: Address) => void;
+  addressToEdit?: Address | null;
 }
 
 export const ModalAddress = ({
   isOpen,
   onClose,
   setAddressCreated,
+  addressToEdit,
 }: ModalAddressProps) => {
-  // Hook de formulario
-  const { formState, updateField, resetForm, isFormValid } = useAddressForm();
+  // Referencias para el input del autocomplete
+  const inputRef = useRef<HTMLInputElement | null>(null);
+  const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
+
+  // Hook de formulario con datos iniciales si está editando
+  const initialData = addressToEdit ? {
+    address: addressToEdit.address,
+    floor: addressToEdit.floor || '',
+  } : undefined;
+
+  const { formState, updateField, resetForm, isFormValid } = useAddressForm(initialData);
 
   // Hook de envío
   const { submitAddress, isSubmitting, error } = useAddressSubmit(
@@ -60,6 +71,18 @@ export const ModalAddress = ({
       }
     }
   });
+
+  // Cargar datos de dirección cuando se abre en modo edición
+  useEffect(() => {
+    if (isOpen && addressToEdit) {
+      updateField('address', addressToEdit.fullAddress);
+      updateField('floor', addressToEdit.floor || '');
+      updateField('comment', addressToEdit.comment || '');
+      updateField('addressName', addressToEdit.name);
+      updateField('coordinates', addressToEdit.coordinates);
+      updateField('selectedType', addressToEdit.propertyType || '');
+    }
+  }, [isOpen, addressToEdit]);
 
   // Manejo de navegación del navegador
   useEffect(() => {
@@ -110,7 +133,7 @@ export const ModalAddress = ({
           onSubmit={handleSubmit}
         >
           <DialogTitle className="mb-4 pt-[24px] pl-[20px] lg:pl-[32px] lg:pt-[32px] font-bold text-[18px]! md:text-[20px]! leading-[20px]! md:leading-[22px]! text-neutral-black-80">
-            NUEVA DIRECCIÓN
+            {addressToEdit ? 'EDITAR DIRECCIÓN' : 'NUEVA DIRECCIÓN'}
           </DialogTitle>
           
           {error && (
