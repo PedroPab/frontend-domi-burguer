@@ -75,7 +75,7 @@ export const ModalAddress = ({
   // Cargar datos de dirección cuando se abre en modo edición
   useEffect(() => {
     if (isOpen && addressToEdit) {
-      updateField('address', addressToEdit.address);
+      updateField('address', addressToEdit.fullAddress);
       updateField('floor', addressToEdit.floor || '');
       updateField('comment', addressToEdit.comment || '');
       updateField('addressName', addressToEdit.name);

@@ -39,6 +39,7 @@ export const useAddressSubmit = (
       const addressData = {
         ...response.body,
         address: street,
+        fullAddress: formState.address,
         name: formState.addressName,
         deliveryPrice: responseDelivery.body.delivery.price || 0,
         kitchen: responseDelivery.body.kitchen.name || '',

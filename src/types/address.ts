@@ -17,6 +17,7 @@ export interface Address {
   propertyType: PropertyType | '';
   deliveryPrice?: number;
   kitchen?: string;
+  fullAddress: string;
 }
 
 // Helper para crear dirección vacía
@@ -31,4 +32,6 @@ export const createEmptyAddress = (): Address => ({
   },
   propertyType: "",
   deliveryPrice: 0,
+  fullAddress: "",
+  kitchen: "",
 });
