@@ -44,6 +44,7 @@ export const useAddressSubmit = (
         kitchen: responseDelivery.body.kitchen.name || '',
       };
 
+      localStorage.setItem('userAddress', JSON.stringify(addressData));
       onSuccess?.(addressData);
       return addressData;
     } catch (err) {

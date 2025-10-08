@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { CalendarIcon, Pencil, PencilIcon, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -150,6 +150,13 @@ export default function Cart() {
     createEmptyAddress()
   );
   const [addressToEdit, setAddressToEdit] = useState<Address | null>(null);
+
+  useEffect(() => {
+    const savedAddress = localStorage.getItem('userAddress');
+    if (savedAddress) {
+      setAddressCreated(JSON.parse(savedAddress));
+    }
+  }, []);
 
   const handleEditAddress = () => {
     setAddressToEdit(addressCreated);
