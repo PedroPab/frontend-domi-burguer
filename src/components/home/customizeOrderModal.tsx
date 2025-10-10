@@ -17,11 +17,12 @@ import {
   TomateIcon,
 } from "../ui/icons";
 import { QuantitySelector } from "../ui/quantitySelector";
+import { LogoProps } from "../ui/icons";
 export interface Complement {
   id: number;
   name?: string;
   quantity: number;
-  icon?: React.FC<any>;
+  icon?: React.FC<LogoProps>;
   price?: string | null;
   type?: "removable" | "special" | "addable";
   additionId?: number; 
