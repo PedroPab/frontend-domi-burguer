@@ -48,27 +48,16 @@ const handleAddableComplement = (
     const newQty = action === 'plus' ? currentQty + 1 : currentQty - 1;
 
     // Manejar complementos de adición
-    if (action === 'plus' && currentQty >= 1 && ingredient.additionId) {
-      const existing = currentComplements.find(c => c.id === ingredient.additionId);
-      if (!existing) {
-        complementsToAdd.push({
-          id: ingredient.additionId,
-          name: `Adición de ${ingredient.name}`,
-          quantity: 1,
-        });
-      }
-    }
-
-    if (action === 'plus' && currentQty >= 2 && ingredient.additionId) {
-      // Incrementar adición existente
+    if (action === 'plus' && currentQty === 1 && ingredient.additionId) {
+      complementsToAdd.push({
+        id: ingredient.additionId,
+        name: `Adición de ${ingredient.name}`,
+        quantity: 1,
+      });
     }
 
     if (action === 'minus' && currentQty === 2 && ingredient.additionId) {
       complementsToRemove.push(ingredient.additionId);
-    }
-
-    if (action === 'minus' && currentQty > 2 && ingredient.additionId) {
-      // Decrementar adición existente
     }
 
     return { newQuantity: newQty, complementsToAdd, complementsToRemove };
@@ -145,7 +134,7 @@ const handleSpecialComplement = (
       if (!hasVegetariano) {
         complementsToAdd.push({
           id: ingredient.minusId,
-          name: 'Vegetariano',
+          name: `Sin ${ingredient.name}`,
           quantity: 1,
         });
       }
@@ -247,7 +236,7 @@ export function useMenu() {
   const [quantity, setQuantity] = useState(1);
 
   useEffect(() => {
-    console.log("Current product complements:", products[actualProduct].complements);
+    console.log("Current product complements:", products);
   }, [products, actualProduct]);
 
   const handleIncrease = () => {
@@ -307,7 +296,7 @@ export function useMenu() {
         // Manejar incremento/decremento de adiciones
         if ((ingredient.type === 'special' || ingredient.type === 'addable') && ingredient.additionId) {
           if (action === 'plus' && ingredient.quantity >= 1) {
-            const hasAddition = updatedComplements.find(c => c.id === ingredient.additionId);
+            const hasAddition = product.complements.find(c => c.id === ingredient.additionId);
             if (hasAddition) {
               updatedComplements = updatedComplements.map((c) =>
                 c.id === ingredient.additionId

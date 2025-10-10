@@ -56,12 +56,14 @@ const ingredientsData: Complement[] = [
     type: "removable",
   },
   {
-    id: 6,
+    id: 666,
     name: "Tocineta",
     price: "+$3.500",
     icon: TocinetaIcon,
     quantity: 1,
-    type: "removable",
+    type: "special",
+    additionId: 6,
+    minusId: 18,
   },
   {
     id: 13,
@@ -80,12 +82,14 @@ const ingredientsData: Complement[] = [
     type: "removable",
   },
   {
-    id: 24,
+    id: 244,
     name: "Queso americano",
     price: "+$2.000",
     icon: QuesoIcon,
     quantity: 1,
-    type: "removable",
+    type: "special",
+    additionId: 5,
+    minusId: 24,
   },
   {
     id: 7,
@@ -111,6 +115,7 @@ export const CustomizationModalSection = ({
   isOpen,
   onClose,
   productName = "BURGER",
+  productId,
   handleChangeComplement,
   complements = [],
 }: CustomizationModalSectionProps) => {
@@ -140,6 +145,19 @@ export const CustomizationModalSection = ({
             return { ...ing, quantity: 1 };
           }
 
+          // Para ingredientes ADDABLE
+          if (ing.type === "addable") {
+            const isComboEspecial = productId === 1;
+            const adicion = complements.find((c) => c.id === ing.additionId);
+            const aditionQty = adicion ? adicion.quantity : 0;
+
+            if (isComboEspecial) {
+              return { ...ing, quantity: 1 + aditionQty };
+            } else {
+              return { ...ing, quantity: aditionQty };
+            }
+          }
+
           // Para ingredientes REMOVABLE
           if (ing.type === "removable") {
             // Buscar complemento "Sin X" (mismo ID del ingrediente)
@@ -159,7 +177,7 @@ export const CustomizationModalSection = ({
         })
       );
     }
-  }, [complements, isOpen]);
+  }, [complements, isOpen, productId]);
 
   // Manejo del botón "atrás" del navegador
   useEffect(() => {
