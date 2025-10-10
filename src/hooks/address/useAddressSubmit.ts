@@ -34,7 +34,7 @@ export const useAddressSubmit = (
 
       const response = await AddressService.createAddress(formData);
       const responseDelivery = await AddressService.createDelivery(response.body.id || '');
-
+      console.log('responseDelivery', responseDelivery);
       const addressData = {
         ...response.body,
         address: street,
@@ -42,6 +42,7 @@ export const useAddressSubmit = (
         name: formState.addressName,
         deliveryPrice: responseDelivery.body.delivery.price || 0,
         kitchen: responseDelivery.body.kitchen.name || '',
+        
       };
 
       localStorage.setItem('userAddress', JSON.stringify(addressData));
