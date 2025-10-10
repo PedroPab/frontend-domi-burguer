@@ -21,17 +21,18 @@ export default function MenuSection() {
     handleIncrease,
     handleDecrease,
     handleChangeProduct,
+    handleChangeComplement,
   } = useMenu();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<string>("");
 
   // Configurar Embla Carousel para el carrusel principal
-  const [emblaRef, emblaApi] = useEmblaCarousel({ 
+  const [emblaRef, emblaApi] = useEmblaCarousel({
     loop: true,
     skipSnaps: false,
     duration: 20,
-    align: 'center'
+    align: "center",
   });
   // Sincronizar el carrusel principal con el producto actual
   useEffect(() => {
@@ -78,8 +79,6 @@ export default function MenuSection() {
     }
     setIsModalOpen(true);
   };
-
-
 
   return (
     <>
@@ -329,7 +328,10 @@ export default function MenuSection() {
       <CustomizationModalSection
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        productName={selectedProduct ? selectedProduct : ""}
+        productName={currentProduct.name}
+        productId={currentProduct.id}
+        handleChangeComplement={handleChangeComplement}
+        complements={currentProduct.complements}
       />
     </>
   );
