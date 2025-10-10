@@ -23,6 +23,7 @@ import { Switch } from "@/components/ui/switch";
 import Link from "next/link";
 
 import { Address, createEmptyAddress } from "@/types/address";
+import { PhoneNumberInput } from "@/components/ui/inputPhone";
 
 export default function Cart() {
   const userDataFields = [
@@ -187,7 +188,13 @@ export default function Cart() {
 
               <div className="flex flex-col lg:flex-row w-full gap-2">
                 <Input className="" placeholder="Correo Electrónico"></Input>
-                <Input className="" placeholder="+57 000 000 00 00"></Input>
+                <PhoneNumberInput
+                  className="pl-2"
+                  id="phone-input"
+                  placeholder="Escribe tu número de teléfono"
+                  // El onChange recibe el valor en formato E.164 (+ código de país)
+                  onChange={() => { console.log("%ceste log se lo dedico a Gemini, que supo hacer el codigo mejor que ChatGPT", "color: green; font-weight: bold;") }}
+                />
               </div>
 
               <div className="relative w-full">
@@ -243,8 +250,8 @@ export default function Cart() {
                         <span>{addressCreated.kitchen}</span>
                       </div>
 
-                      <Pencil 
-                        className="h-[18px] w-[18px] xl:mt-[2px] cursor-pointer hover:text-neutral-black-60" 
+                      <Pencil
+                        className="h-[18px] w-[18px] xl:mt-[2px] cursor-pointer hover:text-neutral-black-60"
                         onClick={handleEditAddress}
                       />
                     </div>
@@ -261,11 +268,10 @@ export default function Cart() {
               {paymentMethods.map((method) => (
                 <label
                   key={method.id}
-                  className={`cursor-pointer inline-flex flex-col items-start justify-center p-3 flex-[0_0_auto] rounded-[8px] transition-colors ${
-                    selectedMethod === method.id
-                      ? "bg-[#F7F7F7]"
-                      : "bg-[#FFFFFF]"
-                  }`}
+                  className={`cursor-pointer inline-flex flex-col items-start justify-center p-3 flex-[0_0_auto] rounded-[8px] transition-colors ${selectedMethod === method.id
+                    ? "bg-[#F7F7F7]"
+                    : "bg-[#FFFFFF]"
+                    }`}
                 >
                   {/* input radio oculto */}
                   <input
@@ -279,11 +285,10 @@ export default function Cart() {
 
                   <div className="inline-flex items-center gap-4">
                     <div
-                      className={`relative w-4 h-4 rounded-[10px] ${
-                        selectedMethod === method.id
-                          ? "bg-neutral-black-80"
-                          : "bg-[#FFFFFF] border-2 border-solid border-[#cccccc]"
-                      }`}
+                      className={`relative w-4 h-4 rounded-[10px] ${selectedMethod === method.id
+                        ? "bg-neutral-black-80"
+                        : "bg-[#FFFFFF] border-2 border-solid border-[#cccccc]"
+                        }`}
                     >
                       {selectedMethod === method.id && (
                         <div className="relative top-[calc(50.00%_-_3px)] left-[calc(50.00%_-_3px)] w-1.5 h-1.5 bg-[#FFFFFF] rounded-[10px]" />
@@ -293,11 +298,10 @@ export default function Cart() {
                       <method.icon className={method.iconClass} />
 
                       <div
-                        className={`w-fit font-normal text-xs text-center leading-[18px] whitespace-nowrap ${
-                          selectedMethod === method.id
-                            ? "text-neutral-black-80"
-                            : "text-neutral-black-50"
-                        }`}
+                        className={`w-fit font-normal text-xs text-center leading-[18px] whitespace-nowrap ${selectedMethod === method.id
+                          ? "text-neutral-black-80"
+                          : "text-neutral-black-50"
+                          }`}
                       >
                         {method.label}
                       </div>
@@ -406,11 +410,10 @@ export default function Cart() {
                             alt="Burger"
                             width={67}
                             height={105}
-                            className={`object-cover absolute  ${
-                              item.image2
-                                ? "left-[5px] top-[-5]"
-                                : "top-[5px] left-[15px]"
-                            }`}
+                            className={`object-cover absolute  ${item.image2
+                              ? "left-[5px] top-[-5]"
+                              : "top-[5px] left-[15px]"
+                              }`}
                           />
 
                           {item.image2 && (
