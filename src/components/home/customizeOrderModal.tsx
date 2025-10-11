@@ -18,22 +18,13 @@ import {
 } from "../ui/icons";
 import { QuantitySelector } from "../ui/quantitySelector";
 import { LogoProps } from "../ui/icons";
-export interface Complement {
-  id: number;
-  name?: string;
-  quantity: number;
-  icon?: React.FC<LogoProps>;
-  price?: string | null;
-  type?: "removable" | "special" | "addable";
-  additionId?: number; 
-  minusId?: number;
-}
+import { Complement } from "@/types/products";
 
 const ingredientsData: Complement[] = [
   {
     id: 4,
     name: "Carne",
-    price: "+$6.000",
+    price: 6000,
     icon: CarneIcon,
     quantity: 1,
     type: "special",
@@ -59,7 +50,7 @@ const ingredientsData: Complement[] = [
   {
     id: 666,
     name: "Tocineta",
-    price: "+$3.500",
+    price: 3500,
     icon: TocinetaIcon,
     quantity: 1,
     type: "special",
@@ -85,7 +76,7 @@ const ingredientsData: Complement[] = [
   {
     id: 244,
     name: "Queso americano",
-    price: "+$2.000",
+    price: 2000,
     icon: QuesoIcon,
     quantity: 1,
     type: "special",
@@ -95,7 +86,7 @@ const ingredientsData: Complement[] = [
   {
     id: 7,
     name: "Papas rizadas",
-    price: "+$6.800",
+    price: 6800,
     icon: FrenchFriesIcon,
     quantity: 0,
     type: "addable",
@@ -258,7 +249,7 @@ export const CustomizationModalSection = ({
                   {ingredient.price && (
                     <span className="text-[#808080]">
                       {" "}
-                      ({ingredient.price})
+                      (+${ingredient.price})
                     </span>
                   )}
                 </div>

@@ -25,13 +25,12 @@ const handleAddableComplement = (
   ingredient: Complement,
   action: 'plus' | 'minus',
   currentComplements: Complement[],
-  productId: number
+  productId: number,
+  newQuantity: number
 ): {
-  newQuantity: number;
   complementsToAdd: Complement[];
   complementsToRemove: number[];
 } => {
-  const currentQty = ingredient.quantity;
   const complementsToAdd: Complement[] = [];
   const complementsToRemove: number[] = [];
 
@@ -40,39 +39,47 @@ const handleAddableComplement = (
 
   if (isComboEspecial) {
     // En Combo Especial: cantidad mínima es 1, no puede bajar a 0
-    if (action === 'minus' && currentQty <= 1) {
-      return { newQuantity: 1, complementsToAdd, complementsToRemove };
+    if (action === 'minus' && newQuantity < 1) {
+      return { complementsToAdd, complementsToRemove };
     }
-
-    // Aumentar o disminuir normalmente (nunca llega a 0)
-    const newQty = action === 'plus' ? currentQty + 1 : currentQty - 1;
 
     // Manejar complementos de adición
-    if (action === 'plus' && currentQty === 1 && ingredient.additionId) {
-      complementsToAdd.push({
-        id: ingredient.additionId,
-        name: `Adición de ${ingredient.name}`,
-        quantity: 1,
-      });
+    if (action === 'plus' && newQuantity > 1 && ingredient.additionId) {
+      const existing = currentComplements.find(c => c.id === ingredient.additionId);
+      if (!existing) {
+        complementsToAdd.push({
+          ...ingredient,
+          id: ingredient.additionId,
+          name: `Adición de ${ingredient.name}`,
+          quantity: 1,
+        });
+      }
     }
 
-    if (action === 'minus' && currentQty === 2 && ingredient.additionId) {
+    if (action === 'plus' && newQuantity > 2 && ingredient.additionId) {
+      // Incrementar adición existente
+    }
+
+    if (action === 'minus' && newQuantity === 1 && ingredient.additionId) {
       complementsToRemove.push(ingredient.additionId);
     }
 
-    return { newQuantity: newQty, complementsToAdd, complementsToRemove };
+    if (action === 'minus' && newQuantity > 1 && ingredient.additionId) {
+      // Decrementar adición existente
+    }
+
+    return { complementsToAdd, complementsToRemove };
   }
 
   // En otros productos (Hamburguesa Artesanal): inicia en 0, se puede agregar
-  if (action === 'minus' && currentQty <= 0) {
-    return { newQuantity: 0, complementsToAdd, complementsToRemove };
+  if (action === 'minus' && newQuantity < 0) {
+    return { complementsToAdd, complementsToRemove };
   }
 
-  const newQty = action === 'plus' ? currentQty + 1 : Math.max(0, currentQty - 1);
-
   // Al pasar de 0 a 1, agregar complemento de adición
-  if (action === 'plus' && currentQty === 0 && ingredient.additionId) {
+  if (action === 'plus' && newQuantity === 1 && ingredient.additionId) {
     complementsToAdd.push({
+      ...ingredient,
       id: ingredient.additionId,
       name: `Adición de ${ingredient.name}`,
       quantity: 1,
@@ -80,20 +87,20 @@ const handleAddableComplement = (
   }
 
   // Al pasar de 1 a 0, quitar complemento de adición
-  if (action === 'minus' && currentQty === 1 && ingredient.additionId) {
+  if (action === 'minus' && newQuantity === 0 && ingredient.additionId) {
     complementsToRemove.push(ingredient.additionId);
   }
 
   // Manejar incrementos/decrementos cuando qty >= 2
-  if (action === 'plus' && currentQty >= 1 && ingredient.additionId) {
+  if (action === 'plus' && newQuantity > 1 && ingredient.additionId) {
     // Se manejará en el reducer principal
   }
 
-  if (action === 'minus' && currentQty > 1 && ingredient.additionId) {
+  if (action === 'minus' && newQuantity > 0 && ingredient.additionId) {
     // Se manejará en el reducer principal
   }
 
-  return { newQuantity: newQty, complementsToAdd, complementsToRemove };
+  return { complementsToAdd, complementsToRemove };
 };
 
 /**
@@ -102,25 +109,23 @@ const handleAddableComplement = (
 const handleSpecialComplement = (
   ingredient: Complement,
   action: 'plus' | 'minus',
-  currentComplements: Complement[]
+  currentComplements: Complement[],
+  newQuantity: number
 ): {
-  newQuantity: number;
   complementsToAdd: Complement[];
   complementsToRemove: number[];
 } => {
-  const currentQty = ingredient.quantity;
-  const newQty = action === 'plus' ? currentQty + 1 : Math.max(0, currentQty - 1);
-
   const complementsToAdd: Complement[] = [];
   const complementsToRemove: number[] = [];
 
   if (action === 'plus') {
-    if (currentQty === 0 && ingredient.minusId) {
+    if (newQuantity === 1 && ingredient.minusId) {
       complementsToRemove.push(ingredient.minusId);
     }
     
-    if (currentQty === 1 && ingredient.additionId) {
+    if (newQuantity === 2 && ingredient.additionId) {
       complementsToAdd.push({
+        ...ingredient,
         id: ingredient.additionId,
         name: `Adición de ${ingredient.name}`,
         quantity: 1,
@@ -129,72 +134,74 @@ const handleSpecialComplement = (
   }
   
   if (action === 'minus') {
-    if (currentQty === 1 && ingredient.minusId) {
+    if (newQuantity === 0 && ingredient.minusId) {
       const hasVegetariano = currentComplements.some(c => c.id === ingredient.minusId);
       if (!hasVegetariano) {
         complementsToAdd.push({
+            ...ingredient,
           id: ingredient.minusId,
-          name: `Sin ${ingredient.name}`,
+          name: 'Vegetariano',
           quantity: 1,
+          price: 0,
         });
       }
     }
     
-    if (currentQty === 2 && ingredient.additionId) {
+    if (newQuantity === 1 && ingredient.additionId) {
       complementsToRemove.push(ingredient.additionId);
     }
   }
 
-  return { newQuantity: newQty, complementsToAdd, complementsToRemove };
+  return { complementsToAdd, complementsToRemove };
 };
 
 /**
  * Maneja la lógica de complementos REMOVABLE (ej: Lechuga)
- * Usa el mismo ID del ingrediente para el complemento "Sin X"
  */
 const handleRemovableComplement = (
   ingredient: Complement,
   action: 'plus' | 'minus',
-  currentComplements: Complement[]
+  currentComplements: Complement[],
+  newQuantity: number
 ): {
-  newQuantity: number;
   complementsToAdd: Complement[];
   complementsToRemove: number[];
 } => {
-  const currentQty = ingredient.quantity;
   const complementsToAdd: Complement[] = [];
   const complementsToRemove: number[] = [];
 
   // Si intenta aumentar más de 1, no hacer nada
-  if (action === 'plus' && currentQty >= 1) {
-    return { newQuantity: currentQty, complementsToAdd, complementsToRemove };
+  if (action === 'plus' && newQuantity > 1) {
+    return { complementsToAdd, complementsToRemove };
   }
 
   // Si aumenta de 0 a 1, quitar "sin [ingrediente]"
-  if (action === 'plus' && currentQty === 0) {
+  if (action === 'plus' && newQuantity === 1) {
     complementsToRemove.push(ingredient.id);
-    return { newQuantity: 1, complementsToAdd, complementsToRemove };
+    return { complementsToAdd, complementsToRemove };
   }
 
   // Si disminuye de 1 a 0, agregar "sin [ingrediente]"
-  if (action === 'minus' && currentQty === 1) {
+  if (action === 'minus' && newQuantity === 0) {
     const hasRemoval = currentComplements.some((c) => c.id === ingredient.id);
     if (!hasRemoval) {
       complementsToAdd.push({
+        ...ingredient,
         id: ingredient.id,
         name: `Sin ${ingredient.name}`,
         quantity: 1,
+        price: 0,
       });
     }
-    return { newQuantity: 0, complementsToAdd, complementsToRemove };
+    return { complementsToAdd, complementsToRemove };
   }
 
   // Si intenta disminuir más de 0, no hacer nada
-  if (action === 'minus' && currentQty <= 0) {
-    return { newQuantity: 0, complementsToAdd, complementsToRemove };
+  if (action === 'minus' && newQuantity < 0) {
+    return { complementsToAdd, complementsToRemove };
   }
 
-  return { newQuantity: currentQty, complementsToAdd, complementsToRemove };
+  return { complementsToAdd, complementsToRemove };
 };
 
 // ============================================
@@ -208,8 +215,10 @@ export function useMenu() {
       name: "HAMBURGUESA ARTESANAL",
       price: 18900,
       body: "Pan brioche dorado, carne jugosa, tocineta crocante, lechuga fresca, tomate y el toque de nuestra salsa secreta.",
-      image: "/burgerBig.png",
+      bigImage: "/burgerBig.png",
+      image1: "/burgerSmall.png",
       icons: [CarneIcon, TomateIcon, QuesoIcon, TocinetaIcon],
+      quantity: 1,
       complements: [],
     },
     {
@@ -217,8 +226,11 @@ export function useMenu() {
       name: "COMBO ESPECIAL",
       price: 22900,
       body: "Nuestra hamburguesa estrella, acompañada de papas rizadas doradas, crocantes y listas para el dip.",
-      image: "/comboEspecial.png",
+      bigImage: "/comboEspecial.png",
+      image1: "/burgerSmall.png",
+      image2: "/papitasSmall.png",
       icons: [HamburgerIcon, FrenchFriesIcon],
+      quantity: 1,
       complements: [],
     },
     {
@@ -226,25 +238,38 @@ export function useMenu() {
       name: "SALSA DE AJO",
       price: 25000,
       body: "Cremosa, intensa y perfectamente balanceada, nuestra receta familiar de salsa de ajo. Es el secreto que se queda en tu memoria.",
-      image: "/salsaAjo.png",
+      bigImage: "/salsaAjo.png",
+      image1: "/salsaSmall.png",
       icons: [HuevoIcon, AjoIcon],
+      quantity: 1,
       complements: [],
     },
   ]);
 
   const [actualProduct, setActualProduct] = useState(0);
-  const [quantity, setQuantity] = useState(1);
 
   useEffect(() => {
-    console.log("Current product complements:", products);
+    console.log("Current product complements:", products[actualProduct].complements);
   }, [products, actualProduct]);
 
-  const handleIncrease = () => {
-    setQuantity((prev) => prev + 1);
+    const handleIncrease = () => {
+    setProducts((prev) =>
+      prev.map((product, index) =>
+        index === actualProduct
+          ? { ...product, quantity: product.quantity + 1 }
+          : product
+      )
+    );
   };
 
   const handleDecrease = () => {
-    setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
+    setProducts((prev) =>
+      prev.map((product, index) =>
+        index === actualProduct
+          ? { ...product, quantity: Math.max(1, product.quantity - 1) }
+          : product
+      )
+    );
   };
 
   const handleChangeProduct = (index: number) => {
@@ -258,6 +283,8 @@ export function useMenu() {
     ingredient: Complement,
     action: 'plus' | 'minus'
   ) => {
+    const newQuantity = action === 'plus' ? ingredient.quantity + 1 : ingredient.quantity - 1;
+
     setProducts((prev) =>
       prev.map((product, index) => {
         if (index !== actualProduct) return product;
@@ -265,14 +292,14 @@ export function useMenu() {
         let result;
         
         if (ingredient.type === 'special') {
-          result = handleSpecialComplement(ingredient, action, product.complements);
+          result = handleSpecialComplement(ingredient, action, product.complements, newQuantity);
         } else if (ingredient.type === 'addable') {
-          result = handleAddableComplement(ingredient, action, product.complements, product.id);
+          result = handleAddableComplement(ingredient, action, product.complements, product.id, newQuantity);
         } else {
-          result = handleRemovableComplement(ingredient, action, product.complements);
+          result = handleRemovableComplement(ingredient, action, product.complements, newQuantity);
         }
 
-        const { newQuantity, complementsToAdd, complementsToRemove } = result;
+        const { complementsToAdd, complementsToRemove } = result;
 
         let updatedComplements = [...product.complements];
 
@@ -296,7 +323,7 @@ export function useMenu() {
         // Manejar incremento/decremento de adiciones
         if ((ingredient.type === 'special' || ingredient.type === 'addable') && ingredient.additionId) {
           if (action === 'plus' && ingredient.quantity >= 1) {
-            const hasAddition = product.complements.find(c => c.id === ingredient.additionId);
+            const hasAddition = updatedComplements.find(c => c.id === ingredient.additionId);
             if (hasAddition) {
               updatedComplements = updatedComplements.map((c) =>
                 c.id === ingredient.additionId
@@ -341,7 +368,6 @@ export function useMenu() {
     products,
     actualProduct,
     currentProduct,
-    quantity,
     handleIncrease,
     handleDecrease,
     handleChangeProduct,
