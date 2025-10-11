@@ -25,6 +25,7 @@ import Link from "next/link";
 import { Address, createEmptyAddress } from "@/types/address";
 import { useCartStore } from "@/store/cartStore";
 import { useIsMounted } from "@/hooks/useIsMounted";
+import { PhoneNumberInput } from "@/components/ui/inputPhone";
 
 export default function Cart() {
   const formatCurrency = (value: number): string => {
@@ -198,7 +199,18 @@ export default function Cart() {
 
               <div className="flex flex-col lg:flex-row w-full gap-2">
                 <Input className="" placeholder="Correo Electrónico"></Input>
-                <Input className="" placeholder="+57 000 000 00 00"></Input>
+                <PhoneNumberInput
+                  className="pl-2"
+                  id="phone-input"
+                  placeholder="Escribe tu número de teléfono"
+                  // El onChange recibe el valor en formato E.164 (+ código de país)
+                  onChange={() => {
+                    console.log(
+                      "%ceste log se lo dedico a Gemini, que supo hacer el codigo mejor que ChatGPT",
+                      "color: green; font-weight: bold;"
+                    );
+                  }}
+                />
               </div>
 
               <div className="relative w-full">
