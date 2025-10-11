@@ -11,13 +11,13 @@ import { QuantitySelector } from "@/components/ui/quantitySelector";
 import { showFoodToast } from "../toastFood";
 import Link from "next/link";
 import useEmblaCarousel from "embla-carousel-react";
+import { useAddToCart } from "@/hooks/cart/useAddToCart";
 
 export default function MenuSection() {
   const {
     products,
     actualProduct,
     currentProduct,
-    quantity,
     handleIncrease,
     handleDecrease,
     handleChangeProduct,
@@ -26,6 +26,7 @@ export default function MenuSection() {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<string>("");
+  const { handleAddToCart } = useAddToCart();
 
   // Configurar Embla Carousel para el carrusel principal
   const [emblaRef, emblaApi] = useEmblaCarousel({
@@ -96,7 +97,7 @@ export default function MenuSection() {
                 >
                   <div className="w-full aspect-[1/1] relative">
                     <Image
-                      src={product.image}
+                      src={product.bigImage}
                       alt={product.name}
                       fill
                       className="object-contain"
@@ -164,7 +165,7 @@ export default function MenuSection() {
 
           <div className="flex w-full max-w-[720px] items-center justify-center gap-6">
             <QuantitySelector
-              value={quantity}
+              value={currentProduct.quantity}
               onIncrease={handleIncrease}
               onDecrease={handleDecrease}
               size="lg"
@@ -186,7 +187,10 @@ export default function MenuSection() {
             <Button
               variant="ghost"
               className="bg-accent-yellow-40 hover:bg-accent-yellow-60 active:bg-accent-yellow-60 rounded-[30px] flex items-center gap-2 text-[16px] w-[199px] h-[48px] transition-all hover:scale-105 active:scale-95"
-              onClick={() => showFoodToast(currentProduct.name)}
+              onClick={() => {
+                handleAddToCart(currentProduct);
+                showFoodToast(currentProduct.name);
+              }}
             >
               AÑADIR AL CARRITO
             </Button>

@@ -23,9 +23,17 @@ import { Switch } from "@/components/ui/switch";
 import Link from "next/link";
 
 import { Address, createEmptyAddress } from "@/types/address";
+import { useCartStore } from "@/store/cartStore";
+import { useIsMounted } from "@/hooks/useIsMounted";
 import { PhoneNumberInput } from "@/components/ui/inputPhone";
 
 export default function Cart() {
+  const formatCurrency = (value: number): string => {
+    return value.toLocaleString("es-CO");
+  };
+
+  const isMounted = useIsMounted();
+
   const userDataFields = [
     {
       value: "Pepito Mendieta",
@@ -67,6 +75,9 @@ export default function Cart() {
       selected: false,
     },
   ];
+
+  const { addItem, items, getSubtotal, getTotal, getDeliveryFee } =
+    useCartStore();
 
   const orderItems = [
     // {
@@ -153,7 +164,7 @@ export default function Cart() {
   const [addressToEdit, setAddressToEdit] = useState<Address | null>(null);
 
   useEffect(() => {
-    const savedAddress = localStorage.getItem('userAddress');
+    const savedAddress = localStorage.getItem("userAddress");
     if (savedAddress) {
       setAddressCreated(JSON.parse(savedAddress));
     }
@@ -170,8 +181,8 @@ export default function Cart() {
   };
 
   return (
-    <div className="flex flex-col xl:flex-row w-full items-center xl:justify-around gap-5 mt-[130px] lg:mt-[130px] mb-[100px]">
-      <div className="flex flex-col items-center gap-14 pb-20 w-full justify-center max-w-[500px]">
+    <div className="flex flex-col xl:flex-row w-full xl:justify-around items-center xl:items-start gap-5 mt-[130px] lg:mt-[130px] mb-[100px]">
+      <div className="flex flex-col gap-14 pb-20 w-full lg:mt-4 max-w-[500px]">
         <div className="flex flex-col gap-6 w-full">
           <div className="inline-flex gap-4 flex-col">
             <h2 className="items-start">INFORMACIÓN DE PAGO</h2>
@@ -187,13 +198,18 @@ export default function Cart() {
               <Input className="" placeholder="Nombres y Apellidos"></Input>
 
               <div className="flex flex-col lg:flex-row w-full gap-2">
-                <Input className="" placeholder="Correo Electrónico"></Input>
+                <Input className="w-full" placeholder="Correo Electrónico"></Input>
                 <PhoneNumberInput
-                  className="pl-2"
+                  className="pl-2 w-full"
                   id="phone-input"
                   placeholder="Escribe tu número de teléfono"
                   // El onChange recibe el valor en formato E.164 (+ código de país)
-                  onChange={() => { console.log("%ceste log se lo dedico a Gemini, que supo hacer el codigo mejor que ChatGPT", "color: green; font-weight: bold;") }}
+                  onChange={() => {
+                    console.log(
+                      "%ceste log se lo dedico a Gemini, que supo hacer el codigo mejor que ChatGPT",
+                      "color: green; font-weight: bold;"
+                    );
+                  }}
                 />
               </div>
 
@@ -268,10 +284,11 @@ export default function Cart() {
               {paymentMethods.map((method) => (
                 <label
                   key={method.id}
-                  className={`cursor-pointer inline-flex flex-col items-start justify-center p-3 flex-[0_0_auto] rounded-[8px] transition-colors ${selectedMethod === method.id
-                    ? "bg-[#F7F7F7]"
-                    : "bg-[#FFFFFF]"
-                    }`}
+                  className={`cursor-pointer inline-flex flex-col items-start justify-center p-3 flex-[0_0_auto] rounded-[8px] transition-colors ${
+                    selectedMethod === method.id
+                      ? "bg-[#F7F7F7]"
+                      : "bg-[#FFFFFF]"
+                  }`}
                 >
                   {/* input radio oculto */}
                   <input
@@ -285,10 +302,11 @@ export default function Cart() {
 
                   <div className="inline-flex items-center gap-4">
                     <div
-                      className={`relative w-4 h-4 rounded-[10px] ${selectedMethod === method.id
-                        ? "bg-neutral-black-80"
-                        : "bg-[#FFFFFF] border-2 border-solid border-[#cccccc]"
-                        }`}
+                      className={`relative w-4 h-4 rounded-[10px] ${
+                        selectedMethod === method.id
+                          ? "bg-neutral-black-80"
+                          : "bg-[#FFFFFF] border-2 border-solid border-[#cccccc]"
+                      }`}
                     >
                       {selectedMethod === method.id && (
                         <div className="relative top-[calc(50.00%_-_3px)] left-[calc(50.00%_-_3px)] w-1.5 h-1.5 bg-[#FFFFFF] rounded-[10px]" />
@@ -298,10 +316,11 @@ export default function Cart() {
                       <method.icon className={method.iconClass} />
 
                       <div
-                        className={`w-fit font-normal text-xs text-center leading-[18px] whitespace-nowrap ${selectedMethod === method.id
-                          ? "text-neutral-black-80"
-                          : "text-neutral-black-50"
-                          }`}
+                        className={`w-fit font-normal text-xs text-center leading-[18px] whitespace-nowrap ${
+                          selectedMethod === method.id
+                            ? "text-neutral-black-80"
+                            : "text-neutral-black-50"
+                        }`}
                       >
                         {method.label}
                       </div>
@@ -370,8 +389,8 @@ export default function Cart() {
         </div>
       </div>
 
-      <div className="flex flex-col items-start gap-8 max-w-[500px]">
-        <Card className="flex-col shadow-none bg-transparent! rounded-2xl flex items-start w-full border-0">
+      <div className="flex flex-col gap-8 max-w-[500px] justify-center w-full h-full">
+        <Card className="flex-col shadow-none bg-transparent! rounded-2xl flex h-full w-full border-0">
           <SpikesIcon className="w-full" />
           <CardContent className="p-0 w-full">
             <div className="px-6 py-2 bg-accent-yellow-10 flex flex-col items-start gap-8 w-full">
@@ -398,7 +417,7 @@ export default function Cart() {
 
               <div className="flex flex-col items-start gap-8 w-full">
                 <div className="flex flex-col items-start gap-4 w-full">
-                  {orderItems.map((item) => (
+                  {items.map((item) => (
                     <Card
                       key={item.id}
                       className="flex w-full h-28 items-start gap-4 pl-2 pr-4 py-2 bg-[#FFFFFF] rounded-[12px] overflow-hidden border-0"
@@ -410,10 +429,15 @@ export default function Cart() {
                             alt="Burger"
                             width={67}
                             height={105}
-                            className={`object-cover absolute  ${item.image2
-                              ? "left-[5px] top-[-5]"
-                              : "top-[5px] left-[15px]"
-                              }`}
+                            className={
+                              item.name.toLowerCase().includes("salsa")
+                                ? "absolute top-[5px] left-[3px] w-[118px] h-[85px] object-cover overflow-visible"
+                                : `object-cover absolute ${
+                                    item.image2
+                                      ? "left-[5px] top-[-5px]"
+                                      : "top-[-5px] left-[15px]"
+                                  }`
+                            }
                           />
 
                           {item.image2 && (
@@ -461,7 +485,9 @@ export default function Cart() {
                           )} */}
 
                           <div className="flex h-8 items-center justify-between w-full rounded-[50px]">
-                            <h4 className="">{item.price}</h4>
+                            <h4 className="">
+                              ${item.price.toLocaleString("es-CO")}
+                            </h4>
 
                             <QuantitySelector
                               size="sm"
@@ -522,7 +548,9 @@ export default function Cart() {
                     <div className="flex items-start gap-10 w-full">
                       <p className="flex-1 mt-[-0.93px] body-font">Subtotal</p>
 
-                      <p className="w-fit mt-[-0.93px] body-font">$ 36.800</p>
+                      <p className="w-fit mt-[-0.93px] body-font">
+                        ${isMounted ? formatCurrency(getSubtotal()) : "0"}
+                      </p>
                     </div>
 
                     <div className="flex items-start gap-10 w-full">
@@ -530,7 +558,9 @@ export default function Cart() {
                         Envío
                       </div>
 
-                      <p className="w-fit body-font font-bold">4.400</p>
+                      <p className="w-fit body-font font-bold">
+                        ${isMounted ? formatCurrency(getDeliveryFee()) : "0"}
+                      </p>
                     </div>
 
                     <Separator orientation="horizontal" />
@@ -538,7 +568,9 @@ export default function Cart() {
                     <div className="flex items-center gap-10 w-full">
                       <p className="flex-1 body-font font-bold">Total</p>
 
-                      <h2 className="w-fit mt-[-0.93px]">$36.800</h2>
+                      <h2 className="w-fit mt-[-0.93px]">
+                        ${isMounted ? formatCurrency(getTotal()) : "0"}
+                      </h2>
                     </div>
                   </div>
                 </div>

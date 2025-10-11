@@ -5,7 +5,7 @@ export interface Complement {
   name?: string;
   quantity: number;
   icon?: React.FC<LogoProps>;
-  price?: string | null;
+  price?: number | null;
   type?: "removable" | "special" | "addable";
   additionId?: number; 
   minusId?: number;
@@ -16,7 +16,10 @@ export type Product = {
   name: string;
   price: number;
   body: string;
-  image: string;
+  bigImage: string;
+  image1: string;
+  image2?: string | null;
+  quantity: number;
   icons: React.FC<LogoProps>[];
   complements: Complement[];
 };
