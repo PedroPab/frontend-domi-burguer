@@ -198,9 +198,9 @@ export default function Cart() {
               <Input className="" placeholder="Nombres y Apellidos"></Input>
 
               <div className="flex flex-col lg:flex-row w-full gap-2">
-                <Input className="" placeholder="Correo Electrónico"></Input>
+                <Input className="w-full" placeholder="Correo Electrónico"></Input>
                 <PhoneNumberInput
-                  className="pl-2"
+                  className="pl-2 w-full"
                   id="phone-input"
                   placeholder="Escribe tu número de teléfono"
                   // El onChange recibe el valor en formato E.164 (+ código de país)
