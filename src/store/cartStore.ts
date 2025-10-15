@@ -8,7 +8,7 @@ export interface CartItem {
   productId: number;
   name: string;
   price: number; // Precio total incluyendo complementos
-  basePrice: number;
+  basePrice: number; // Precio base sin complementos
   quantity: number;
   image1: string;
   image2?: string | null; 
@@ -82,7 +82,6 @@ export const useCartStore = create<CartStore>()(
 
       getSubtotal: () => {
         const subtotal = get().items.reduce((sum, item) => {
-          // price ya incluye complementos, solo multiplicar por cantidad
           return sum + (item.price * item.quantity);
         }, 0);
         

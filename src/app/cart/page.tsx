@@ -75,58 +75,24 @@ export default function Cart() {
       selected: false,
     },
   ];
+  // const benefits = [
+  //   {
+  //     icon: "/cupon.svg",
+  //     text: "Cupones de descuento y sorpresas especiales solo para miembros.",
+  //   },
+  //   {
+  //     icon: "/burger.svg",
+  //     text: "Acceso más rápido a tus pedidos favoritos.",
+  //   },
+  //   {
+  //     icon: "/map-pin.svg",
+  //     text: "Seguimiento y soporte personalizado.",
+  //   },
+  // ];
 
-  const { addItem, items, getSubtotal, getTotal, getDeliveryFee } =
+  const { addItem, items, getSubtotal, getTotal, getDeliveryFee, updateQuantity, address: addressStore } =
     useCartStore();
 
-  const orderItems = [
-    // {
-    //   id: 1,
-    //   name: "COMBO ESPECIAL",
-    //   price: "$29.900",
-    //   quantity: "01",
-    //   image1: "/burger-1-2.png",
-    //   image2: "/domiburger-papitas-3.png",
-    //   modifications: [
-    //     { icon: "/pickles.svg", text: "0 Pepinillos" },
-    //     { icon: "/lechuga.svg", text: "0 lechuga" },
-    //     { icon: "/carne.svg", text: "2 Carne (+$6.000)" },
-    //   ],
-    // },
-    {
-      id: 2,
-      name: "COMBO ESPECIAL",
-      price: "$29.900",
-      quantity: "01",
-      image1: "/burgerSmall.png",
-      image2: "/papitasSmall.png",
-      modifications: [{ icon: "/carne.svg", text: "2 Carne (+$6.000)" }],
-    },
-    {
-      id: 4,
-      name: "PORCIÓN PAPITAS RIZADAS",
-      price: "$6.900",
-      quantity: "01",
-      image1: "/papitasSmall.png",
-      image2: null,
-      modifications: [],
-    },
-  ];
-
-  const benefits = [
-    {
-      icon: "/cupon.svg",
-      text: "Cupones de descuento y sorpresas especiales solo para miembros.",
-    },
-    {
-      icon: "/burger.svg",
-      text: "Acceso más rápido a tus pedidos favoritos.",
-    },
-    {
-      icon: "/map-pin.svg",
-      text: "Seguimiento y soporte personalizado.",
-    },
-  ];
 
   const [selectedMethod, setSelectedMethod] = useState("efectivo"); // valor inicial
 
@@ -136,14 +102,13 @@ export default function Cart() {
 
   const [quantity, setQuantity] = useState(1);
 
-  //Funciones para aumentar
-  const handleIncrease = () => {
-    setQuantity((prev) => prev + 1);
+  const handleIncrease = (id: string, quantity: number) => {
+    updateQuantity(id, quantity + 1);
   };
 
   //Funciones para disminuir
-  const handleDecrease = () => {
-    setQuantity((prev) => (prev > 1 ? prev - 1 : 1)); // evita bajar de 1
+  const handleDecrease = (id: string, quantity: number) => {
+    updateQuantity(id, quantity - 1);
   };
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -158,20 +123,10 @@ export default function Cart() {
     setIsModalOpen(true);
   };
 
-  const [addressCreated, setAddressCreated] = useState<Address>(
-    createEmptyAddress()
-  );
-  const [addressToEdit, setAddressToEdit] = useState<Address | null>(null);
-
-  useEffect(() => {
-    const savedAddress = localStorage.getItem("userAddress");
-    if (savedAddress) {
-      setAddressCreated(JSON.parse(savedAddress));
-    }
-  }, []);
+  const [addressToEdit, setAddressToEdit] = useState<Address | null>(addressStore);
 
   const handleEditAddress = () => {
-    setAddressToEdit(addressCreated);
+    setAddressToEdit(addressStore);
     setIsModalOpen(true);
   };
 
@@ -179,6 +134,11 @@ export default function Cart() {
     setIsModalOpen(false);
     setAddressToEdit(null);
   };
+
+  useEffect(() => {
+    console.log("Items en el carrito:", items);
+  }, [items]);
+
 
   return (
     <div className="flex flex-col xl:flex-row w-full xl:justify-around items-center xl:items-start gap-5 mt-[130px] lg:mt-[130px] mb-[100px]">
@@ -236,22 +196,22 @@ export default function Cart() {
               <Plus /> AGREGAR DIRECCIÓN
             </Button>
             {/* direccion ya creada */}
-            {addressCreated.coordinates && addressCreated.country && (
+            {addressStore?.coordinates && addressStore?.country && (
               <Card className="gap-6 p-5 w-full bg-accent-yellow-10 rounded-[12px] shadow-none border-0">
                 <CardContent className="p-0">
                   <div className="flex justify-between gap-6 w-full">
                     <div className="flex gap-4">
                       <div className="flex flex-col gap-2">
                         <h5 className="body-font font-bold">
-                          {addressCreated.name}
+                          {addressStore.name}
                         </h5>
 
                         <div className="body-font flex flex-col gap-1">
                           <span>
-                            {addressCreated.city}, {addressCreated.country}
+                            {addressStore.city}, {addressStore.country}
                           </span>
-                          <span>{addressCreated.address}</span>
-                          <span>{addressCreated.floor}</span>
+                          <span>{addressStore.address}</span>
+                          <span>{addressStore.floor}</span>
                         </div>
                       </div>
                     </div>
@@ -259,11 +219,11 @@ export default function Cart() {
                       <div className="flex flex-col">
                         <h2 className="flex-1">
                           $
-                          {(addressCreated.deliveryPrice ?? 0).toLocaleString(
+                          {(addressStore.deliveryPrice ?? 0).toLocaleString(
                             "es-CO"
                           )}
                         </h2>
-                        <span>{addressCreated.kitchen}</span>
+                        <span>{addressStore.kitchen}</span>
                       </div>
 
                       <Pencil
@@ -331,12 +291,12 @@ export default function Cart() {
             </div>
           </div>
 
-          <div className="flex items-center justify-between w-full my-1">
+          {/* <div className="flex items-center justify-between w-full my-1">
             <label htmlFor="include-photo" className="body-font font-bold">
               Guardar datos para una próxima compra
             </label>
             <Switch id="include-photo" />
-          </div>
+          </div> */}
 
           <Card className="flex flex-col items-start h-[209px] p-6 w-full bg-neutral-black-30 rounded-[12px] border-0">
             <CardContent className="p-0 w-full">
@@ -486,14 +446,14 @@ export default function Cart() {
 
                           <div className="flex h-8 items-center justify-between w-full rounded-[50px]">
                             <h4 className="">
-                              ${item.price.toLocaleString("es-CO")}
+                              ${item.price.toLocaleString("es-CO")} X {item.quantity}
                             </h4>
 
                             <QuantitySelector
                               size="sm"
-                              value={quantity}
-                              onDecrease={handleDecrease}
-                              onIncrease={handleIncrease}
+                              value={item.quantity}
+                              onDecrease={() => handleDecrease(item.id, item.quantity)}
+                              onIncrease={() => handleIncrease(item.id, item.quantity)}
                             />
                           </div>
                         </div>
@@ -591,8 +551,6 @@ export default function Cart() {
       <ModalAddress
         isOpen={isModalOpen}
         onClose={handleCloseModal}
-        addressCreated={addressCreated}
-        setAddressCreated={setAddressCreated}
         addressToEdit={addressToEdit}
       />
     </div>

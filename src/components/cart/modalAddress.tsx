@@ -17,6 +17,7 @@ import { MapComponent } from "../map/map";
 import { useAddressForm } from "@/hooks/address/useAddressForm";
 import { useAddressSubmit } from "@/hooks/address/useAddressSubmit";
 import { useGooglePlaces } from "@/hooks/useGooglePlaces";
+import { useCartStore } from "@/store/cartStore";
 
 import { Address, PropertyType } from "@/types/address";
 
@@ -24,17 +25,15 @@ import { Address, PropertyType } from "@/types/address";
 interface ModalAddressProps {
   isOpen: boolean;
   onClose: () => void;
-  addressCreated?: Address;
-  setAddressCreated?: (value: Address) => void;
   addressToEdit?: Address | null;
 }
 
 export const ModalAddress = ({
   isOpen,
   onClose,
-  setAddressCreated,
   addressToEdit,
 }: ModalAddressProps) => {
+  const { setAddress } = useCartStore();
   // Referencias para el input del autocomplete
   const inputRef = useRef<HTMLInputElement | null>(null);
   const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
@@ -50,7 +49,7 @@ export const ModalAddress = ({
   // Hook de envío
   const { submitAddress, isSubmitting, error } = useAddressSubmit(
     (addressData) => {
-      setAddressCreated?.(addressData);
+      setAddress(addressData);
       onClose();
       resetForm();
     },
