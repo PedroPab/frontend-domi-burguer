@@ -394,7 +394,7 @@ export default function Cart() {
                       className="flex w-full h-28 items-start gap-4 pl-2 pr-4 py-2 bg-[#FFFFFF] rounded-[12px] overflow-hidden border-0"
                     >
                       <CardContent className="p-0 flex w-full gap-4">
-                        <div className="w-24 h-24 bg-accent-yellow-40 rounded-[7.66px] relative">
+                        <div className="w-24 h-24 min-w-24 bg-accent-yellow-40 rounded-[7.66px] relative">
                           <Image
                             src={item.image1}
                             alt="Burger"
@@ -422,7 +422,7 @@ export default function Cart() {
                           )}
                         </div>
 
-                        <div className="justify-center gap-3 pt-1 pb-0 px-0 flex-1 grow flex flex-col items-start self-stretch">
+                        <div className="justify-center max-w-[316px] gap-3 pt-1 pb-0 px-0 flex-1 grow flex flex-col items-start self-stretch">
                           <div className="flex gap-3 self-stretch w-full rounded-[80.62px] flex-col items-start">
                             <div className="gap-3 self-stretch w-full flex items-center">
                               <div className="flex-1 font-h4">{item.name}</div>
@@ -431,7 +431,7 @@ export default function Cart() {
                             </div>
                           </div>
 
-                          <Complements complements={item.complements} />
+                          <Complements complements={item.complements} maxVisible={6}/>
 
                           <div className="flex h-8 items-center justify-between w-full rounded-[50px]">
                             <h4 className="">
