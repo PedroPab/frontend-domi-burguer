@@ -322,7 +322,7 @@ export function useMenu() {
 
         // Manejar incremento/decremento de adiciones
         if ((ingredient.type === 'special' || ingredient.type === 'addable') && ingredient.additionId) {
-          if (action === 'plus' && ingredient.quantity >= 1) {
+          if ((action === 'plus' && ingredient.quantity > 1) || (action === 'plus' && ingredient.quantity >= 1 && ingredient.id === 7 && product.id === 2)) {
             const hasAddition = updatedComplements.find(c => c.id === ingredient.additionId);
             if (hasAddition) {
               updatedComplements = updatedComplements.map((c) =>

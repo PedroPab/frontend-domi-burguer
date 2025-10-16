@@ -77,7 +77,7 @@ export const useCartStore = create<CartStore>()(
 
       getDeliveryFee: () => {
         const address = get().address;
-        return address?.deliveryPrice || 4400;
+        return address?.deliveryPrice || 0;
       },
 
       getSubtotal: () => {
@@ -85,7 +85,6 @@ export const useCartStore = create<CartStore>()(
           return sum + (item.price * item.quantity);
         }, 0);
         
-        console.log('Subtotal calculado:', subtotal);
         return subtotal;
       },
 
@@ -94,7 +93,6 @@ export const useCartStore = create<CartStore>()(
         const deliveryFee = get().getDeliveryFee();
         const total = subtotal + deliveryFee;
         
-        console.log('Total calculado:', { subtotal, deliveryFee, total });
         return total;
       },
 
