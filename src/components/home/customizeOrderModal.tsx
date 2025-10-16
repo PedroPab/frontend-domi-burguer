@@ -15,82 +15,105 @@ import {
   SouceIcon,
   TocinetaIcon,
   TomateIcon,
+  LogoProps,
 } from "../ui/icons";
 import { QuantitySelector } from "../ui/quantitySelector";
-import { LogoProps } from "../ui/icons";
 import { Complement } from "@/types/products";
+
+const iconMap: { [key: string]: React.FC<LogoProps> } = {
+  CarneIcon,
+  FrenchFriesIcon,
+  LechugaIcon,
+  PicklesIcon,
+  QuesoIcon,
+  SouceIcon,
+  TocinetaIcon,
+  TomateIcon,
+};
 
 const ingredientsData: Complement[] = [
   {
     id: 4,
     name: "Carne",
     price: 6000,
-    icon: CarneIcon,
+    icon: "CarneIcon",
     quantity: 1,
     type: "special",
     additionId: 100,
     minusId: 101,
+    minusComplement: false,
   },
   {
     id: 14,
     name: "Lechuga",
     price: null,
-    icon: LechugaIcon,
+    icon: "LechugaIcon",
     quantity: 1,
     type: "removable",
+    minusComplement: true,
   },
   {
-    id: 30,
+    id: 300,
     name: "Tomate",
     price: null,
-    icon: TomateIcon,
+    icon: "TomateIcon",
     quantity: 1,
-    type: "removable",
+    type: "special",
+    additionId: 30,
+    minusId: 12,
+    minusComplement: false,
   },
   {
     id: 666,
     name: "Tocineta",
     price: 3500,
-    icon: TocinetaIcon,
+    icon: "TocinetaIcon",
     quantity: 1,
     type: "special",
     additionId: 6,
     minusId: 18,
+    minusComplement: false,
   },
   {
-    id: 13,
+    id: 288,
     name: "Pepinillos",
     price: null,
-    icon: PicklesIcon,
+    icon: "PicklesIcon",
     quantity: 1,
-    type: "removable",
+    type: "special",
+    additionId: 28,
+    minusId: 13,
+    minusComplement: false,
   },
   {
     id: 15,
     name: "Salsas",
     price: null,
-    icon: SouceIcon,
+    icon: "SouceIcon",
     quantity: 1,
     type: "removable",
+    minusComplement: true,
   },
   {
     id: 244,
     name: "Queso americano",
     price: 2000,
-    icon: QuesoIcon,
+    icon: "QuesoIcon",
     quantity: 1,
     type: "special",
     additionId: 5,
     minusId: 24,
+    minusComplement: false,
   },
   {
     id: 7,
     name: "Papas rizadas",
     price: 6800,
-    icon: FrenchFriesIcon,
+    icon: "FrenchFriesIcon",
     quantity: 0,
     type: "addable",
     additionId: 7,
+    minusComplement: false,
   },
 ];
 
@@ -154,7 +177,7 @@ export const CustomizationModalSection = ({
           if (ing.type === "removable") {
             // Buscar complemento "Sin X" (mismo ID del ingrediente)
             const hasSinIngrediente = complements.some((c) => 
-              c.id === ing.id && c.name?.startsWith("Sin ")
+              c.id === ing.id 
             );
             
             if (hasSinIngrediente) {
@@ -236,32 +259,42 @@ export const CustomizationModalSection = ({
 
         <div className="flex flex-col gap-6 px-10 pb-10">
           {/* Lista de ingredientes */}
-          <div className="flex flex-col">
-            {ingredients.map((ingredient) => (
-              <div
-                key={ingredient.id}
-                className="flex h-12 items-center gap-4 py-3 rounded-xl"
-              >
-                {ingredient.icon && <ingredient.icon />}
-                
-                <div className="flex-1 font-medium text-sm leading-4">
-                  <span className="text-[#313131]">{ingredient.name}</span>
-                  {ingredient.price && (
-                    <span className="text-[#808080]">
-                      {" "}
-                      (+${ingredient.price})
-                    </span>
-                  )}
-                </div>
-                
-                <QuantitySelector
-                  value={ingredient.quantity}
-                  onIncrease={() => handleIngredientChange(ingredient, "plus")}
-                  onDecrease={() => handleIngredientChange(ingredient, "minus")}
-                  size="sm"
-                />
-              </div>
-            ))}
+                    <div className="flex flex-col">
+                      {ingredients.map((ingredient) => {
+                        const IconComponent = ingredient.icon
+                          ? iconMap[ingredient.icon]
+                          : null;
+                        return (
+                          <div
+                            key={ingredient.id}
+                            className="flex h-12 items-center gap-4 py-3 rounded-xl"
+                          >
+                            {IconComponent && <IconComponent />}
+          
+                            <div className="flex-1 font-medium text-sm leading-4">
+                              <span className="text-[#313131]">{ingredient.name}</span>
+                              {ingredient.price && (
+                                <span className="text-[#808080]">
+                                  {" "}
+                                  (+${
+                                  ingredient.price
+                                })
+                                </span>
+                              )}
+                            </div>
+          
+                            <QuantitySelector
+                              value={ingredient.quantity}
+                              onIncrease={() => handleIngredientChange(ingredient, "plus")}
+                              onDecrease={() =>
+                                handleIngredientChange(ingredient, "minus")
+                              }
+                              size="sm"
+                            />
+                          </div>
+                        );
+                      })}
+          
           </div>
 
           {/* Botones de acción */}

@@ -47,10 +47,11 @@ const handleAddableComplement = (
     if (action === 'plus' && newQuantity > 1 && ingredient.additionId) {
       const existing = currentComplements.find(c => c.id === ingredient.additionId);
       if (!existing) {
+        const { additionId, minusId, ...rest } = ingredient;
         complementsToAdd.push({
-          ...ingredient,
+          ...rest,
           id: ingredient.additionId,
-          name: `Adición de ${ingredient.name}`,
+          minusComplement: false,
           quantity: 1,
         });
       }
@@ -78,10 +79,11 @@ const handleAddableComplement = (
 
   // Al pasar de 0 a 1, agregar complemento de adición
   if (action === 'plus' && newQuantity === 1 && ingredient.additionId) {
+    const { additionId, minusId, ...rest } = ingredient;
     complementsToAdd.push({
-      ...ingredient,
+      ...rest,
       id: ingredient.additionId,
-      name: `Adición de ${ingredient.name}`,
+      minusComplement: false,
       quantity: 1,
     });
   }
@@ -124,10 +126,11 @@ const handleSpecialComplement = (
     }
     
     if (newQuantity === 2 && ingredient.additionId) {
+      const { additionId, minusId, ...rest } = ingredient;
       complementsToAdd.push({
-        ...ingredient,
+        ...rest,
         id: ingredient.additionId,
-        name: `Adición de ${ingredient.name}`,
+        minusComplement: false,
         quantity: 1,
       });
     }
@@ -137,10 +140,11 @@ const handleSpecialComplement = (
     if (newQuantity === 0 && ingredient.minusId) {
       const hasVegetariano = currentComplements.some(c => c.id === ingredient.minusId);
       if (!hasVegetariano) {
+        const { additionId, minusId, ...rest } = ingredient;
         complementsToAdd.push({
-            ...ingredient,
+          ...rest,
           id: ingredient.minusId,
-          name: 'Vegetariano',
+          minusComplement: true,
           quantity: 1,
           price: 0,
         });
@@ -188,7 +192,7 @@ const handleRemovableComplement = (
       complementsToAdd.push({
         ...ingredient,
         id: ingredient.id,
-        name: `Sin ${ingredient.name}`,
+        minusComplement: true,
         quantity: 1,
         price: 0,
       });
@@ -322,7 +326,7 @@ export function useMenu() {
 
         // Manejar incremento/decremento de adiciones
         if ((ingredient.type === 'special' || ingredient.type === 'addable') && ingredient.additionId) {
-          if (action === 'plus' && ingredient.quantity >= 1) {
+          if ((action === 'plus' && ingredient.quantity > 1) || (action === 'plus' && ingredient.quantity >= 1 && ingredient.id === 7 && product.id === 2)) {
             const hasAddition = updatedComplements.find(c => c.id === ingredient.additionId);
             if (hasAddition) {
               updatedComplements = updatedComplements.map((c) =>

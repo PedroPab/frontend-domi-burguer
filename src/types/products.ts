@@ -4,11 +4,12 @@ export interface Complement {
   id: number;
   name?: string;
   quantity: number;
-  icon?: React.FC<LogoProps>;
+  icon?: string;
   price?: number | null;
   type?: "removable" | "special" | "addable";
   additionId?: number; 
   minusId?: number;
+  minusComplement: boolean;
 }
 
 export type Product = {
