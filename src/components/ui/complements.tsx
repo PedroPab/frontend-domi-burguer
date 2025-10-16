@@ -37,168 +37,169 @@ export const Complements: React.FC<ComplementsProps> = ({
   gapPx = 4,
   onRemove,
 }) => {
-  // ✅ Hooks siempre antes de cualquier return o condición
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const ellipsisRef = useRef<HTMLDivElement | null>(null);
-  const chipRefs = useRef<Map<number, HTMLDivElement>>(new Map());
-  const [visibleCount, setVisibleCount] = useState<number>(0);
+  const measureRef = useRef<HTMLDivElement | null>(null);
+  const [visibleCount, setVisibleCount] = useState<number>(complements.length);
 
-  const setChipRef = (index: number) => (el: HTMLDivElement | null) => {
-    if (el) chipRefs.current.set(index, el);
-    else chipRefs.current.delete(index);
-  };
-
-  const recalculate = () => {
+  const calculateVisible = () => {
     const container = containerRef.current;
-    if (!container) return;
+    const measureContainer = measureRef.current;
+    
+    if (!container || !measureContainer) return;
 
-    const containerWidth = container.clientWidth;
-    const ellipsisEl = ellipsisRef.current;
-    const ellipsisWidth = ellipsisEl ? ellipsisEl.offsetWidth : 24;
-
-    let used = 0;
+    const containerWidth = container.offsetWidth;
+    const badgeWidth = 30; // Ancho aproximado del "+N"
+    
+    // Obtener todos los chips medidos
+    const chips = Array.from(measureContainer.children) as HTMLElement[];
+    
+    let totalWidth = 0;
     let count = 0;
 
-    for (let i = 0; i < complements.length; i++) {
-      const chipEl = chipRefs.current.get(i);
-      if (!chipEl) {
-        count = complements.length;
-        break;
-      }
-
-      const chipWidth = chipEl.offsetWidth;
-      const remaining = complements.length - (i + 1);
-      const reserveEllipsis = remaining > 0 ? ellipsisWidth + gapPx : 0;
-
-      if (used + chipWidth + reserveEllipsis <= containerWidth) {
-        used += chipWidth + gapPx;
+    for (let i = 0; i < chips.length; i++) {
+      const chipWidth = chips[i].offsetWidth;
+      const isLast = i === chips.length - 1;
+      const hasMore = i < complements.length - 1;
+      
+      // Si no es el último chip, reservar espacio para el badge
+      const spaceNeeded = totalWidth + chipWidth + (hasMore && !isLast ? badgeWidth + gapPx : 0);
+      
+      if (spaceNeeded <= containerWidth) {
+        totalWidth += chipWidth + gapPx;
         count++;
       } else {
         break;
       }
 
-      if (typeof maxVisible === "number" && count >= maxVisible) break;
+      // Respetar maxVisible si está definido
+      if (typeof maxVisible === "number" && count >= maxVisible) {
+        break;
+      }
     }
 
     setVisibleCount(count);
   };
 
+  // Calcular cuando cambian los complementos
   useLayoutEffect(() => {
-    recalculate();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [complements]);
+    const timeoutId = setTimeout(() => {
+      calculateVisible();
+    }, 0);
 
+    return () => clearTimeout(timeoutId);
+  }, [complements, maxVisible, gapPx]);
+
+  // Recalcular en resize
   useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
+    let resizeTimeout: NodeJS.Timeout;
 
-    const ro = new ResizeObserver(() => recalculate());
-    ro.observe(container);
-    window.addEventListener("resize", recalculate);
+    const handleResize = () => {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(() => {
+        calculateVisible();
+      }, 100);
+    };
+
+    window.addEventListener("resize", handleResize);
 
     return () => {
-      ro.disconnect();
-      window.removeEventListener("resize", recalculate);
+      clearTimeout(resizeTimeout);
+      window.removeEventListener("resize", handleResize);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [complements, gapPx, maxVisible]);
+  }, [complements, maxVisible, gapPx]);
 
-  // 🔹 Return condicional después de los hooks
   if (!complements || complements.length === 0) return null;
 
+  const hiddenCount = complements.length - visibleCount;
+
   return (
-    <div
-      ref={containerRef}
-      className="flex items-center w-full overflow-hidden"
-      style={{ flexWrap: "nowrap" }}
-    >
-      {/* Invisibles para medir */}
+    <>
+      {/* Contenedor invisible para medir */}
       <div
-        aria-hidden
-        style={{
-          position: "absolute",
-          visibility: "hidden",
-          pointerEvents: "none",
-          height: 0,
-          overflow: "hidden",
-          whiteSpace: "nowrap",
-        }}
+        ref={measureRef}
+        aria-hidden="true"
+        className="fixed -top-[9999px] left-0 flex items-center pointer-events-none"
+        style={{ gap: `${gapPx}px`, visibility: "hidden" }}
       >
         {complements.map((comp, idx) => {
           const IconComponent = comp.icon ? iconMap[comp.icon] : null;
           return (
             <div
               key={`measure-${comp.id}-${idx}`}
-              ref={setChipRef(idx)}
-              className="inline-flex h-5 items-center justify-center gap-1 pl-1.5 pr-1 py-2 rounded-[30px] border border-solid border-[#808080] mr-[4px]"
+              className="inline-flex h-5 items-center justify-center gap-1 pl-1.5 pr-1 py-2 rounded-[30px] border border-solid border-[#808080] flex-shrink-0"
             >
               {IconComponent && <IconComponent className="w-3 h-3" />}
-              <span className="text-neutrosblack-80 leading-[18px] font-normal text-[8px] whitespace-nowrap font-[Montserrat,Helvetica]">
+              <span className="text-neutrosblack-80 leading-[18px] font-normal text-[8px] sm:text-[9px] whitespace-nowrap font-[Montserrat,Helvetica]">
                 <span className="text-[#313131]">
-                  {comp.minusComplement === true || comp.minusId ? "0" : comp.quantity}{" "}
+                  {comp.minusComplement === true || comp.minusId
+                    ? "0"
+                    : comp.quantity}{" "}
                   {comp.name}
                 </span>
-                {comp.price != 0 && (
+                {comp.price !== 0 && (
                   <span className="text-[#808080]"> (+${comp.price})</span>
                 )}
               </span>
               {onRemove && (
-                <button className="ml-1 flex items-center justify-center w-3 h-3 rounded-full">
-                  <X size={8} />
-                </button>
+                <span className="ml-0.5 w-3 h-3" />
               )}
             </div>
           );
         })}
       </div>
 
-      {/* Visibles */}
+      {/* Contenedor visible */}
       <div
-        className="flex items-center"
-        style={{ gap: `${gapPx}px`, overflow: "hidden", whiteSpace: "nowrap" }}
+        ref={containerRef}
+        className="flex items-center w-full overflow-hidden"
+        style={{
+          gap: `${gapPx}px`,
+          flexWrap: "nowrap",
+        }}
       >
         {complements.slice(0, visibleCount).map((comp, idx) => {
           const IconComponent = comp.icon ? iconMap[comp.icon] : null;
           return (
             <div
-              key={`visible-${comp.id}-${idx}`}
-              className="inline-flex h-5 items-center justify-center gap-1 pl-1.5 pr-1 py-2 rounded-[30px] border border-solid border-[#808080]"
+              key={`${comp.id}-${idx}`}
+              className="inline-flex h-5 items-center justify-center gap-1 pl-1.5 pr-1 py-2 rounded-[30px] border border-solid border-[#808080] flex-shrink-0"
             >
-              {IconComponent && <IconComponent className="w-3 h-3" />}
-              <span className="text-neutrosblack-80 leading-[18px] font-normal text-[8px] whitespace-nowrap font-[Montserrat,Helvetica]">
+              {IconComponent && <IconComponent className="w-3 h-3 flex-shrink-0" />}
+              <span className="text-neutrosblack-80 leading-[18px] font-normal text-[8px] sm:text-[9px] whitespace-nowrap font-[Montserrat,Helvetica]">
                 <span className="text-[#313131]">
-                  {comp.minusComplement === true || comp.minusId ? "0" : comp.quantity}{" "}
+                  {comp.minusComplement === true || comp.minusId
+                    ? "0"
+                    : comp.quantity}{" "}
                   {comp.name}
                 </span>
-                {comp.price != 0 && (
+                {comp.price !== 0 && (
                   <span className="text-[#808080]"> (+${comp.price})</span>
                 )}
               </span>
               {onRemove && (
                 <button
                   onClick={() => onRemove(comp.id)}
-                  className="flex items-center justify-center w-3 h-3 rounded-full hover:bg-neutral-200"
+                  className="ml-0.5 flex items-center justify-center w-3 h-3 rounded-full hover:bg-neutral-200 flex-shrink-0"
                 >
-                  <X size={30} />
+                  <X size={8} />
                 </button>
               )}
             </div>
           );
         })}
 
-        {visibleCount < complements.length && (
+        {hiddenCount > 0 && (
           <div
-            ref={ellipsisRef}
-            className="inline-flex items-center justify-center px-1.5 py-1 text-[12px] leading-[1] select-none"
+            className="inline-flex items-center justify-center px-1.5 h-5 text-[9px] font-medium leading-[1] select-none flex-shrink-0 text-neutral-black-80"
             title={complements
               .slice(visibleCount)
               .map((c) => `${c.quantity} ${c.name}`)
               .join(", ")}
           >
-            ...
+            +{hiddenCount}
           </div>
         )}
       </div>
-    </div>
+    </>
   );
 };
