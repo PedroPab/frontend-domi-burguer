@@ -10,6 +10,7 @@ import {
   TocinetaIcon,
   TomateIcon,
 } from "./icons";
+import { X } from "lucide-react";
 
 const iconMap: { [key: string]: React.FC<any> } = {
   CarneIcon,
@@ -26,17 +27,18 @@ interface ComplementsProps {
   complements: Complement[];
   maxVisible?: number;
   gapPx?: number;
+  onRemove?: (complementId: number) => void;
 }
 
 export const Complements: React.FC<ComplementsProps> = ({
   complements,
   maxVisible,
   gapPx = 4,
+  onRemove,
 }) => {
   if (!complements || complements.length === 0) return null;
 
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const measureRef = useRef<HTMLDivElement | null>(null);
   const ellipsisRef = useRef<HTMLDivElement | null>(null);
   const chipRefs = useRef<Map<number, HTMLDivElement>>(new Map());
 
@@ -49,28 +51,34 @@ export const Complements: React.FC<ComplementsProps> = ({
 
   const recalculate = () => {
     const container = containerRef.current;
+    if (!container) return;
+
+    const containerWidth = container.clientWidth;
+
     const ellipsisEl = ellipsisRef.current;
-
-    if (!container || !ellipsisEl) return;
-
-    const containerWidth = container.getBoundingClientRect().width;
-    const ellipsisWidth = ellipsisEl.getBoundingClientRect().width;
+    const ellipsisWidth = ellipsisEl ? ellipsisEl.offsetWidth : 24;
 
     let used = 0;
     let count = 0;
 
     for (let i = 0; i < complements.length; i++) {
       const chipEl = chipRefs.current.get(i);
-      if (!chipEl) return;
+      if (!chipEl) {
+        // Si todavía no se midió, no forzamos límite
+        count = complements.length;
+        break;
+      }
 
-      const chipWidth = chipEl.getBoundingClientRect().width;
+      const chipWidth = chipEl.offsetWidth;
       const remaining = complements.length - (i + 1);
       const reserveEllipsis = remaining > 0 ? ellipsisWidth + gapPx : 0;
 
       if (used + chipWidth + reserveEllipsis <= containerWidth) {
         used += chipWidth + gapPx;
         count++;
-      } else break;
+      } else {
+        break;
+      }
 
       if (typeof maxVisible === "number" && count >= maxVisible) break;
     }
@@ -78,23 +86,27 @@ export const Complements: React.FC<ComplementsProps> = ({
     setVisibleCount(count);
   };
 
-  // medir al render inicial
   useLayoutEffect(() => {
-    // esperar al próximo frame para asegurar que las fuentes e íconos cargaron
-    requestAnimationFrame(() => recalculate());
+    recalculate();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [complements]);
 
-  // recalcular al redimensionar
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
-    const observer = new ResizeObserver(() => recalculate());
-    observer.observe(container);
+
+    const ro = new ResizeObserver(() => {
+      recalculate();
+    });
+    ro.observe(container);
+
     window.addEventListener("resize", recalculate);
+
     return () => {
-      observer.disconnect();
+      ro.disconnect();
       window.removeEventListener("resize", recalculate);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [complements, gapPx, maxVisible]);
 
   return (
@@ -103,19 +115,16 @@ export const Complements: React.FC<ComplementsProps> = ({
       className="flex items-center w-full overflow-hidden"
       style={{ flexWrap: "nowrap" }}
     >
-      {/* Contenedor de medición fuera de pantalla */}
+      {/* Chips invisibles para medición precisa */}
       <div
-        ref={measureRef}
         aria-hidden
         style={{
           position: "absolute",
-          left: -9999,
-          top: -9999,
-          display: "flex",
-          gap: `${gapPx}px`,
-          whiteSpace: "nowrap",
+          visibility: "hidden",
           pointerEvents: "none",
-          visibility: "visible", // importante para medir bien
+          height: 0,
+          overflow: "hidden",
+          whiteSpace: "nowrap",
         }}
       >
         {complements.map((comp, idx) => {
@@ -124,10 +133,10 @@ export const Complements: React.FC<ComplementsProps> = ({
             <div
               key={`measure-${comp.id}-${idx}`}
               ref={setChipRef(idx)}
-              className="inline-flex h-5 items-center justify-center gap-1 px-1.5 py-2 rounded-[30px] border border-solid border-[#808080]"
+              className="inline-flex h-5 items-center justify-center gap-1 pl-1.5 pr-1 py-2 rounded-[30px] border border-solid border-[#808080] mr-[4px]"
             >
               {IconComponent && <IconComponent className="w-3 h-3" />}
-              <span className="text-neutrosblack-80 leading-[18px] font-normal text-[8px] whitespace-nowrap font-[Montserrat,Helvetica]">
+              <span className="text-neutrosblack-80 leading-[18px] font-normal text-[8px] tracking-[0] whitespace-nowrap font-[Montserrat,Helvetica]">
                 <span className="text-[#313131]">
                   {comp.minusComplement === true || comp.minusId
                     ? "0"
@@ -138,18 +147,19 @@ export const Complements: React.FC<ComplementsProps> = ({
                   <span className="text-[#808080]"> (+${comp.price})</span>
                 )}
               </span>
+              {onRemove && (
+                <button
+                  className="ml-1 flex items-center justify-center w-3 h-3 rounded-full"
+                >
+                  <X size={8} />
+                </button>
+              )}
             </div>
           );
         })}
-        <div
-          ref={ellipsisRef}
-          className="inline-flex items-center justify-center px-1.5 py-1 text-[12px]"
-        >
-          ...
-        </div>
       </div>
 
-      {/* Contenido visible */}
+      {/* Chips visibles */}
       <div
         className="flex items-center"
         style={{ gap: `${gapPx}px`, overflow: "hidden", whiteSpace: "nowrap" }}
@@ -159,10 +169,10 @@ export const Complements: React.FC<ComplementsProps> = ({
           return (
             <div
               key={`visible-${comp.id}-${idx}`}
-              className="inline-flex h-5 items-center justify-center gap-1 px-1.5 py-2 rounded-[30px] border border-solid border-[#808080]"
+              className="inline-flex h-5 items-center justify-center gap-1 pl-1.5 pr-1 py-2 rounded-[30px] border border-solid border-[#808080]"
             >
               {IconComponent && <IconComponent className="w-3 h-3" />}
-              <span className="text-neutrosblack-80 leading-[18px] font-normal text-[8px] whitespace-nowrap font-[Montserrat,Helvetica]">
+              <span className="text-neutrosblack-80 leading-[18px] font-normal text-[8px] tracking-[0] whitespace-nowrap font-[Montserrat,Helvetica]">
                 <span className="text-[#313131]">
                   {comp.minusComplement === true || comp.minusId
                     ? "0"
@@ -173,13 +183,23 @@ export const Complements: React.FC<ComplementsProps> = ({
                   <span className="text-[#808080]"> (+${comp.price})</span>
                 )}
               </span>
+              {onRemove && (
+                <button
+                  onClick={() => onRemove(comp.id)}
+                  className="flex items-center justify-center w-3 h-3 rounded-full hover:bg-neutral-200 cursor-pointer"
+                >
+                  <X size={30} />
+                </button>
+              )}
             </div>
           );
         })}
 
         {visibleCount < complements.length && (
           <div
+            ref={ellipsisRef}
             className="inline-flex items-center justify-center px-1.5 py-1 text-[12px] leading-[1] select-none"
+            aria-hidden={false}
             title={complements
               .slice(visibleCount)
               .map((c) => `${c.quantity} ${c.name}`)

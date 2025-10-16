@@ -98,6 +98,7 @@ export default function Cart() {
     getTotal,
     getDeliveryFee,
     updateQuantity,
+    removeComplement,
     address: addressStore,
   } = useCartStore();
 
@@ -431,7 +432,12 @@ export default function Cart() {
                             </div>
                           </div>
 
-                          <Complements complements={item.complements} maxVisible={6}/>
+                          <Complements
+                            complements={item.complements}
+                            onRemove={(complementId) =>
+                              removeComplement(item.id, complementId)
+                            }
+                          />
 
                           <div className="flex h-8 items-center justify-between w-full rounded-[50px]">
                             <h4 className="">
