@@ -8,7 +8,7 @@ const quantityWrapperVariants = cva(
   {
     variants: {
       size: {
-        sm: "h-8 gap-4 px-[3px] py-2 border-[1.2px] border-[#313131] max-w-[101px] w-fit",
+        sm: "h-8 gap-2 px-[3px] py-2 border-[1.2px] border-[#313131] max-w-[90px] w-fit",
         lg: "h-[48px] gap-6 px-1.5 py-2",
       },
     },

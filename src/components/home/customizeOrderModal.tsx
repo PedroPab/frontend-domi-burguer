@@ -15,11 +15,12 @@ import {
   SouceIcon,
   TocinetaIcon,
   TomateIcon,
+  LogoProps,
 } from "../ui/icons";
 import { QuantitySelector } from "../ui/quantitySelector";
 import { Complement } from "@/types/products";
 
-const iconMap: { [key: string]: React.FC<any> } = {
+const iconMap: { [key: string]: React.FC<LogoProps> } = {
   CarneIcon,
   FrenchFriesIcon,
   LechugaIcon,
