@@ -69,7 +69,7 @@ export default function Cart() {
     removeComplement,
     address: addressStore,
     removeAddress, // AÑADIDO
-    addItem
+    addItem,
   } = useCartStore();
 
   const [selectedMethod, setSelectedMethod] = useState("efectivo");
@@ -88,7 +88,9 @@ export default function Cart() {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalComplementsOpen, setIsModalComplementsOpen] = useState(false);
-  const [selectedCartItem, setSelectedCartItem] = useState<CartItem | null>(null);
+  const [selectedCartItem, setSelectedCartItem] = useState<CartItem | null>(
+    null
+  );
 
   const [addressToEdit, setAddressToEdit] = useState<Address | null>(
     addressStore
@@ -200,14 +202,14 @@ export default function Cart() {
                         <span>{addressStore.kitchen}</span>
                       </div>
 
-                      <div className="flex gap-2">
-                        <Trash2
-                          className="h-[18px] w-[18px] xl:mt-[2px] cursor-pointer text-red-500 hover:text-red-700"
-                          onClick={() => removeAddress()} // Asegúrate de que removeAddress esté disponible en el hook
-                        />
+                      <div className="flex flex-col justify-between">
                         <Pencil
                           className="h-[18px] w-[18px] xl:mt-[2px] cursor-pointer hover:text-neutral-black-60"
                           onClick={handleEditAddress}
+                        />
+                        <Trash2
+                          className="h-[18px] w-[18px] xl:mt-[2px] cursor-pointer text-red-500 hover:text-red-700"
+                          onClick={() => removeAddress()} // Asegúrate de que removeAddress esté disponible en el hook
                         />
                       </div>
                     </div>
@@ -458,7 +460,7 @@ export default function Cart() {
                               className="w-10 h-10 rounded-[30px] p-0"
                               onClick={() => {
                                 const salsaItem = {
-                                  id: "product-38", 
+                                  id: "product-38",
                                   productId: 38,
                                   name: "SALSA DE AJO DE LA CASA",
                                   price: 25000,
