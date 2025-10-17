@@ -26,6 +26,7 @@ interface CartStore {
   removeComplement: (itemId: string, complementId: number) => void;
   updateItemComplements: (itemId: string, newComplements: Complement[]) => void; // NUEVA
   setAddress: (address: Address) => void;
+  removeAddress: () => void; // NUEVA
   clearCart: () => void;
 
   getTotal: () => number;
@@ -161,8 +162,8 @@ export const useCartStore = create<CartStore>()(
         }),
 
       setAddress: (address) => set({ address }),
-
-      clearCart: () => set({ items: [], address: null }),
+  removeAddress: () => set({ address: null }), // NUEVA
+  clearCart: () => set({ items: [], address: null }),
 
       getDeliveryFee: () => {
         const address = get().address;

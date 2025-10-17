@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { CalendarIcon, Pencil, PencilIcon, Plus } from "lucide-react";
+import { CalendarIcon, Pencil, PencilIcon, Plus, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -23,7 +23,7 @@ import { Switch } from "@/components/ui/switch";
 import Link from "next/link";
 
 import { Address, createEmptyAddress } from "@/types/address";
-import { useCartStore } from "@/store/cartStore";
+import { useCartStore, CartItem } from "@/store/cartStore";
 import { useIsMounted } from "@/hooks/useIsMounted";
 import { PhoneNumberInput } from "@/components/ui/inputPhone";
 import { Complements } from "@/components/ui/complements";
@@ -68,6 +68,8 @@ export default function Cart() {
     updateQuantity,
     removeComplement,
     address: addressStore,
+    removeAddress, // AÑADIDO
+    addItem
   } = useCartStore();
 
   const [selectedMethod, setSelectedMethod] = useState("efectivo");
@@ -86,7 +88,7 @@ export default function Cart() {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalComplementsOpen, setIsModalComplementsOpen] = useState(false);
-  const [selectedCartItem, setSelectedCartItem] = useState<any>(null);
+  const [selectedCartItem, setSelectedCartItem] = useState<CartItem | null>(null);
 
   const [addressToEdit, setAddressToEdit] = useState<Address | null>(
     addressStore
@@ -102,7 +104,7 @@ export default function Cart() {
     setAddressToEdit(null);
   };
 
-  const handleEditComplements = (item: any) => {
+  const handleEditComplements = (item: CartItem) => {
     setSelectedCartItem(item);
     setIsModalComplementsOpen(true);
   };
@@ -198,10 +200,16 @@ export default function Cart() {
                         <span>{addressStore.kitchen}</span>
                       </div>
 
-                      <Pencil
-                        className="h-[18px] w-[18px] xl:mt-[2px] cursor-pointer hover:text-neutral-black-60"
-                        onClick={handleEditAddress}
-                      />
+                      <div className="flex gap-2">
+                        <Trash2
+                          className="h-[18px] w-[18px] xl:mt-[2px] cursor-pointer text-red-500 hover:text-red-700"
+                          onClick={() => removeAddress()} // Asegúrate de que removeAddress esté disponible en el hook
+                        />
+                        <Pencil
+                          className="h-[18px] w-[18px] xl:mt-[2px] cursor-pointer hover:text-neutral-black-60"
+                          onClick={handleEditAddress}
+                        />
+                      </div>
                     </div>
                   </div>
                 </CardContent>
@@ -448,6 +456,19 @@ export default function Cart() {
                             <Button
                               size="icon"
                               className="w-10 h-10 rounded-[30px] p-0"
+                              onClick={() => {
+                                const salsaItem = {
+                                  id: "product-38", 
+                                  productId: 38,
+                                  name: "SALSA DE AJO DE LA CASA",
+                                  price: 25000,
+                                  basePrice: 25000,
+                                  quantity: 1,
+                                  image1: "/salsaSmall.png",
+                                  complements: [],
+                                };
+                                addItem(salsaItem);
+                              }}
                             >
                               <Plus className="text-white" />
                             </Button>
