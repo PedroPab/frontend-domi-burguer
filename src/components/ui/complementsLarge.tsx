@@ -180,7 +180,7 @@ export const ComplementsLarge: React.FC<ComplementsLargeProps> = ({
                 onClick={() => onRemove(comp.id)}
                 className="ml-1 flex items-center justify-center w-4 h-4 rounded-full hover:bg-neutral-200 transition-colors"
               >
-                <X size={12} />
+                <X size={20} />
               </button>
             )}
           </div>

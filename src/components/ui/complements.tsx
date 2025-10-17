@@ -181,7 +181,7 @@ export const Complements: React.FC<ComplementsProps> = ({
                   onClick={() => onRemove(comp.id)}
                   className="ml-0.5 flex items-center justify-center w-3 h-3 rounded-full hover:bg-neutral-200 flex-shrink-0"
                 >
-                  <X size={8} />
+                  <X size={20} />
                 </button>
               )}
             </div>

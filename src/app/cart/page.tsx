@@ -167,10 +167,10 @@ export default function Cart() {
               <Input className="" placeholder="Nombres y Apellidos"></Input>
 
               <div className="flex flex-col lg:flex-row w-full gap-2">
-                <Input
+                {/* <Input
                   className="w-full"
                   placeholder="Correo Electrónico"
-                ></Input>
+                /> */}
                 <PhoneNumberInput
                   className="pl-2 w-full"
                   id="phone-input"
@@ -464,42 +464,48 @@ export default function Cart() {
 
                 <Separator orientation="horizontal" className="w-full!" />
 
-                <h2 className="">ACOMPAÑA TU BURGER</h2>
+                {items.some((item) =>
+                  item.name.toLowerCase().includes("SALSA DE AJO")
+                ) ? (
+                  <>
+                    <h2 className="">ACOMPAÑA TU BURGER</h2>
 
-                <Card className="flex w-full h-28 items-start gap-4 pl-2 pr-4 py-2 bg-[#FFFFFF] rounded-[12px] overflow-hidden border-0">
-                  <CardContent className="p-0 flex w-full gap-4">
-                    <div className="w-24 h-24 bg-accent-yellow-40 rounded-[7.66px] relative">
-                      <Image
-                        src="/salsaSmall.png"
-                        alt="Burger"
-                        width={118}
-                        height={85}
-                        className="absolute top-[5px] left-[3px] w-[118px] h-[85px] object-cover overflow-visible"
-                      />
-                    </div>
+                    <Card className="flex w-full h-28 items-start gap-4 pl-2 pr-4 py-2 bg-[#FFFFFF] rounded-[12px] overflow-hidden border-0">
+                      <CardContent className="p-0 flex w-full gap-4">
+                        <div className="w-24 h-24 bg-accent-yellow-40 rounded-[7.66px] relative">
+                          <Image
+                            src="/salsaSmall.png"
+                            alt="Burger"
+                            width={118}
+                            height={85}
+                            className="absolute top-[5px] left-[3px] w-[118px] h-[85px] object-cover overflow-visible"
+                          />
+                        </div>
 
-                    <div className="justify-center gap-3 pt-1 pb-0 px-0 flex-1 grow flex flex-col items-start self-stretch">
-                      <div className="flex gap-3 self-stretch w-full rounded-[80.62px] flex-col items-start">
-                        <div className="gap-3 self-stretch w-full flex items-center">
-                          <div className="flex-1 font-h4">
-                            SALSA DE AJO DE LA CASA
+                        <div className="justify-center gap-3 pt-1 pb-0 px-0 flex-1 grow flex flex-col items-start self-stretch">
+                          <div className="flex gap-3 self-stretch w-full rounded-[80.62px] flex-col items-start">
+                            <div className="gap-3 self-stretch w-full flex items-center">
+                              <div className="flex-1 font-h4">
+                                SALSA DE AJO DE LA CASA
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="flex h-8 items-center justify-between w-full rounded-[50px]">
+                            <h4 className="">$25.000</h4>
+
+                            <Button
+                              size="icon"
+                              className="w-10 h-10 rounded-[30px] p-0"
+                            >
+                              <Plus className="text-white" />
+                            </Button>
                           </div>
                         </div>
-                      </div>
-
-                      <div className="flex h-8 items-center justify-between w-full rounded-[50px]">
-                        <h4 className="">$25.000</h4>
-
-                        <Button
-                          size="icon"
-                          className={` w-10 h-10  rounded-[30px] p-0`}
-                        >
-                          <Plus className="text-white" />
-                        </Button>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
+                      </CardContent>
+                    </Card>
+                  </>
+                ) : null}
               </div>
 
               <div className="flex flex-col items-start gap-8 w-full">

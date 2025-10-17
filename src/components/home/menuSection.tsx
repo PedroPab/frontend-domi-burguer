@@ -24,6 +24,8 @@ export default function MenuSection() {
     handleDecrease,
     handleChangeProduct,
     handleChangeComplement,
+    handleRemoveComplement,
+    resetCurrentProduct,
   } = useMenu();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -164,9 +166,12 @@ export default function MenuSection() {
               PERSONALIZAR <EditarIcon className="w-4 h-4" />
             </Button>
           </div>
-          
+
           <div className="w-full mb-8 md:mb-12">
-            <ComplementsLarge complements={currentProduct.complements} />
+            <ComplementsLarge
+              complements={currentProduct.complements}
+              onRemove={handleRemoveComplement}
+            />
           </div>
 
           <div className="flex w-full max-w-[720px] items-center justify-center gap-6 mb-8 md:mb-12">
@@ -196,6 +201,7 @@ export default function MenuSection() {
               onClick={() => {
                 handleAddToCart(currentProduct);
                 showFoodToast(currentProduct.name);
+                resetCurrentProduct();
               }}
             >
               AÑADIR AL CARRITO
@@ -230,9 +236,14 @@ export default function MenuSection() {
 
             <Button
               size="icon"
-              className={`absolute top-[5px] right-[5px] lg:top-[7px] lg:left-[232px] w-8 h-8 lg:w-10 lg:h-10 rounded-[30px] p-0 ${
+              className={`absolute top-[5px] z-200 right-[5px] lg:top-[7px] lg:left-[232px] w-8 h-8 lg:w-10 lg:h-10 rounded-[30px] p-0 ${
                 actualProduct === 0 ? "hidden" : ""
               }`}
+              onClick={() => {
+                handleAddToCart(products[0]);
+                showFoodToast(products[0].name);
+                resetCurrentProduct();
+              }}
             >
               <Plus className="text-white" />
             </Button>
@@ -268,9 +279,14 @@ export default function MenuSection() {
 
             <Button
               size="icon"
-              className={`absolute top-[5px] right-[5px] lg:top-[7px] lg:left-[232px] w-8 h-8 lg:w-10 lg:h-10 rounded-[30px] p-0 ${
+              className={`absolute z-200 top-[5px] right-[5px] lg:top-[7px] lg:left-[232px] w-8 h-8 lg:w-10 lg:h-10 rounded-[30px] p-0 ${
                 actualProduct === 1 ? "hidden" : ""
               }`}
+              onClick={() => {
+                handleAddToCart(products[1]);
+                showFoodToast(products[1].name);
+                resetCurrentProduct();
+              }}
             >
               <Plus className="text-white" />
             </Button>
@@ -297,9 +313,14 @@ export default function MenuSection() {
 
             <Button
               size="icon"
-              className={`absolute top-[5px] right-[5px] lg:top-[7px] lg:left-[232px] w-8 h-8 lg:w-10 lg:h-10 rounded-[30px] p-0 ${
+              className={`absolute z-200 top-[5px] right-[5px] lg:top-[7px] lg:left-[232px] w-8 h-8 lg:w-10 lg:h-10 rounded-[30px] p-0 ${
                 actualProduct === 2 ? "hidden" : ""
               }`}
+              onClick={() => {
+                handleAddToCart(products[2]);
+                showFoodToast(products[2].name);
+                resetCurrentProduct();
+              }}
             >
               <Plus className="text-white" />
             </Button>

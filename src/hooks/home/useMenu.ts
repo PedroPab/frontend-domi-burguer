@@ -34,16 +34,13 @@ const handleAddableComplement = (
   const complementsToAdd: Complement[] = [];
   const complementsToRemove: number[] = [];
 
-  // Verificar si es Combo Especial (id: 1) - las papas vienen incluidas
   const isComboEspecial = productId === 1;
 
   if (isComboEspecial) {
-    // En Combo Especial: cantidad mínima es 1, no puede bajar a 0
     if (action === 'minus' && newQuantity < 1) {
       return { complementsToAdd, complementsToRemove };
     }
 
-    // Manejar complementos de adición
     if (action === 'plus' && newQuantity > 1 && ingredient.additionId) {
       const existing = currentComplements.find(c => c.id === ingredient.additionId);
       if (!existing) {
@@ -57,27 +54,17 @@ const handleAddableComplement = (
       }
     }
 
-    if (action === 'plus' && newQuantity > 2 && ingredient.additionId) {
-      // Incrementar adición existente
-    }
-
     if (action === 'minus' && newQuantity === 1 && ingredient.additionId) {
       complementsToRemove.push(ingredient.additionId);
     }
 
-    if (action === 'minus' && newQuantity > 1 && ingredient.additionId) {
-      // Decrementar adición existente
-    }
-
     return { complementsToAdd, complementsToRemove };
   }
 
-  // En otros productos (Hamburguesa Artesanal): inicia en 0, se puede agregar
   if (action === 'minus' && newQuantity < 0) {
     return { complementsToAdd, complementsToRemove };
   }
 
-  // Al pasar de 0 a 1, agregar complemento de adición
   if (action === 'plus' && newQuantity === 1 && ingredient.additionId) {
     const { additionId, minusId, ...rest } = ingredient;
     complementsToAdd.push({
@@ -88,18 +75,8 @@ const handleAddableComplement = (
     });
   }
 
-  // Al pasar de 1 a 0, quitar complemento de adición
   if (action === 'minus' && newQuantity === 0 && ingredient.additionId) {
     complementsToRemove.push(ingredient.additionId);
-  }
-
-  // Manejar incrementos/decrementos cuando qty >= 2
-  if (action === 'plus' && newQuantity > 1 && ingredient.additionId) {
-    // Se manejará en el reducer principal
-  }
-
-  if (action === 'minus' && newQuantity > 0 && ingredient.additionId) {
-    // Se manejará en el reducer principal
   }
 
   return { complementsToAdd, complementsToRemove };
@@ -174,18 +151,15 @@ const handleRemovableComplement = (
   const complementsToAdd: Complement[] = [];
   const complementsToRemove: number[] = [];
 
-  // Si intenta aumentar más de 1, no hacer nada
   if (action === 'plus' && newQuantity > 1) {
     return { complementsToAdd, complementsToRemove };
   }
 
-  // Si aumenta de 0 a 1, quitar "sin [ingrediente]"
   if (action === 'plus' && newQuantity === 1) {
     complementsToRemove.push(ingredient.id);
     return { complementsToAdd, complementsToRemove };
   }
 
-  // Si disminuye de 1 a 0, agregar "sin [ingrediente]"
   if (action === 'minus' && newQuantity === 0) {
     const hasRemoval = currentComplements.some((c) => c.id === ingredient.id);
     if (!hasRemoval) {
@@ -200,7 +174,6 @@ const handleRemovableComplement = (
     return { complementsToAdd, complementsToRemove };
   }
 
-  // Si intenta disminuir más de 0, no hacer nada
   if (action === 'minus' && newQuantity < 0) {
     return { complementsToAdd, complementsToRemove };
   }
@@ -256,7 +229,7 @@ export function useMenu() {
     console.log("Current product complements:", products[actualProduct].complements);
   }, [products, actualProduct]);
 
-    const handleIncrease = () => {
+  const handleIncrease = () => {
     setProducts((prev) =>
       prev.map((product, index) =>
         index === actualProduct
@@ -307,7 +280,6 @@ export function useMenu() {
 
         let updatedComplements = [...product.complements];
 
-        // Agregar nuevos complementos
         complementsToAdd.forEach((comp) => {
           const existing = updatedComplements.find((c) => c.id === comp.id);
           if (existing) {
@@ -319,12 +291,10 @@ export function useMenu() {
           }
         });
 
-        // Remover complementos
         complementsToRemove.forEach((id) => {
           updatedComplements = updatedComplements.filter((c) => c.id !== id);
         });
 
-        // Manejar incremento/decremento de adiciones
         if ((ingredient.type === 'special' || ingredient.type === 'addable') && ingredient.additionId) {
           if ((action === 'plus' && ingredient.quantity > 1) || (action === 'plus' && ingredient.quantity >= 1 && ingredient.id === 7 && product.id === 2)) {
             const hasAddition = updatedComplements.find(c => c.id === ingredient.additionId);
@@ -352,6 +322,33 @@ export function useMenu() {
     );
   };
 
+  /**
+   * NUEVA FUNCIÓN: Elimina un complemento directamente desde la vista
+   * Se usa cuando el usuario hace clic en la X de un complemento visible
+   */
+  const handleRemoveComplement = (complementId: number) => {
+    setProducts((prev) =>
+      prev.map((product, index) => {
+        if (index !== actualProduct) return product;
+
+        // Encontrar el complemento a eliminar
+        const complementToRemove = product.complements.find(c => c.id === complementId);
+        
+        if (!complementToRemove) return product;
+
+        console.log("Eliminando complemento:", complementToRemove);
+
+        // Filtrar el complemento del array
+        const updatedComplements = product.complements.filter(c => c.id !== complementId);
+
+        return {
+          ...product,
+          complements: updatedComplements,
+        };
+      })
+    );
+  };
+
   const clearCurrentProductComplements = () => {
     setProducts((prev) =>
       prev.map((product, index) =>
@@ -366,7 +363,43 @@ export function useMenu() {
     return products[actualProduct]?.complements || [];
   };
 
-  const currentProduct = products[actualProduct];
+  /**
+   * Calcula el precio total del producto incluyendo complementos
+   */
+  const calculateProductPrice = (product: Product): number => {
+    const basePrice = product.price;
+    
+    // Sumar el precio de todos los complementos
+    const complementsPrice = product.complements.reduce((total, complement) => {
+      // Solo sumar si el complemento tiene precio y no es un "minus" (sin ingrediente)
+      if (complement.price && complement.price > 0 && !complement.minusComplement) {
+        return total + (complement.price * complement.quantity);
+      }
+      return total;
+    }, 0);
+
+    return basePrice + complementsPrice;
+  };
+
+  /**
+   * Resetea el producto actual a su estado inicial
+   * Limpia todos los complementos y restaura la cantidad a 1
+   */
+  const resetCurrentProduct = () => {
+    setProducts((prev) =>
+      prev.map((product, index) =>
+        index === actualProduct
+          ? { ...product, complements: [], quantity: 1 }
+          : product
+      )
+    );
+  };
+
+  const currentProduct = {
+    ...products[actualProduct],
+    // Sobrescribir el precio con el precio calculado dinámicamente
+    price: calculateProductPrice(products[actualProduct])
+  };
 
   return {
     products,
@@ -376,6 +409,8 @@ export function useMenu() {
     handleDecrease,
     handleChangeProduct,
     handleChangeComplement,
+    handleRemoveComplement,
+    resetCurrentProduct, // ← NUEVA FUNCIÓN
     clearCurrentProductComplements,
     getCurrentProductComplements,
   };
