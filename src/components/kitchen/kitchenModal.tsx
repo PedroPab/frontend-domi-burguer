@@ -224,7 +224,10 @@ export const KitchenModal = ({ isOpen, onClose }: KitchenModalProps) => {
           </div>
           <div className="flex-1 min-h-[200px] w-full bg-accent-yellow-40">
             <MapComponent
-              coordinates={selectedKitchen?.location?.coordinates || { lat: 6.3017314, lng: -75.5743796 }}
+              coordinates={{
+                lat: selectedKitchen?.location?.coordinates?.lat ?? 6.3017314,
+                lng: selectedKitchen?.location?.coordinates?.lng ?? -75.5743796,
+              }}
               minHeight="200px"
             />
           </div>
