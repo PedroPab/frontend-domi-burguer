@@ -12,6 +12,7 @@ interface ModalAddressProps {
 }
 
 export const LogInModal = ({ isOpen, onClose }: ModalAddressProps) => {
+  
   useEffect(() => {
     const handlePopState = () => {
       onClose();

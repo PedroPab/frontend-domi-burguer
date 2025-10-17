@@ -27,6 +27,7 @@ import { useCartStore } from "@/store/cartStore";
 import { useIsMounted } from "@/hooks/useIsMounted";
 import { PhoneNumberInput } from "@/components/ui/inputPhone";
 import { Complements } from "@/components/ui/complements";
+import { CustomizationModalCart } from "@/components/cart/customizationModalCart";
 
 export default function Cart() {
   const formatCurrency = (value: number): string => {
@@ -34,24 +35,6 @@ export default function Cart() {
   };
 
   const isMounted = useIsMounted();
-
-  const userDataFields = [
-    {
-      value: "Pepito Mendieta",
-      hasCheck: true,
-      fullWidth: true,
-    },
-    {
-      value: "pepito@correo.com",
-      hasCheck: true,
-      fullWidth: false,
-    },
-    {
-      value: "+57 322 234 56 78",
-      hasCheck: true,
-      fullWidth: false,
-    },
-  ];
 
   const paymentMethods = [
     {
@@ -76,23 +59,8 @@ export default function Cart() {
       selected: false,
     },
   ];
-  // const benefits = [
-  //   {
-  //     icon: "/cupon.svg",
-  //     text: "Cupones de descuento y sorpresas especiales solo para miembros.",
-  //   },
-  //   {
-  //     icon: "/burger.svg",
-  //     text: "Acceso más rápido a tus pedidos favoritos.",
-  //   },
-  //   {
-  //     icon: "/map-pin.svg",
-  //     text: "Seguimiento y soporte personalizado.",
-  //   },
-  // ];
 
   const {
-    addItem,
     items,
     getSubtotal,
     getTotal,
@@ -102,34 +70,23 @@ export default function Cart() {
     address: addressStore,
   } = useCartStore();
 
-  const [selectedMethod, setSelectedMethod] = useState("efectivo"); // valor inicial
+  const [selectedMethod, setSelectedMethod] = useState("efectivo");
 
   const handleSelect = (id: string) => {
     setSelectedMethod(id);
   };
 
-  const [quantity, setQuantity] = useState(1);
-
   const handleIncrease = (id: string, quantity: number) => {
     updateQuantity(id, quantity + 1);
   };
 
-  //Funciones para disminuir
   const handleDecrease = (id: string, quantity: number) => {
     updateQuantity(id, quantity - 1);
   };
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState<string>("");
-
-  const handleEditProduct = (productName?: string) => {
-    if (productName) {
-      setSelectedProduct(productName);
-    } else {
-      setSelectedProduct("");
-    }
-    setIsModalOpen(true);
-  };
+  const [isModalComplementsOpen, setIsModalComplementsOpen] = useState(false);
+  const [selectedCartItem, setSelectedCartItem] = useState<any>(null);
 
   const [addressToEdit, setAddressToEdit] = useState<Address | null>(
     addressStore
@@ -143,6 +100,16 @@ export default function Cart() {
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setAddressToEdit(null);
+  };
+
+  const handleEditComplements = (item: any) => {
+    setSelectedCartItem(item);
+    setIsModalComplementsOpen(true);
+  };
+
+  const handleCloseComplementsModal = () => {
+    setIsModalComplementsOpen(false);
+    setSelectedCartItem(null);
   };
 
   useEffect(() => {
@@ -167,20 +134,12 @@ export default function Cart() {
               <Input className="" placeholder="Nombres y Apellidos"></Input>
 
               <div className="flex flex-col lg:flex-row w-full gap-2">
-                {/* <Input
-                  className="w-full"
-                  placeholder="Correo Electrónico"
-                /> */}
                 <PhoneNumberInput
                   className="pl-2 w-full"
                   id="phone-input"
                   placeholder="Escribe tu número de teléfono"
-                  // El onChange recibe el valor en formato E.164 (+ código de país)
                   onChange={() => {
-                    console.log(
-                      "%ceste log se lo dedico a Gemini, que supo hacer el codigo mejor que ChatGPT",
-                      "color: green; font-weight: bold;"
-                    );
+                    console.log("Phone changed");
                   }}
                 />
               </div>
@@ -192,7 +151,7 @@ export default function Cart() {
                   className="w-full h-[100px] shadow-sm px-5 py-4 rounded-2xl border-[1.5px] border-[#cccccc] resize-none outline-none [font-family:'Montserrat',Helvetica] font-normal text-neutrosblack-80 text-sm leading-[18px] tracking-[0]"
                 />
                 <span className="absolute bottom-3 right-3 text-gray-400 text-sm pointer-events-none">
-                  23/200
+                  0/200
                 </span>
               </div>
             </div>
@@ -200,14 +159,15 @@ export default function Cart() {
 
           <div className="flex flex-col gap-4 w-full">
             <p className="body-font font-bold">¡Necesitamos tu dirección!</p>
-            <Button
-              variant="ghost"
-              className="bg-accent-yellow-20 hover:bg-accent-yellow-40 active:bg-accent-yellow-40 rounded-[30px] flex items-center gap-2 xl:w-[260px] xl:h-[48px] h-[40px] w-full label-font"
-              onClick={() => setIsModalOpen(true)}
-            >
-              <Plus /> AGREGAR DIRECCIÓN
-            </Button>
-            {/* direccion ya creada */}
+            {addressStore?.coordinates && addressStore?.country ? null : (
+              <Button
+                variant="ghost"
+                className="bg-accent-yellow-20 hover:bg-accent-yellow-40 active:bg-accent-yellow-40 rounded-[30px] flex items-center gap-2 xl:w-[260px] xl:h-[48px] h-[40px] w-full label-font"
+                onClick={() => setIsModalOpen(true)}
+              >
+                <Plus /> AGREGAR DIRECCIÓN
+              </Button>
+            )}
             {addressStore?.coordinates && addressStore?.country && (
               <Card className="gap-6 p-5 w-full bg-accent-yellow-10 rounded-[12px] shadow-none border-0">
                 <CardContent className="p-0">
@@ -262,7 +222,6 @@ export default function Cart() {
                       : "bg-[#FFFFFF]"
                   }`}
                 >
-                  {/* input radio oculto */}
                   <input
                     type="radio"
                     name="paymentMethod"
@@ -303,13 +262,6 @@ export default function Cart() {
             </div>
           </div>
 
-          {/* <div className="flex items-center justify-between w-full my-1">
-            <label htmlFor="include-photo" className="body-font font-bold">
-              Guardar datos para una próxima compra
-            </label>
-            <Switch id="include-photo" />
-          </div> */}
-
           <Card className="flex flex-col items-start h-[209px] p-6 w-full bg-neutral-black-30 rounded-[12px] border-0">
             <CardContent className="p-0 w-full">
               <h5 className="mt-[-1.00px] body-font font-bold mb-4">
@@ -323,7 +275,6 @@ export default function Cart() {
               <div className="inline-flex flex-col gap-3 items-start mr-[-16.00px]">
                 <div className="flex w-full items-center gap-4">
                   <CuponIcon className="" />
-
                   <p className=" body-font text-[15px]!">
                     Cupones de descuento y sorpresas especiales solo para
                     miembros.
@@ -331,14 +282,12 @@ export default function Cart() {
                 </div>
                 <div className="flex w-full items-center  gap-4">
                   <HamburgerIcon width={16} height={16} />
-
                   <p className=" body-font text-[15px]!">
                     Acceso más rápido a tus pedidos favoritos.
                   </p>
                 </div>
                 <div className="flex w-full items-center  gap-4">
                   <MapPinIcon width={16} height={16} />
-
                   <p className=" body-font text-[15px]!">
                     Acceso más rápido a tus pedidos favoritos.
                   </p>
@@ -351,7 +300,6 @@ export default function Cart() {
             <div className="flex flex-col w-full items-start justify-center gap-6">
               <div className="flex items-center gap-3 w-full">
                 <ShieldIcon />
-
                 <p className="body-font">
                   Guardaremos tu información de forma segura
                 </p>
@@ -381,7 +329,6 @@ export default function Cart() {
                     <div className="w-fit font-bold [font-family:'Montserrat',Helvetica] text-neutral-black-80 text-xs leading-[18px] ">
                       PROGRAMAR
                     </div>
-
                     <CalendarIcon className="w-[15px] h-[15px]" />
                   </Button>
                 </div>
@@ -427,8 +374,12 @@ export default function Cart() {
                           <div className="flex gap-3 self-stretch w-full rounded-[80.62px] flex-col items-start">
                             <div className="gap-3 self-stretch w-full flex items-center">
                               <div className="flex-1 font-h4">{item.name}</div>
-
-                              <PencilIcon className="w-4 h-4" />
+                              {item.name.includes("SALSA DE AJO") ? null : (
+                                <PencilIcon
+                                  className="w-4 h-4 cursor-pointer hover:text-neutral-black-60 transition-colors"
+                                  onClick={() => handleEditComplements(item)}
+                                />
+                              )}
                             </div>
                           </div>
 
@@ -464,9 +415,9 @@ export default function Cart() {
 
                 <Separator orientation="horizontal" className="w-full!" />
 
-                {items.some((item) =>
-                  item.name.toLowerCase().includes("SALSA DE AJO")
-                ) ? (
+                {!items.some((item) =>
+                  item.name.toLowerCase().includes("salsa")
+                ) && (
                   <>
                     <h2 className="">ACOMPAÑA TU BURGER</h2>
 
@@ -475,7 +426,7 @@ export default function Cart() {
                         <div className="w-24 h-24 bg-accent-yellow-40 rounded-[7.66px] relative">
                           <Image
                             src="/salsaSmall.png"
-                            alt="Burger"
+                            alt="Salsa"
                             width={118}
                             height={85}
                             className="absolute top-[5px] left-[3px] w-[118px] h-[85px] object-cover overflow-visible"
@@ -505,7 +456,7 @@ export default function Cart() {
                       </CardContent>
                     </Card>
                   </>
-                ) : null}
+                )}
               </div>
 
               <div className="flex flex-col items-start gap-8 w-full">
@@ -554,11 +505,20 @@ export default function Cart() {
           <SpikesIcon className="w-full rotate-180" />
         </Card>
       </div>
+
       <ModalAddress
         isOpen={isModalOpen}
         onClose={handleCloseModal}
         addressToEdit={addressToEdit}
       />
+
+      {selectedCartItem && (
+        <CustomizationModalCart
+          isOpen={isModalComplementsOpen}
+          onClose={handleCloseComplementsModal}
+          cartItem={selectedCartItem}
+        />
+      )}
     </div>
   );
 }

@@ -322,10 +322,7 @@ export function useMenu() {
     );
   };
 
-  /**
-   * NUEVA FUNCIÓN: Elimina un complemento directamente desde la vista
-   * Se usa cuando el usuario hace clic en la X de un complemento visible
-   */
+  
   const handleRemoveComplement = (complementId: number) => {
     setProducts((prev) =>
       prev.map((product, index) => {
@@ -410,7 +407,7 @@ export function useMenu() {
     handleChangeProduct,
     handleChangeComplement,
     handleRemoveComplement,
-    resetCurrentProduct, // ← NUEVA FUNCIÓN
+    resetCurrentProduct, 
     clearCurrentProductComplements,
     getCurrentProductComplements,
   };
