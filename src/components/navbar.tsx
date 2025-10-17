@@ -12,10 +12,13 @@ import {
 import Link from "next/link";
 import { LogInModal } from "./login/logInModal";
 import { KitchenModal } from "./kitchen/kitchenModal";
+import { useCartStore } from "@/store/cartStore";
 
 export const Navbar = () => {
   const [isAcountModalOpen, setIsAcountModalOpen] = useState(false);
   const [isKitchenModalOpen, setIsKitchenModalOpen] = useState(false);
+  const { items } = useCartStore();
+
   return (
     <>
       <nav
@@ -23,7 +26,7 @@ export const Navbar = () => {
           isAcountModalOpen || isKitchenModalOpen ? "z-600" : "z-300"
         } w-full px-4`}
       >
-        <div className="max-w-[828px] md:h-[80px] h-[62px] gap-2 py-0 mt-[20px] mb-[10px] rounded-[60px] border border-solid border-[#e6e6e6] flex items-center justify-between w-full mx-auto px-4 sm:px-6 lg:px-8 bg-[#ffffff]">
+        <div className="max-w-[828px] md:h-[80px] h-[62px] gap-2 py-0 mt-[20px] mb-[10px] rounded-[60px] border border-solid border-[#e6e6e6] flex items-center justify-between w-full mx-auto px-4! sm:px-6 lg:px-8 bg-[#ffffff]">
           <div className="flex w-[300px] h-14 px-0 py-3 rounded-[50px] overflow-hidden items-center">
             <Button
               onClick={() => setIsAcountModalOpen(true)}
@@ -84,7 +87,7 @@ export const Navbar = () => {
                 </span>
                 <div className="flex flex-col w-8 h-8 items-center justify-center gap-2 bg-accentmikado-10 rounded-[20px]">
                   <span className="text-black whitespace-nowrap font-bold text-[16px] bg-amber-50 h-8 w-8 rounded-[20px] text-center pt-1 lg:mr-2">
-                    0
+                    {items.length}
                   </span>
                 </div>
               </Button>

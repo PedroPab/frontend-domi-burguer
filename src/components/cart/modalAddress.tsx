@@ -21,7 +21,6 @@ import { useCartStore } from "@/store/cartStore";
 
 import { Address, PropertyType } from "@/types/address";
 
-
 interface ModalAddressProps {
   isOpen: boolean;
   onClose: () => void;
@@ -39,12 +38,15 @@ export const ModalAddress = ({
   const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
 
   // Hook de formulario con datos iniciales si está editando
-  const initialData = addressToEdit ? {
-    address: addressToEdit.address,
-    floor: addressToEdit.floor || '',
-  } : undefined;
+  const initialData = addressToEdit
+    ? {
+        address: addressToEdit.address,
+        floor: addressToEdit.floor || "",
+      }
+    : undefined;
 
-  const { formState, updateField, resetForm, isFormValid } = useAddressForm(initialData);
+  const { formState, updateField, resetForm, isFormValid } =
+    useAddressForm(initialData);
 
   // Hook de envío
   const { submitAddress, isSubmitting, error } = useAddressSubmit(
@@ -54,7 +56,7 @@ export const ModalAddress = ({
       resetForm();
     },
     (error) => {
-      console.error('Error al crear dirección:', error);
+      console.error("Error al crear dirección:", error);
     }
   );
 
@@ -63,10 +65,10 @@ export const ModalAddress = ({
     if (place.geometry?.location && place.formatted_address) {
       const lat = place.geometry.location.lat();
       const lng = place.geometry.location.lng();
-      
-      if (typeof lat === 'number' && typeof lng === 'number') {
-        updateField('coordinates', { lat, lng });
-        updateField('address', place.formatted_address);
+
+      if (typeof lat === "number" && typeof lng === "number") {
+        updateField("coordinates", { lat, lng });
+        updateField("address", place.formatted_address);
       }
     }
   });
@@ -74,12 +76,12 @@ export const ModalAddress = ({
   // Cargar datos de dirección cuando se abre en modo edición
   useEffect(() => {
     if (isOpen && addressToEdit) {
-      updateField('address', addressToEdit.fullAddress);
-      updateField('floor', addressToEdit.floor || '');
-      updateField('comment', addressToEdit.comment || '');
-      updateField('addressName', addressToEdit.name);
-      updateField('coordinates', addressToEdit.coordinates);
-      updateField('selectedType', addressToEdit.propertyType || '');
+      updateField("address", addressToEdit.fullAddress);
+      updateField("floor", addressToEdit.floor || "");
+      updateField("comment", addressToEdit.comment || "");
+      updateField("addressName", addressToEdit.name);
+      updateField("coordinates", addressToEdit.coordinates);
+      updateField("selectedType", addressToEdit.propertyType || "");
     }
   }, [isOpen, addressToEdit]);
 
@@ -90,10 +92,10 @@ export const ModalAddress = ({
     };
 
     if (isOpen) {
-      window.history.pushState({ modalOpen: true }, "");
+      window.history.pushState({ addressModalOpen: true }, "");
       window.addEventListener("popstate", handlePopState);
     } else {
-      if (window.history.state?.modalOpen) {
+      if (window.history.state?.addressModalOpen) {
         window.history.back();
       }
     }
@@ -105,11 +107,11 @@ export const ModalAddress = ({
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    
+
     if (!isFormValid()) {
       return;
     }
-    
+
     await submitAddress(formState);
   };
 
@@ -132,9 +134,9 @@ export const ModalAddress = ({
           onSubmit={handleSubmit}
         >
           <DialogTitle className="mb-4 pt-[24px] pl-[20px] lg:pl-[32px] lg:pt-[32px] font-bold text-[18px]! md:text-[20px]! leading-[20px]! md:leading-[22px]! text-neutral-black-80">
-            {addressToEdit ? 'EDITAR DIRECCIÓN' : 'NUEVA DIRECCIÓN'}
+            {addressToEdit ? "EDITAR DIRECCIÓN" : "NUEVA DIRECCIÓN"}
           </DialogTitle>
-          
+
           {error && (
             <div className="mx-[20px] lg:mx-[32px] mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
               {error}
@@ -144,9 +146,10 @@ export const ModalAddress = ({
           <div className="flex flex-col lg:flex-row gap-2 lg:gap-6 h-full">
             <div className="flex flex-1 flex-col px-[20px] lg:pl-[32px] lg:pr-0">
               <p className="body-font mb-5">
-                Selecciona la ubicación en el mapa y completa los datos de tu dirección.
+                Selecciona la ubicación en el mapa y completa los datos de tu
+                dirección.
               </p>
-              
+
               <div className="flex flex-col gap-2">
                 {isLoaded && (
                   <Autocomplete
@@ -169,7 +172,7 @@ export const ModalAddress = ({
                         className="shadow-none pr-12"
                         placeholder="Nueva dirección"
                         value={formState.address}
-                        onChange={(e) => updateField('address', e.target.value)}
+                        onChange={(e) => updateField("address", e.target.value)}
                       />
                       <MapPinIcon className="w-[22px] h-[22px] absolute right-5 top-1/2 -translate-y-1/2" />
                     </div>
@@ -180,15 +183,17 @@ export const ModalAddress = ({
                   className="shadow-none"
                   placeholder="Nombre de la ubicación (ej: Casa, Oficina)"
                   value={formState.addressName}
-                  onChange={(e) => updateField('addressName', e.target.value)}
+                  onChange={(e) => updateField("addressName", e.target.value)}
                   id="name"
                   name="name"
                   required
                 />
 
                 <div className="flex gap-2">
-                  <Select 
-                    onValueChange={(value) => updateField('selectedType', value as PropertyType)} 
+                  <Select
+                    onValueChange={(value) =>
+                      updateField("selectedType", value as PropertyType)
+                    }
                     value={formState.selectedType}
                   >
                     <SelectTrigger className="text-neutral-black-50! body-font">
@@ -207,7 +212,7 @@ export const ModalAddress = ({
                     value={formState.floor}
                     id="floor"
                     name="floor"
-                    onChange={(e) => updateField('floor', e.target.value)}
+                    onChange={(e) => updateField("floor", e.target.value)}
                     placeholder="Unidad, piso, apto"
                   />
                 </div>
@@ -216,7 +221,7 @@ export const ModalAddress = ({
                   <textarea
                     placeholder="Alguna referencia?"
                     value={formState.comment}
-                    onChange={(e) => updateField('comment', e.target.value)}
+                    onChange={(e) => updateField("comment", e.target.value)}
                     id="comment"
                     name="comment"
                     maxLength={200}
@@ -240,7 +245,10 @@ export const ModalAddress = ({
             </div>
 
             <div className="flex-1 min-h-[223px] w-full bg-accent-yellow-40">
-              <MapComponent coordinates={formState.coordinates} minHeight="223px" />
+              <MapComponent
+                coordinates={formState.coordinates}
+                minHeight="223px"
+              />
             </div>
           </div>
 
@@ -253,12 +261,12 @@ export const ModalAddress = ({
             >
               CERRAR
             </Button>
-            <Button 
+            <Button
               type="submit"
               className="text-white rounded-[30px] flex items-center gap-2 text-[16px] w-[200px] h-[48px]"
               disabled={isSubmitting || !isFormValid()}
             >
-              {isSubmitting ? 'GUARDANDO...' : 'CONFIRMAR'}
+              {isSubmitting ? "GUARDANDO..." : "CONFIRMAR"}
             </Button>
           </div>
         </form>

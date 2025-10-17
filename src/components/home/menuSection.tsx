@@ -12,6 +12,8 @@ import { showFoodToast } from "../toastFood";
 import Link from "next/link";
 import useEmblaCarousel from "embla-carousel-react";
 import { useAddToCart } from "@/hooks/cart/useAddToCart";
+import { Complements } from "../ui/complements";
+import { ComplementsLarge } from "../ui/complementsLarge";
 
 export default function MenuSection() {
   const {
@@ -22,6 +24,8 @@ export default function MenuSection() {
     handleDecrease,
     handleChangeProduct,
     handleChangeComplement,
+    handleRemoveComplement,
+    resetCurrentProduct,
   } = useMenu();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -129,9 +133,9 @@ export default function MenuSection() {
           </div>
         </div>
 
-        {/* Columna 2 - Información del Producto */}
-        <div className="flex flex-col items-center justify-center gap-8 md:gap-14 p-10 md:p-20 bg-accent-yellow-10 max-w-[720px] w-full mx-auto">
-          <div className="flex flex-col w-full max-w-[400px] items-center gap-6">
+        {/* Columna 2 - Información del Producto 56 32*/}
+        <div className="flex flex-col items-center justify-center p-10 md:p-20 md:pt-30 bg-accent-yellow-10 max-w-[720px] w-full mx-auto">
+          <div className="flex flex-col w-full max-w-[400px] items-center gap-6 mb-8 md:mb-5">
             <div className="transition-opacity duration-300">
               <h1 className="text-center">
                 {currentProduct.name.startsWith("HAMBURGUESA") ? (
@@ -163,7 +167,14 @@ export default function MenuSection() {
             </Button>
           </div>
 
-          <div className="flex w-full max-w-[720px] items-center justify-center gap-6">
+          <div className="w-full mb-8 md:mb-12">
+            <ComplementsLarge
+              complements={currentProduct.complements}
+              onRemove={handleRemoveComplement}
+            />
+          </div>
+
+          <div className="flex w-full max-w-[720px] items-center justify-center gap-6 mb-8 md:mb-12">
             <QuantitySelector
               value={currentProduct.quantity}
               onIncrease={handleIncrease}
@@ -190,6 +201,7 @@ export default function MenuSection() {
               onClick={() => {
                 handleAddToCart(currentProduct);
                 showFoodToast(currentProduct.name);
+                resetCurrentProduct();
               }}
             >
               AÑADIR AL CARRITO
@@ -224,9 +236,14 @@ export default function MenuSection() {
 
             <Button
               size="icon"
-              className={`absolute top-[5px] right-[5px] lg:top-[7px] lg:left-[232px] w-8 h-8 lg:w-10 lg:h-10 rounded-[30px] p-0 ${
+              className={`absolute top-[5px] z-200 right-[5px] lg:top-[7px] lg:left-[232px] w-8 h-8 lg:w-10 lg:h-10 rounded-[30px] p-0 ${
                 actualProduct === 0 ? "hidden" : ""
               }`}
+              onClick={() => {
+                handleAddToCart(products[0]);
+                showFoodToast(products[0].name);
+                resetCurrentProduct();
+              }}
             >
               <Plus className="text-white" />
             </Button>
@@ -262,9 +279,14 @@ export default function MenuSection() {
 
             <Button
               size="icon"
-              className={`absolute top-[5px] right-[5px] lg:top-[7px] lg:left-[232px] w-8 h-8 lg:w-10 lg:h-10 rounded-[30px] p-0 ${
+              className={`absolute z-200 top-[5px] right-[5px] lg:top-[7px] lg:left-[232px] w-8 h-8 lg:w-10 lg:h-10 rounded-[30px] p-0 ${
                 actualProduct === 1 ? "hidden" : ""
               }`}
+              onClick={() => {
+                handleAddToCart(products[1]);
+                showFoodToast(products[1].name);
+                resetCurrentProduct();
+              }}
             >
               <Plus className="text-white" />
             </Button>
@@ -291,9 +313,14 @@ export default function MenuSection() {
 
             <Button
               size="icon"
-              className={`absolute top-[5px] right-[5px] lg:top-[7px] lg:left-[232px] w-8 h-8 lg:w-10 lg:h-10 rounded-[30px] p-0 ${
+              className={`absolute z-200 top-[5px] right-[5px] lg:top-[7px] lg:left-[232px] w-8 h-8 lg:w-10 lg:h-10 rounded-[30px] p-0 ${
                 actualProduct === 2 ? "hidden" : ""
               }`}
+              onClick={() => {
+                handleAddToCart(products[2]);
+                showFoodToast(products[2].name);
+                resetCurrentProduct();
+              }}
             >
               <Plus className="text-white" />
             </Button>

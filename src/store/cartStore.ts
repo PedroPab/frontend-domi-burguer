@@ -8,8 +8,8 @@ export interface CartItem {
   id: string;
   productId: number;
   name: string;
-  price: number; // Precio total incluyendo complementos
-  basePrice: number; // Precio base sin complementos
+  price: number;
+  basePrice: number;
   quantity: number;
   image1: string;
   image2?: string | null;
@@ -24,10 +24,11 @@ interface CartStore {
   removeItem: (id: string) => void;
   updateQuantity: (id: string, quantity: number) => void;
   removeComplement: (itemId: string, complementId: number) => void;
+  updateItemComplements: (itemId: string, newComplements: Complement[]) => void; // NUEVA
   setAddress: (address: Address) => void;
+  removeAddress: () => void; // NUEVA
   clearCart: () => void;
 
-  // Computed - Mejorados
   getTotal: () => number;
   getSubtotal: () => number;
   getItemCount: () => number;
@@ -123,9 +124,46 @@ export const useCartStore = create<CartStore>()(
           return { items: newItems };
         }),
 
-      setAddress: (address) => set({ address }),
+      // NUEVA FUNCIÓN: Actualiza los complementos de un item del carrito
+      updateItemComplements: (itemId, newComplements) =>
+        set((state) => {
+          const itemIndex = state.items.findIndex((i) => i.id === itemId);
+          if (itemIndex === -1) return state;
 
-      clearCart: () => set({ items: [], address: null }),
+          const item = state.items[itemIndex];
+          const newPrice = calculateTotalPrice(item.basePrice, newComplements);
+          const newId = generateCartItemId(item.productId, newComplements);
+
+          // Verificar si ya existe un item con los mismos complementos
+          const existingItemIndex = state.items.findIndex(
+            (i, index) => i.id === newId && index !== itemIndex
+          );
+
+          const newItems = [...state.items];
+
+          if (existingItemIndex !== -1 && newId !== itemId) {
+            // Si ya existe, combinar cantidades
+            newItems[existingItemIndex] = {
+              ...newItems[existingItemIndex],
+              quantity: newItems[existingItemIndex].quantity + item.quantity,
+            };
+            newItems.splice(itemIndex, 1);
+          } else {
+            // Si no existe, actualizar el item actual
+            newItems[itemIndex] = {
+              ...item,
+              id: newId,
+              complements: newComplements,
+              price: newPrice,
+            };
+          }
+
+          return { items: newItems };
+        }),
+
+      setAddress: (address) => set({ address }),
+  removeAddress: () => set({ address: null }), // NUEVA
+  clearCart: () => set({ items: [], address: null }),
 
       getDeliveryFee: () => {
         const address = get().address;
