@@ -190,7 +190,14 @@ export default function MenuSection() {
 
           <div className="flex flex-col sm:flex-row w-full max-w-[720px] items-center justify-center gap-3 sm:gap-6">
             <Link href={"/cart"}>
-              <Button className="text-white rounded-[30px] flex items-center gap-2 text-[16px] w-[199px] h-[48px] transition-all hover:scale-105 active:scale-95">
+              <Button
+                onClick={() => {
+                  handleAddToCart(currentProduct);
+                  showFoodToast(currentProduct.name);
+                  resetCurrentProduct();
+                }}
+                className="text-white rounded-[30px] flex items-center gap-2 text-[16px] w-[199px] h-[48px] transition-all hover:scale-105 active:scale-95"
+              >
                 <HamburgerIcon className="w-6 h-6" />
                 PAGAR AHORA
               </Button>

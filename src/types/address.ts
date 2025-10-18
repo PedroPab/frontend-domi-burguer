@@ -6,7 +6,8 @@ export interface Coordinates {
 }
 
 export interface Address {
-  id?: string;
+  id: string;
+  distance: number;
   name: string;
   address: string;
   floor?: string;
@@ -22,6 +23,7 @@ export interface Address {
 
 // Helper para crear dirección vacía
 export const createEmptyAddress = (): Address => ({
+  id: "",
   name: "",
   address: "",
   city: "",
@@ -34,4 +36,5 @@ export const createEmptyAddress = (): Address => ({
   deliveryPrice: 0,
   fullAddress: "",
   kitchen: "",
+  distance: 0,
 });

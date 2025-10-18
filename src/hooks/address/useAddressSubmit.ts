@@ -42,7 +42,7 @@ export const useAddressSubmit = (
         name: formState.addressName,
         deliveryPrice: responseDelivery.body.delivery.price || 0,
         kitchen: responseDelivery.body.kitchen.name || '',
-        
+        distance: responseDelivery.body.delivery.distance || 0,
       };
 
       localStorage.setItem('userAddress', JSON.stringify(addressData));

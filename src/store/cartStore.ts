@@ -162,8 +162,8 @@ export const useCartStore = create<CartStore>()(
         }),
 
       setAddress: (address) => set({ address }),
-  removeAddress: () => set({ address: null }), // NUEVA
-  clearCart: () => set({ items: [], address: null }),
+      removeAddress: () => set({ address: null }),
+      clearCart: () => set({ items: [] }),
 
       getDeliveryFee: () => {
         const address = get().address;
