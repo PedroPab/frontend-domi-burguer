@@ -34,14 +34,14 @@ const iconMap: { [key: string]: React.FC<LogoProps> } = {
 
 const ingredientsData: Complement[] = [
   {
-    id: 4,
+    id: 1002,
     name: "Carne",
     price: 6000,
     icon: "CarneIcon",
     quantity: 1,
     type: "special",
-    additionId: 100,
-    minusId: 101,
+    additionId: 4,
+    minusId: 20,
     minusComplement: false,
   },
   {
