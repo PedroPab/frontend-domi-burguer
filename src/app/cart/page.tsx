@@ -153,7 +153,7 @@ export default function Cart() {
                     value={formData.comment}
                     maxLength={200}
                     placeholder="Algún comentario?"
-                    className="w-full h-[100px] shadow-sm px-5 py-4 rounded-2xl border-[1.5px] border-[#cccccc] resize-none outline-none [font-family:'Montserrat',Helvetica] font-normal text-neutrosblack-80 text-sm leading-[18px] tracking-[0]"
+                    className="w-full h-[100px] shadow-sm px-5 py-4 rounded-2xl border-[1.5px] border-[#cccccc] resize-none outline-none [font-family:'Montserrat',Helvetica] font-normal text-neutrosblack-80 text-sm leading-[18px] tracking-[0] focus:border-[#808080]"
                   />
                   <span className="absolute bottom-3 right-3 text-gray-400 text-sm pointer-events-none">
                     {formData.comment.length}/200
@@ -224,13 +224,13 @@ export default function Cart() {
             <div className="flex flex-col gap-4 w-full">
               <h5 className="body-font font-bold">Método de pago</h5>
 
-              <div className="flex gap-5 xl:gap-2  w-full">
+              <div className="flex flex-wrap justify-around gap-3 sm:gap-4 md:gap-5 w-full">
                 {paymentMethods.map((method) => (
                   <label
                     key={method.id}
                     className={`cursor-pointer inline-flex flex-col items-start justify-center p-3 flex-[0_0_auto] rounded-[8px] transition-colors ${
                       formData.paymentMethod === method.id
-                        ? "bg-[#F7F7F7]"
+                        ? "bg-accent-yellow-10"
                         : "bg-[#FFFFFF]"
                     }`}
                   >
@@ -248,7 +248,7 @@ export default function Cart() {
                       <div
                         className={`relative w-4 h-4 rounded-[10px] ${
                           formData.paymentMethod === method.id
-                            ? "bg-neutral-black-80"
+                            ? "bg-primary-red-60"
                             : "bg-[#FFFFFF] border-2 border-solid border-[#cccccc]"
                         }`}
                       >
@@ -275,7 +275,7 @@ export default function Cart() {
               </div>
             </div>
 
-            <Card className="flex flex-col items-start h-[209px] p-6 w-full bg-neutral-black-30 rounded-[12px] border-0">
+            <Card className="flex flex-col items-start min-h-[209px]  p-6 w-full bg-neutral-black-30 rounded-[12px] border-0">
               <CardContent className="p-0 w-full">
                 <h5 className="mt-[-1.00px] body-font font-bold mb-4">
                   ¿Por qué guardar tus datos?
@@ -339,6 +339,7 @@ export default function Cart() {
                       type="button"
                       variant="outline"
                       className="bg-accent-yellow-10 inline-flex px-3 py-2 rounded-[20px] border-[1.5px] border-solid border-[#313131] items-center justify-center gap-2 h-auto"
+                      disabled={true}
                     >
                       <div className="w-fit font-bold [font-family:'Montserrat',Helvetica] text-neutral-black-80 text-xs leading-[18px] ">
                         PROGRAMAR
@@ -355,7 +356,7 @@ export default function Cart() {
                         key={item.id}
                         className="flex w-full xl:h-28 items-start gap-4 pl-2 pr-3 xl:pr-4 py-2 bg-[#FFFFFF] rounded-[12px] overflow-hidden border-0"
                       >
-                        <CardContent className="p-0 flex w-full gap-4 justify-center items-center">
+                        <CardContent className="p-0 flex w-full gap-4 items-center justify-start">
                           <div className="w-24 h-24 min-w-24 bg-accent-yellow-40 rounded-[7.66px] relative">
                             <Image
                               src={item.image1}
@@ -528,7 +529,7 @@ export default function Cart() {
                     <Button
                       type="submit"
                       disabled={isSubmitting || items.length === 0}
-                      className="text-white rounded-[30px] flex items-center gap-2 text-[16px] w-[128px] h-[48px] disabled:opacity-50 disabled:cursor-not-allowed"
+                      className={`text-white rounded-[30px] flex items-center gap-2 text-[16px] w-[128px] h-[48px] disabled:opacity-50 disabled:cursor-not-allowed ${isSubmitting ? "w-auto" : "w-[128px]"}`}
                     >
                       {isSubmitting ? "PROCESANDO..." : "COMPRAR"}
                     </Button>
