@@ -197,7 +197,7 @@ export const ModalAddress = ({
                     value={formState.selectedType}
                   >
                     <SelectTrigger className="text-neutral-black-50! body-font">
-                      <SelectValue placeholder="Tipo" />
+                      <SelectValue defaultValue="house" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="house">Casa</SelectItem>

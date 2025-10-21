@@ -31,7 +31,7 @@ export const Navbar = () => {
             <Button
               onClick={() => setIsAcountModalOpen(true)}
               variant="ghost"
-              className={`inline-flex h-10 lg:h-12 justify-center px-[10px] lg:px-5 lg:py-2  mt-[-8.00px] mb-[-8.00px] rounded-[30px] items-center bg-transparent outline-none border-none focus:ring-0 ${
+              className={`inline-flex h-10 lg:h-12 justify-center px-[10px] lg:px-5 lg:py-2  mt-[-8.00px] mb-[-8.00px] rounded-[30px] items-center bg-transparent outline-none border-none focus:outline-0! focus:ring-0! focus:bg-accent-yellow-20 ${
                 isAcountModalOpen ? "bg-accent-yellow-20" : ""
               }`}
             >
@@ -43,7 +43,7 @@ export const Navbar = () => {
             <Button
               onClick={() => setIsKitchenModalOpen(true)}
               variant="ghost"
-              className={`inline-flex h-10 lg:h-12 justify-center px-3 lg:px-5 py-2 mt-[-8.00px] mb-[-8.00px] rounded-[30px] items-center bg-transparent ${
+              className={`inline-flex h-10 lg:h-12 justify-center px-3 lg:px-5 py-2 mt-[-8.00px] mb-[-8.00px] rounded-[30px] items-center bg-transparent focus:outline-0! focus:ring-0! focus:bg-accent-yellow-20 ${
                 isKitchenModalOpen ? "bg-accent-yellow-20" : ""
               }`}
             >
@@ -54,8 +54,8 @@ export const Navbar = () => {
           </div>
 
           <div className="flex flex-col w-[130px] h-14 items-center justify-center gap-2">
-            <div className="hidden md:block w-[106px] h-14">
-              <Link href={"/"}>
+            <div className="hidden md:block w-[106px] h-14 ">
+              <Link href={"/"} className="focus:outline-0! focus:ring-0!">
                 <LogoDesktop height={58} width={106} />
               </Link>
             </div>
@@ -72,14 +72,14 @@ export const Navbar = () => {
             <Button
               variant="ghost"
               size="icon"
-              className="flex w-12 h-12 px-3 py-2 bg-accent-yellow-20 cursor-pointer items-center justify-center gap-2 rounded-[30px] "
+              className="flex w-12 h-12 px-3 py-2 bg-accent-yellow-20 focus:bg-accent-yellow-40 cursor-pointer items-center justify-center gap-2 rounded-[30px] focus:outline-0! focus:ring-0!"
             >
               <WhatsAppIcon className="w-5 h-5 md:w-6 md:h-6" />
             </Button>
-            <Link href={"/cart"}>
+            <Link href={"/cart"} tabIndex={-1} className="focus:outline-0! focus:ring-0! focus:bg-[#E10300] rounded-[30px]">
               <Button
                 variant="default"
-                className="h-[42px] min-w-16 lg:h-12 py-2 ps-3 pe-1 lg:pl-5 lg:pr-2 lg:py-2 items-center justify-center gap-2 rounded-[30px] cursor-pointer"
+                className="h-[44px] min-w-16 lg:h-12 py-2 ps-3 pe-[7px] lg:pl-5 lg:pr-2 lg:py-2 items-center justify-center gap-2 rounded-[30px] cursor-pointer focus:outline-0! focus:ring-0! focus:bg-[#E10300]"
               >
                 <HamburgerIcon className="w-5 h-5 md:w-6 md:h-6 text-white" />
                 <span className="text-white whitespace-nowrap font-bold hidden md:block">

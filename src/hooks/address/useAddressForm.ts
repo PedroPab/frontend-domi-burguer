@@ -18,7 +18,7 @@ export const useAddressForm = (initialState?: Partial<AddressFormState>) => {
     comment: initialState?.comment || '',
     addressName: initialState?.addressName || '',
     coordinates: initialState?.coordinates || null,
-    selectedType: initialState?.selectedType || '',
+    selectedType: initialState?.selectedType || 'house',
   });
 
   const updateField = <K extends keyof AddressFormState>(

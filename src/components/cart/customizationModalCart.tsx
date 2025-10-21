@@ -17,6 +17,7 @@ import {
   TomateIcon,
   LogoProps,
 } from "../ui/icons";
+import { ChevronDown, ChevronUp, CupSoda } from "lucide-react";
 import { QuantitySelector } from "../ui/quantitySelector";
 import { Complement } from "@/types/products";
 import { useCartStore, CartItem } from "@/store/cartStore";
@@ -30,9 +31,11 @@ const iconMap: { [key: string]: React.FC<LogoProps> } = {
   SouceIcon,
   TocinetaIcon,
   TomateIcon,
+  CupSoda,
 };
 
-const ingredientsData: Complement[] = [
+// SECCIONES
+const favoritosData: Complement[] = [
   {
     id: 1002,
     name: "Carne",
@@ -44,6 +47,41 @@ const ingredientsData: Complement[] = [
     minusId: 20,
     minusComplement: false,
   },
+  {
+    id: 244,
+    name: "Queso americano",
+    price: 2000,
+    icon: "QuesoIcon",
+    quantity: 1,
+    type: "special",
+    additionId: 5,
+    minusId: 24,
+    minusComplement: false,
+  },
+  {
+    id: 666,
+    name: "Tocineta",
+    price: 3500,
+    icon: "TocinetaIcon",
+    quantity: 1,
+    type: "special",
+    additionId: 6,
+    minusId: 18,
+    minusComplement: false,
+  },
+  {
+    id: 7,
+    name: "Papas rizadas",
+    price: 6800,
+    icon: "FrenchFriesIcon",
+    quantity: 0,
+    type: "addable",
+    additionId: 7,
+    minusComplement: false,
+  },
+];
+
+const otrosData: Complement[] = [
   {
     id: 14,
     name: "Lechuga",
@@ -62,17 +100,6 @@ const ingredientsData: Complement[] = [
     type: "special",
     additionId: 30,
     minusId: 12,
-    minusComplement: false,
-  },
-  {
-    id: 666,
-    name: "Tocineta",
-    price: 3500,
-    icon: "TocinetaIcon",
-    quantity: 1,
-    type: "special",
-    additionId: 6,
-    minusId: 18,
     minusComplement: false,
   },
   {
@@ -95,25 +122,37 @@ const ingredientsData: Complement[] = [
     type: "removable",
     minusComplement: true,
   },
+];
+
+const gaseosasData: Complement[] = [
   {
-    id: 244,
-    name: "Queso americano",
-    price: 2000,
-    icon: "QuesoIcon",
-    quantity: 1,
-    type: "special",
-    additionId: 5,
-    minusId: 24,
+    id: 501,
+    name: "Coca Cola",
+    price: 3000,
+    icon: "CupSoda",
+    quantity: 0,
+    type: "addable",
+    additionId: 501,
     minusComplement: false,
   },
   {
-    id: 7,
-    name: "Papas rizadas",
-    price: 6800,
-    icon: "FrenchFriesIcon",
+    id: 502,
+    name: "Sprite",
+    price: 3000,
+    icon: "CupSoda",
     quantity: 0,
     type: "addable",
-    additionId: 7,
+    additionId: 502,
+    minusComplement: false,
+  },
+  {
+    id: 503,
+    name: "Fanta",
+    price: 3000,
+    icon: "CupSoda",
+    quantity: 0,
+    type: "addable",
+    additionId: 503,
     minusComplement: false,
   },
 ];
@@ -129,122 +168,101 @@ export const CustomizationModalCart = ({
   onClose,
   cartItem,
 }: CustomizationModalCartProps) => {
-  const [ingredients, setIngredients] = useState<Complement[]>(ingredientsData);
   const { updateItemComplements } = useCartStore();
 
-  // Sincronizar ingredientes con los complementos del item del carrito
+  const [favoritos, setFavoritos] = useState(favoritosData);
+  const [otros, setOtros] = useState(otrosData);
+  const [gaseosas, setGaseosas] = useState(gaseosasData);
+
+  const [isFavoritosOpen, setIsFavoritosOpen] = useState(true);
+  const [isOtrosOpen, setIsOtrosOpen] = useState(true);
+  const [isGaseosasOpen, setIsGaseosasOpen] = useState(false);
+
+  // Sincroniza complementos con el carrito
   useEffect(() => {
     if (isOpen && cartItem) {
-      setIngredients((prev) =>
-        prev.map((ing) => {
-          // Para ingredientes SPECIAL
+      const sync = (list: Complement[]) =>
+        list.map((ing) => {
           if (ing.type === "special") {
-            const hasVegetariano = cartItem.complements.some(
+            const minus = cartItem.complements.some(
               (c) => c.id === ing.minusId
             );
-            if (hasVegetariano) {
-              return { ...ing, quantity: 0 };
-            }
+            if (minus) return { ...ing, quantity: 0 };
 
-            const adicion = cartItem.complements.find(
+            const add = cartItem.complements.find(
               (c) => c.id === ing.additionId
             );
-            if (adicion) {
-              return { ...ing, quantity: 1 + adicion.quantity };
-            }
-
-            return { ...ing, quantity: 1 };
+            return { ...ing, quantity: add ? 1 + add.quantity : 1 };
           }
 
-          // Para ingredientes ADDABLE
           if (ing.type === "addable") {
-            const isComboEspecial = cartItem.productId === 1;
-            const adicion = cartItem.complements.find(
+            const add = cartItem.complements.find(
               (c) => c.id === ing.additionId
             );
-            const aditionQty = adicion ? adicion.quantity : 0;
-
-            if (isComboEspecial) {
-              return { ...ing, quantity: 1 + aditionQty };
-            } else {
-              return { ...ing, quantity: aditionQty };
-            }
+            return { ...ing, quantity: add ? add.quantity : 0 };
           }
 
-          // Para ingredientes REMOVABLE
           if (ing.type === "removable") {
-            const hasSinIngrediente = cartItem.complements.some(
-              (c) => c.id === ing.id
-            );
-
-            if (hasSinIngrediente) {
-              return { ...ing, quantity: 0 };
-            }
-
-            return { ...ing, quantity: 1 };
+            const removed = cartItem.complements.some((c) => c.id === ing.id);
+            return { ...ing, quantity: removed ? 0 : 1 };
           }
 
           return ing;
-        })
-      );
+        });
+
+      setFavoritos(sync(favoritosData));
+      setOtros(sync(otrosData));
+      setGaseosas(sync(gaseosasData));
     }
   }, [cartItem, isOpen]);
 
-  // Manejo del botón "atrás" del navegador
+  // Cierra con botón atrás
   useEffect(() => {
     const handlePopState = () => onClose();
 
     if (isOpen) {
       window.history.pushState({ complementsModalOpen: true }, "");
       window.addEventListener("popstate", handlePopState);
-    } else {
-      if (window.history.state?.complementsModalOpen) {
-        window.history.back();
-      }
+    } else if (window.history.state?.complementsModalOpen) {
+      window.history.back();
     }
 
     return () => window.removeEventListener("popstate", handlePopState);
   }, [isOpen, onClose]);
 
-  /**
-   * Maneja los cambios en la cantidad de un ingrediente
-   */
   const handleIngredientChange = (
     ingredient: Complement,
-    action: "plus" | "minus"
+    action: "plus" | "minus",
+    section: "favoritos" | "otros" | "gaseosas"
   ) => {
     if (
       action === "plus" &&
       ingredient.type === "removable" &&
       ingredient.quantity >= 1
-    ) {
+    )
       return;
-    }
-
-    if (action === "minus" && ingredient.quantity <= 0) {
-      return;
-    }
+    if (action === "minus" && ingredient.quantity <= 0) return;
 
     const newQuantity =
       action === "plus" ? ingredient.quantity + 1 : ingredient.quantity - 1;
 
-    setIngredients((prev) =>
-      prev.map((i) =>
+    const updateList = (list: Complement[]) =>
+      list.map((i) =>
         i.id === ingredient.id ? { ...i, quantity: newQuantity } : i
-      )
-    );
+      );
+
+    if (section === "favoritos") setFavoritos(updateList);
+    if (section === "otros") setOtros(updateList);
+    if (section === "gaseosas") setGaseosas(updateList);
   };
 
-  /**
-   * Convierte el estado actual de ingredientes a complementos
-   */
-  const convertIngredientsToComplements = (): Complement[] => {
+  const convertToComplements = (): Complement[] => {
+    const all = [...favoritos, ...otros, ...gaseosas];
     const complements: Complement[] = [];
 
-    ingredients.forEach((ing) => {
+    all.forEach((ing) => {
       if (ing.type === "special") {
-        // Si quantity es 0, agregar complemento "Vegetariano/Sin X"
-        if (ing.quantity === 0 && ing.minusId) {
+        if (ing.quantity === 0 && ing.minusId)
           complements.push({
             ...ing,
             id: ing.minusId,
@@ -252,79 +270,98 @@ export const CustomizationModalCart = ({
             quantity: 1,
             price: 0,
           });
-        }
-        // Si quantity > 1, agregar complemento de "Adición"
-        else if (ing.quantity > 1 && ing.additionId) {
-          const { additionId, minusId, ...rest } = ing;
-          complements.push({
-            ...rest,
-            id: ing.additionId,
-            minusComplement: false,
-            quantity: ing.quantity - 1,
-          });
-        }
-      } else if (ing.type === "addable") {
-        const isComboEspecial = cartItem.productId === 1;
-
-        if (isComboEspecial) {
-          // En combo especial, solo agregar si quantity > 1
-          if (ing.quantity > 1 && ing.additionId) {
-            const { additionId, minusId, ...rest } = ing;
-            complements.push({
-              ...rest,
-              id: ing.additionId,
-              minusComplement: false,
-              quantity: ing.quantity - 1,
-            });
-          }
-        } else {
-          // En otros productos, agregar si quantity > 0
-          if (ing.quantity > 0 && ing.additionId) {
-            const { additionId, minusId, ...rest } = ing;
-            complements.push({
-              ...rest,
-              id: ing.additionId,
-              minusComplement: false,
-              quantity: ing.quantity,
-            });
-          }
-        }
-      } else if (ing.type === "removable") {
-        // Si quantity es 0, agregar complemento "Sin X"
-        if (ing.quantity === 0) {
+        else if (ing.quantity > 1 && ing.additionId)
           complements.push({
             ...ing,
-            id: ing.id,
-            minusComplement: true,
-            quantity: 1,
-            price: 0,
+            id: ing.additionId,
+            quantity: ing.quantity - 1,
           });
-        }
+      } else if (ing.type === "addable") {
+        if (ing.quantity > 0 && ing.additionId)
+          complements.push({
+            ...ing,
+            id: ing.additionId,
+            quantity: ing.quantity,
+          });
+      } else if (ing.type === "removable" && ing.quantity === 0) {
+        complements.push({
+          ...ing,
+          id: ing.id,
+          minusComplement: true,
+          quantity: 1,
+          price: 0,
+        });
       }
     });
 
     return complements;
   };
 
-  /**
-   * Confirma los cambios y actualiza el item en el carrito
-   */
   const handleConfirm = () => {
-    const newComplements = convertIngredientsToComplements();
+    const newComplements = convertToComplements();
     updateItemComplements(cartItem.id, newComplements);
     onClose();
   };
 
-  /**
-   * Cancela y cierra el modal
-   */
-  const handleCancel = () => {
-    onClose();
-  };
+  const renderSection = (
+    title: string,
+    ingredients: Complement[],
+    section: "favoritos" | "otros" | "gaseosas",
+    isOpen: boolean,
+    toggle: () => void
+  ) => (
+    <div className="flex flex-col items-start w-full">
+      <button
+        onClick={toggle}
+        className="flex items-center gap-4 px-0 py-3 w-full border-b border-neutral-black-30"
+      >
+        <div className="flex-1 body-font font-bold text-left">{title}</div>
+        {isOpen ? (
+          <ChevronUp className="w-5 h-5" />
+        ) : (
+          <ChevronDown className="w-5 h-5" />
+        )}
+      </button>
+      {isOpen && (
+        <div className="flex flex-col w-full pt-2">
+          {ingredients.map((ingredient) => {
+            const Icon = ingredient.icon ? iconMap[ingredient.icon] : null;
+            return (
+              <div
+                key={ingredient.id}
+                className="flex h-12 items-center gap-4 py-3 rounded-xl"
+              >
+                {Icon && <Icon />}
+                <div className="flex-1 font-medium text-sm leading-4">
+                  <span className="text-[#313131]">{ingredient.name}</span>
+                  {ingredient.price && (
+                    <span className="text-[#808080]">
+                      {" "}
+                      (+${ingredient.price})
+                    </span>
+                  )}
+                </div>
+                <QuantitySelector
+                  value={ingredient.quantity}
+                  onIncrease={() =>
+                    handleIngredientChange(ingredient, "plus", section)
+                  }
+                  onDecrease={() =>
+                    handleIngredientChange(ingredient, "minus", section)
+                  }
+                  size="sm"
+                />
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="p-0 bg-background rounded-2xl z-500">
+      <DialogContent className="p-0 bg-background modal-scrollbar rounded-2xl z-500 max-h-[90vh] overflow-y-auto">
         <DialogHeader className="p-10 pb-0">
           <DialogTitle className="font-bold text-[16px] md:text-[20px] text-center leading-[18px] md:leading-[22px] text-neutral-black-80">
             ¿QUIERES PERSONALIZAR TU {cartItem?.name}?
@@ -332,50 +369,30 @@ export const CustomizationModalCart = ({
         </DialogHeader>
 
         <div className="flex flex-col gap-6 px-10 pb-10">
-          {/* Lista de ingredientes */}
-          <div className="flex flex-col">
-            {ingredients.map((ingredient) => {
-              const IconComponent = ingredient.icon
-                ? iconMap[ingredient.icon]
-                : null;
-              return (
-                <div
-                  key={ingredient.id}
-                  className="flex h-12 items-center gap-4 py-3 rounded-xl"
-                >
-                  {IconComponent && <IconComponent />}
+          <p className="body-font text-center text-neutral-black-60">
+            Selecciona los ingredientes que quieres agregar o los que deseas
+            retirar.
+          </p>
 
-                  <div className="flex-1 font-medium text-sm leading-4">
-                    <span className="text-[#313131]">{ingredient.name}</span>
-                    {ingredient.price && (
-                      <span className="text-[#808080]">
-                        {" "}
-                        (+${ingredient.price})
-                      </span>
-                    )}
-                  </div>
+          {renderSection(
+            "Favoritos",
+            favoritos,
+            "favoritos",
+            isFavoritosOpen,
+            () => setIsFavoritosOpen(!isFavoritosOpen)
+          )}
+          {renderSection("Otros", otros, "otros", isOtrosOpen, () =>
+            setIsOtrosOpen(!isOtrosOpen)
+          )}
+          {renderSection("Gaseosas", gaseosas, "gaseosas", isGaseosasOpen, () =>
+            setIsGaseosasOpen(!isGaseosasOpen)
+          )}
 
-                  <QuantitySelector
-                    value={ingredient.quantity}
-                    onIncrease={() =>
-                      handleIngredientChange(ingredient, "plus")
-                    }
-                    onDecrease={() =>
-                      handleIngredientChange(ingredient, "minus")
-                    }
-                    size="sm"
-                  />
-                </div>
-              );
-            })}
-          </div>
-
-          {/* Botones de acción */}
-          <div className="flex justify-between items-center">
+          <div className="flex justify-between items-center pt-4">
             <Button
               variant="ghost"
               className="bg-accent-yellow-40 hover:bg-accent-yellow-60 rounded-[30px] w-[133px] h-[48px]"
-              onClick={handleCancel}
+              onClick={onClose}
             >
               CANCELAR
             </Button>

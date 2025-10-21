@@ -19,6 +19,7 @@ import {
 } from "../ui/icons";
 import { QuantitySelector } from "../ui/quantitySelector";
 import { Complement } from "@/types/products";
+import { ChevronDown, ChevronUp, CupSoda  } from "lucide-react";
 
 const iconMap: { [key: string]: React.FC<LogoProps> } = {
   CarneIcon,
@@ -29,9 +30,11 @@ const iconMap: { [key: string]: React.FC<LogoProps> } = {
   SouceIcon,
   TocinetaIcon,
   TomateIcon,
+  CupSoda,
 };
 
-const ingredientsData: Complement[] = [
+// FAVORITOS - Ingredientes principales
+const favoritosData: Complement[] = [
   {
     id: 1002,
     name: "Carne",
@@ -43,6 +46,42 @@ const ingredientsData: Complement[] = [
     minusId: 20,
     minusComplement: false,
   },
+  {
+    id: 244,
+    name: "Queso americano",
+    price: 2000,
+    icon: "QuesoIcon",
+    quantity: 1,
+    type: "special",
+    additionId: 5,
+    minusId: 24,
+    minusComplement: false,
+  },
+  {
+    id: 666,
+    name: "Tocineta",
+    price: 3500,
+    icon: "TocinetaIcon",
+    quantity: 1,
+    type: "special",
+    additionId: 6,
+    minusId: 18,
+    minusComplement: false,
+  },
+  {
+    id: 7,
+    name: "Papas rizadas",
+    price: 6800,
+    icon: "FrenchFriesIcon",
+    quantity: 0,
+    type: "addable",
+    additionId: 7,
+    minusComplement: false,
+  },
+];
+
+// OTROS - Ingredientes secundarios y vegetales
+const otrosData: Complement[] = [
   {
     id: 14,
     name: "Lechuga",
@@ -61,17 +100,6 @@ const ingredientsData: Complement[] = [
     type: "special",
     additionId: 30,
     minusId: 12,
-    minusComplement: false,
-  },
-  {
-    id: 666,
-    name: "Tocineta",
-    price: 3500,
-    icon: "TocinetaIcon",
-    quantity: 1,
-    type: "special",
-    additionId: 6,
-    minusId: 18,
     minusComplement: false,
   },
   {
@@ -94,25 +122,39 @@ const ingredientsData: Complement[] = [
     type: "removable",
     minusComplement: true,
   },
+  
+];
+
+// GASEOSAS - Bebidas
+const gaseosasData: Complement[] = [
   {
-    id: 244,
-    name: "Queso americano",
-    price: 2000,
-    icon: "QuesoIcon",
-    quantity: 1,
-    type: "special",
-    additionId: 5,
-    minusId: 24,
+    id: 501,
+    name: "Coca Cola",
+    price: 3000,
+    icon: "CupSoda",
+    quantity: 0,
+    type: "addable",
+    additionId: 501,
     minusComplement: false,
   },
   {
-    id: 7,
-    name: "Papas rizadas",
-    price: 6800,
-    icon: "FrenchFriesIcon",
+    id: 502,
+    name: "Sprite",
+    price: 3000,
+    icon: "CupSoda",
     quantity: 0,
     type: "addable",
-    additionId: 7,
+    additionId: 502,
+    minusComplement: false,
+  },
+  {
+    id: 503,
+    name: "Fanta",
+    price: 3000,
+    icon: "CupSoda",
+    quantity: 0,
+    type: "addable",
+    additionId: 503,
     minusComplement: false,
   },
 ];
@@ -134,33 +176,34 @@ export const CustomizationModalSection = ({
   handleChangeComplement,
   complements = [],
 }: CustomizationModalSectionProps) => {
-  const [ingredients, setIngredients] = useState<Complement[]>(ingredientsData);
+  const [favoritos, setFavoritos] = useState<Complement[]>(favoritosData);
+  const [otros, setOtros] = useState<Complement[]>(otrosData);
+  const [gaseosas, setGaseosas] = useState<Complement[]>(gaseosasData);
 
-  // Sincronizar ingredientes con complementos guardados cuando abre el modal
+  // Estados de los acordeones
+  const [isFavoritosOpen, setIsFavoritosOpen] = useState(true);
+  const [isOtrosOpen, setIsOtrosOpen] = useState(true);
+  const [isGaseosasOpen, setIsGaseosasOpen] = useState(false);
+
+  // Sincronizar ingredientes con complementos guardados
   useEffect(() => {
     if (isOpen) {
-      setIngredients((prev) =>
-        prev.map((ing) => {
-          // Para ingredientes SPECIAL
+      const syncIngredients = (ingredients: Complement[]) =>
+        ingredients.map((ing) => {
           if (ing.type === "special") {
-            // Buscar complemento "Vegetariano" (minusId)
             const hasVegetariano = complements.some((c) => c.id === ing.minusId);
             if (hasVegetariano) {
               return { ...ing, quantity: 0 };
             }
 
-            // Buscar complemento "Adición de X" (additionId)
             const adicion = complements.find((c) => c.id === ing.additionId);
             if (adicion) {
-              // Cantidad = 1 (base) + cantidad de adición
               return { ...ing, quantity: 1 + adicion.quantity };
             }
 
-            // Si no hay complementos, es cantidad 1 (default)
             return { ...ing, quantity: 1 };
           }
 
-          // Para ingredientes ADDABLE
           if (ing.type === "addable") {
             const isComboEspecial = productId === 1;
             const adicion = complements.find((c) => c.id === ing.additionId);
@@ -173,24 +216,20 @@ export const CustomizationModalSection = ({
             }
           }
 
-          // Para ingredientes REMOVABLE
           if (ing.type === "removable") {
-            // Buscar complemento "Sin X" (mismo ID del ingrediente)
-            const hasSinIngrediente = complements.some((c) => 
-              c.id === ing.id 
-            );
-            
+            const hasSinIngrediente = complements.some((c) => c.id === ing.id);
             if (hasSinIngrediente) {
               return { ...ing, quantity: 0 };
             }
-
-            // Si no hay complemento "Sin X", está presente (cantidad 1)
             return { ...ing, quantity: 1 };
           }
 
           return ing;
-        })
-      );
+        });
+
+      setFavoritos(syncIngredients(favoritosData));
+      setOtros(syncIngredients(otrosData));
+      setGaseosas(syncIngredients(gaseosasData));
     }
   }, [complements, isOpen, productId]);
 
@@ -199,58 +238,97 @@ export const CustomizationModalSection = ({
     const handlePopState = () => onClose();
 
     if (isOpen) {
-      window.history.pushState({ modalOpen: true }, "");
+      window.history.pushState({ customModalOpen: true }, "");
       window.addEventListener("popstate", handlePopState);
     } else {
-      if (window.history.state?.modalOpen) window.history.back();
+      if (window.history.state?.customModalOpen) {
+        window.history.back();
+      }
     }
 
     return () => window.removeEventListener("popstate", handlePopState);
   }, [isOpen, onClose]);
 
-  /**
-   * Maneja los cambios en la cantidad de un ingrediente
-   */
   const handleIngredientChange = (
     ingredient: Complement,
-    action: "plus" | "minus"
+    action: "plus" | "minus",
+    section: "favoritos" | "otros" | "gaseosas"
   ) => {
-    // Para removable en cantidad 1, no permitir aumentar
-    if (action === 'plus' && ingredient.type === 'removable' && ingredient.quantity >= 1) {
+    if (
+      action === "plus" &&
+      ingredient.type === "removable" &&
+      ingredient.quantity >= 1
+    ) {
       return;
     }
 
-    // Para special y removable en cantidad 0, no permitir disminuir más
-    if (action === 'minus' && ingredient.quantity <= 0) {
+    if (action === "minus" && ingredient.quantity <= 0) {
       return;
     }
 
-    // Calcular nueva cantidad
-    const newQuantity = action === 'plus' 
-      ? ingredient.quantity + 1 
-      : ingredient.quantity - 1;
+    const newQuantity =
+      action === "plus" ? ingredient.quantity + 1 : ingredient.quantity - 1;
 
-    // Actualizar cantidad visual del ingrediente
-    setIngredients((prev) =>
+    const updateSection = (prev: Complement[]) =>
       prev.map((i) =>
         i.id === ingredient.id ? { ...i, quantity: newQuantity } : i
-      )
-    );
+      );
 
-    // Pasar el ingrediente con la cantidad ACTUAL (antes del cambio)
+    if (section === "favoritos") {
+      setFavoritos(updateSection);
+    } else if (section === "otros") {
+      setOtros(updateSection);
+    } else if (section === "gaseosas") {
+      setGaseosas(updateSection);
+    }
+
     handleChangeComplement(ingredient, action);
   };
 
-  /**
-   * Resetea todos los ingredientes y complementos
-   */
   const handleReset = () => {
-    setIngredients(ingredientsData);
+    setFavoritos(favoritosData);
+    setOtros(otrosData);
+    setGaseosas(gaseosasData);
+  };
+
+  const renderIngredientSection = (
+    ingredients: Complement[],
+    section: "favoritos" | "otros" | "gaseosas"
+  ) => {
+    return ingredients.map((ingredient) => {
+      const IconComponent = ingredient.icon ? iconMap[ingredient.icon] : null;
+      return (
+        <div
+          key={ingredient.id}
+          className="flex h-12 items-center gap-4 py-3 rounded-xl"
+        >
+          {IconComponent ? (
+            <IconComponent />
+          ) : (
+            <div className="w-6 h-6 bg-accent-yellow-40 rounded-full" />
+          )}
+
+          <div className="flex-1 font-medium text-sm leading-4">
+            <span className="text-[#313131]">{ingredient.name}</span>
+            {ingredient.price && (
+              <span className="text-[#808080]"> (+${ingredient.price})</span>
+            )}
+          </div>
+
+          <QuantitySelector
+            value={ingredient.quantity}
+            onIncrease={() => handleIngredientChange(ingredient, "plus", section)}
+            onDecrease={() => handleIngredientChange(ingredient, "minus", section)}
+            size="sm"
+          />
+        </div>
+      );
+    });
   };
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="p-0 bg-background rounded-2xl z-500">
+      <DialogContent className="p-0 bg-background modal-scrollbar rounded-2xl z-500 max-h-[90vh] overflow-y-auto">
         <DialogHeader className="p-10 pb-0">
           <DialogTitle className="font-bold text-[16px] md:text-[20px] text-center leading-[18px] md:leading-[22px] text-neutral-black-80">
             ¿QUIERES PERSONALIZAR TU {productName}?
@@ -258,47 +336,79 @@ export const CustomizationModalSection = ({
         </DialogHeader>
 
         <div className="flex flex-col gap-6 px-10 pb-10">
-          {/* Lista de ingredientes */}
-                    <div className="flex flex-col">
-                      {ingredients.map((ingredient) => {
-                        const IconComponent = ingredient.icon
-                          ? iconMap[ingredient.icon]
-                          : null;
-                        return (
-                          <div
-                            key={ingredient.id}
-                            className="flex h-12 items-center gap-4 py-3 rounded-xl"
-                          >
-                            {IconComponent && <IconComponent />}
-          
-                            <div className="flex-1 font-medium text-sm leading-4">
-                              <span className="text-[#313131]">{ingredient.name}</span>
-                              {ingredient.price && (
-                                <span className="text-[#808080]">
-                                  {" "}
-                                  (+${
-                                  ingredient.price
-                                })
-                                </span>
-                              )}
-                            </div>
-          
-                            <QuantitySelector
-                              value={ingredient.quantity}
-                              onIncrease={() => handleIngredientChange(ingredient, "plus")}
-                              onDecrease={() =>
-                                handleIngredientChange(ingredient, "minus")
-                              }
-                              size="sm"
-                            />
-                          </div>
-                        );
-                      })}
-          
+          <p className="body-font text-center text-neutral-black-60">
+            Selecciona los ingredientes que quieres agregar o los que deseas retirar.
+          </p>
+
+          {/* SECCIÓN FAVORITOS */}
+          <div className="flex flex-col items-start w-full">
+            <button
+              onClick={() => setIsFavoritosOpen(!isFavoritosOpen)}
+              className="flex items-center gap-4 px-0 py-3 w-full border-b border-neutral-black-30"
+            >
+              <div className="flex-1 body-font font-bold text-left">
+                Favoritos
+              </div>
+              {isFavoritosOpen ? (
+                <ChevronUp className="w-5 h-5" />
+              ) : (
+                <ChevronDown className="w-5 h-5" />
+              )}
+            </button>
+
+            {isFavoritosOpen && (
+              <div className="flex flex-col w-full pt-2">
+                {renderIngredientSection(favoritos, "favoritos")}
+              </div>
+            )}
+          </div>
+
+          {/* SECCIÓN OTROS */}
+          <div className="flex flex-col items-start w-full">
+            <button
+              onClick={() => setIsOtrosOpen(!isOtrosOpen)}
+              className="flex items-center gap-4 px-0 py-3 w-full border-b border-neutral-black-30"
+            >
+              <div className="flex-1 body-font font-bold text-left">Otros</div>
+              {isOtrosOpen ? (
+                <ChevronUp className="w-5 h-5" />
+              ) : (
+                <ChevronDown className="w-5 h-5" />
+              )}
+            </button>
+
+            {isOtrosOpen && (
+              <div className="flex flex-col w-full pt-2">
+                {renderIngredientSection(otros, "otros")}
+              </div>
+            )}
+          </div>
+
+          {/* SECCIÓN GASEOSAS */}
+          <div className="flex flex-col items-start w-full">
+            <button
+              onClick={() => setIsGaseosasOpen(!isGaseosasOpen)}
+              className="flex items-center gap-4 px-0 py-3 w-full border-b border-neutral-black-30"
+            >
+              <div className="flex-1 body-font font-bold text-left">
+                Gaseosas
+              </div>
+              {isGaseosasOpen ? (
+                <ChevronUp className="w-5 h-5" />
+              ) : (
+                <ChevronDown className="w-5 h-5" />
+              )}
+            </button>
+
+            {isGaseosasOpen && (
+              <div className="flex flex-col w-full pt-2">
+                {renderIngredientSection(gaseosas, "gaseosas")}
+              </div>
+            )}
           </div>
 
           {/* Botones de acción */}
-          <div className="flex justify-between items-center">
+          <div className="flex justify-between items-center pt-4">
             <Button
               variant="ghost"
               className="bg-accent-yellow-40 hover:bg-accent-yellow-60 rounded-[30px] w-[133px] h-[48px]"
@@ -309,7 +419,7 @@ export const CustomizationModalSection = ({
             >
               CANCELAR
             </Button>
-            <Button 
+            <Button
               className="text-white rounded-[30px] w-[133px] h-[48px]"
               onClick={onClose}
             >
