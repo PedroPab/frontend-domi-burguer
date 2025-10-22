@@ -13,7 +13,7 @@ type PaymentMethod = {
 
 function useFormCart() {
   const router = useRouter();
-  const { items, address, clearCart } = useCartStore();
+  const { items, address, clearCart, getSubtotal, getTotal} = useCartStore();
 
   const API_URL = `${process.env.NEXT_PUBLIC_API_URL}`;
   const paymentMethods: PaymentMethod[] = [
@@ -146,6 +146,22 @@ function useFormCart() {
       const result = await response.json();
 
       console.log("Orden creada exitosamente:", result);
+
+      const lastOrder = {
+        name: formData.name,
+        phone: formData.phone,
+        comment: formData.comment,
+        locationId: address?.id,
+        address: address,
+        orderItems: items,
+        paymentMethod: formData.paymentMethod,
+        prices: {
+        subtotal: getSubtotal(),
+        total: getTotal(),
+      },
+      };
+
+      localStorage.setItem("lastOrder", JSON.stringify(lastOrder));
 
       // Limpiar carrito después de orden exitosa
       clearCart();

@@ -10,7 +10,7 @@ export const useAddToCart = () => {
     const uniqueId = generateCartItemId(product.id, product.complements);
     
     // Calcular precio total con complementos
-    const totalPrice = calculateTotalPrice(product.price, product.complements);
+    const totalPrice = calculateTotalPrice(product.basePrice, product.complements);
     
     
     // Crear item del carrito
@@ -19,7 +19,7 @@ export const useAddToCart = () => {
       productId: product.id,
       name: product.name,
       price: totalPrice,
-      basePrice: product.price,
+      basePrice: product.basePrice,
       quantity: product.quantity,
       image1: product.image1,
       image2: product.image2 || null,
@@ -33,7 +33,7 @@ export const useAddToCart = () => {
       productName: product.name,
       quantity: product.quantity,
       complementsCount: product.complements.length,
-      basePrice: product.price,
+      basePrice: product.basePrice,
       totalPrice,
       pricePerUnit: totalPrice,
       totalCost: totalPrice * product.quantity,

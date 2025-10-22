@@ -6,12 +6,12 @@ import { Input } from "../ui/input";
 import { GoogleIcon } from "../ui/icons";
 import { Separator } from "../ui/separator";
 
-interface ModalAddressProps {
+interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-export const LogInModal = ({ isOpen, onClose }: ModalAddressProps) => {
+export const LogInModal = ({ isOpen, onClose }: ModalProps) => {
   
   useEffect(() => {
     const handlePopState = () => {

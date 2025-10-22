@@ -190,6 +190,7 @@ export function useMenu() {
     {
       id: 2,
       name: "HAMBURGUESA ARTESANAL",
+      basePrice: 18900,
       price: 18900,
       body: "Pan brioche dorado, carne jugosa, tocineta crocante, lechuga fresca, tomate y el toque de nuestra salsa secreta.",
       bigImage: "/burgerBig.png",
@@ -201,6 +202,7 @@ export function useMenu() {
     {
       id: 1,
       name: "COMBO ESPECIAL",
+      basePrice: 22900,
       price: 22900,
       body: "Nuestra hamburguesa estrella, acompañada de papas rizadas doradas, crocantes y listas para el dip.",
       bigImage: "/comboEspecial.png",
@@ -213,6 +215,7 @@ export function useMenu() {
     {
       id: 38,
       name: "SALSA DE AJO",
+      basePrice: 25000,
       price: 25000,
       body: "Cremosa, intensa y perfectamente balanceada, nuestra receta familiar de salsa de ajo. Es el secreto que se queda en tu memoria.",
       bigImage: "/salsaAjo.png",

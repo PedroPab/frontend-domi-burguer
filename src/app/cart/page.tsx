@@ -27,6 +27,8 @@ import { PhoneNumberInput } from "@/components/ui/inputPhone";
 import { Complements } from "@/components/ui/complements";
 import { CustomizationModalCart } from "@/components/cart/customizationModalCart";
 import useFormCart from "@/hooks/cart/useFormcart";
+import Link from "next/link";
+import Tooltip from "@/components/ui/tooltip";
 
 export default function Cart() {
   const formatCurrency = (value: number): string => {
@@ -275,7 +277,7 @@ export default function Cart() {
               </div>
             </div>
 
-            <Card className="flex flex-col items-start min-h-[209px]  p-6 w-full bg-neutral-black-30 rounded-[12px] border-0">
+            {/* <Card className="flex flex-col items-start min-h-[209px]  p-6 w-full bg-neutral-black-30 rounded-[12px] border-0">
               <CardContent className="p-0 w-full">
                 <h5 className="mt-[-1.00px] body-font font-bold mb-4">
                   ¿Por qué guardar tus datos?
@@ -307,9 +309,9 @@ export default function Cart() {
                   </div>
                 </div>
               </CardContent>
-            </Card>
+            </Card> */}
 
-            <div className="flex items-start gap-2 w-full rounded-xl">
+            {/* <div className="flex items-start gap-2 w-full rounded-xl">
               <div className="flex flex-col w-full items-start justify-center gap-6">
                 <div className="flex items-center gap-3 w-full">
                   <ShieldIcon />
@@ -318,7 +320,7 @@ export default function Cart() {
                   </p>
                 </div>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
 
@@ -334,18 +336,19 @@ export default function Cart() {
                     <p className="body-font font-bold flex-1">
                       Programar el envío de mi pedido
                     </p>
-
-                    <Button
-                      type="button"
-                      variant="outline"
-                      className="bg-accent-yellow-10 inline-flex px-3 py-2 rounded-[20px] border-[1.5px] border-solid border-[#313131] items-center justify-center gap-2 h-auto"
-                      disabled={true}
-                    >
-                      <div className="w-fit font-bold [font-family:'Montserrat',Helvetica] text-neutral-black-80 text-xs leading-[18px] ">
-                        PROGRAMAR
-                      </div>
-                      <CalendarIcon className="w-[15px] h-[15px]" />
-                    </Button>
+                    <Tooltip text="Proximamente">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        className="bg-accent-yellow-10 inline-flex px-3 py-2 rounded-[20px] border-[1.5px] border-solid border-[#313131] items-center justify-center gap-2 h-auto"
+                        disabled={true}
+                      >
+                        <div className="w-fit font-bold [font-family:'Montserrat',Helvetica] text-neutral-black-80 text-xs leading-[18px] ">
+                          PROGRAMAR
+                        </div>
+                        <CalendarIcon className="w-[15px] h-[15px]" />
+                      </Button>
+                    </Tooltip>
                   </div>
                 </div>
 
@@ -428,6 +431,28 @@ export default function Cart() {
                         </CardContent>
                       </Card>
                     ))}
+
+                    {items.length === 0 && (
+                      <>
+                        <div className="flex flex-col items-center justify-center w-full py-4">
+                          <h3 className="text-xl text-neutral-black-60">
+                            No hay productos en el carrito
+                          </h3>
+                          <Link
+                            href={"/"}
+                            className="focus:outline-0! focus:ring-0!"
+                          >
+                            <Button
+                              type="button"
+                              className="text-white! rounded-[30px] flex items-center gap-2 w-[260px] xl:w-[260px] xl:h-[48px] h-[40px] label-font mt-4 shadow-none"
+                              onClick={() => setIsModalOpen(true)}
+                            >
+                              <Plus /> AGREGAR PRODUCTOS
+                            </Button>
+                          </Link>
+                        </div>
+                      </>
+                    )}
                   </div>
 
                   <Separator orientation="horizontal" className="w-full!" />
@@ -529,7 +554,9 @@ export default function Cart() {
                     <Button
                       type="submit"
                       disabled={isSubmitting || items.length === 0}
-                      className={`text-white rounded-[30px] flex items-center gap-2 text-[16px] w-[128px] h-[48px] disabled:opacity-50 disabled:cursor-not-allowed ${isSubmitting ? "w-auto" : "w-[128px]"}`}
+                      className={`text-white rounded-[30px] flex items-center gap-2 text-[16px] w-[128px] h-[48px] disabled:opacity-50 disabled:cursor-not-allowed ${
+                        isSubmitting ? "w-auto" : "w-[128px]"
+                      }`}
                     >
                       {isSubmitting ? "PROCESANDO..." : "COMPRAR"}
                     </Button>
