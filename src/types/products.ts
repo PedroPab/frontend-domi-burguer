@@ -16,6 +16,7 @@ export type Product = {
   id: number;
   name: string;
   price: number;
+  basePrice: number;
   body: string;
   bigImage: string;
   image1: string;

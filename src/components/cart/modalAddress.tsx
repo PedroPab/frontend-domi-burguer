@@ -233,13 +233,13 @@ export const ModalAddress = ({
                 </div>
 
                 <div className="flex items-center justify-between mb-1 lg:mb-6">
-                  <label
+                  {/* <label
                     htmlFor="include-photo"
                     className="body-font text-[16px]! font-bold"
                   >
                     Incluir foto de tu ubicación
                   </label>
-                  <Switch id="include-photo" />
+                  <Switch id="include-photo" /> */}
                 </div>
               </div>
             </div>

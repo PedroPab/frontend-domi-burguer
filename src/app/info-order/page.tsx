@@ -10,11 +10,13 @@ import {
 } from "@/components/ui/icons";
 import Image from "next/image";
 import { Separator } from "@/components/ui/separator";
+import { Product } from "@/types/products";
+import { Complements } from "@/components/ui/complements";
 
 export default function InfoOrder() {
   const paymentMethods = [
     {
-      id: "efectivo",
+      id: "cash",
       label: "Efectivo",
       iconClass: "w-[38px] h-[32px]",
       icon: MoneyIcon,
@@ -72,8 +74,17 @@ export default function InfoOrder() {
 
   const [selectedMethod, setSelectedMethod] = useState("efectivo");
 
-  return (
-    <div className="flex flex-col xl:flex-row w-full justify-center items-center xl:justify-around gap-5 mt-[110px] lg:mt-[130px] mb-[100px]">
+  const lastOrder =
+    typeof window !== "undefined" ? localStorage.getItem("lastOrder") : null;
+  console.log("Last Order from localStorage:", lastOrder);
+
+  const items = lastOrder ? JSON.parse(lastOrder).orderItems : [];
+  const address = lastOrder ? JSON.parse(lastOrder).address : null;
+  const paymentMethod = lastOrder ? JSON.parse(lastOrder).paymentMethod : null;
+  const prices = lastOrder ? JSON.parse(lastOrder).prices : null;
+
+  return lastOrder ? (
+    <div className="flex flex-col xl:flex-row w-full xl:justify-around items-center xl:items-start gap-5 mt-[130px] lg:mt-[130px] mb-[100px]">
       <div className="flex h-full w-full pb-10 max-w-[500px]">
         <div className="flex flex-col h-full gap-6 w-full mt-5">
           <div className="flex-col">
@@ -88,19 +99,21 @@ export default function InfoOrder() {
                 <div className="flex justify-between gap-6 w-full">
                   <div className="flex gap-4">
                     <div className="flex flex-col gap-2">
-                      <h5 className="body-font font-bold">Casa de mamá</h5>
+                      <h5 className="body-font font-bold">{address.name}</h5>
 
-                      <div className="body-font">
-                        Medellín, Antioquia
-                        <br />
-                        Cra 66 # 33 - 77
-                        <br />
-                        Int 6 Apto 606
+                      <div className="body-font flex flex-col gap-1">
+                        <span>
+                          {address.city}, {address.country}
+                        </span>
+                        <span>{address.address}</span>
+                        <span>{address.floor}</span>
                       </div>
                     </div>
                   </div>
                   <div className="flex">
-                    <h2 className="">$4.400</h2>
+                    <h2 className="">
+                      ${address.deliveryPrice.toLocaleString("es-CO")}
+                    </h2>
                   </div>
                 </div>
               </CardContent>
@@ -111,7 +124,7 @@ export default function InfoOrder() {
             <h5 className="body-font font-bold">Método de pago</h5>
             {/* tendra que mostrarse solo la opcion que se eligio antes no todas las opciones de pago */}
             <div className="flex gap-5 xl:gap-2  w-full">
-              {paymentMethods.map((method) => (
+              {paymentMethods.filter((method) => method.id === paymentMethod).map((method) => (
                 <label
                   key={method.id}
                   className={`cursor-pointer inline-flex flex-col items-start justify-center p-3 flex-[0_0_auto] rounded-[8px] transition-colors ${
@@ -163,77 +176,67 @@ export default function InfoOrder() {
 
               <div className="flex flex-col items-start gap-8 w-full">
                 <div className="flex flex-col items-start gap-4 w-full">
-                  {orderItems.map((item) => (
-                    <Card
-                      key={item.id}
-                      className="flex w-full h-28 items-start gap-4 pl-2 pr-4 py-2 bg-[#FFFFFF] rounded-[12px] overflow-hidden border-0"
-                    >
-                      <CardContent className="p-0 flex w-full gap-4">
-                        <div className="w-24 h-24 bg-accent-yellow-40 rounded-[7.66px] relative">
-                          <Image
-                            src={item.image1}
-                            alt="Burger"
-                            width={67}
-                            height={105}
-                            className={`object-cover absolute  ${
-                              item.image2
-                                ? "left-[5px] top-[-5]"
-                                : "top-[5px] left-[15px]"
-                            }`}
-                          />
-
-                          {item.image2 && (
+                    {items.map((item: Product) => (
+                      <Card
+                        key={item.id}
+                        className="flex w-full xl:h-28 items-start gap-4 pl-2 pr-3 xl:pr-4 py-2 bg-[#FFFFFF] rounded-[12px] overflow-hidden border-0"
+                      >
+                        <CardContent className="p-0 flex w-full gap-4 items-center justify-start">
+                          <div className="w-24 h-24 min-w-24 bg-accent-yellow-40 rounded-[7.66px] relative">
                             <Image
-                              src={item.image2}
-                              alt="Domiburger papitas"
-                              width={57}
-                              height={84}
-                              className="object-cover absolute top-5 left-[41px]"
+                              src={item.image1}
+                              alt="Burger"
+                              width={67}
+                              height={105}
+                              className={
+                                item.name.toLowerCase().includes("salsa")
+                                  ? "absolute top-[5px] left-[3px] w-[118px] h-[85px] object-cover overflow-visible"
+                                  : `object-cover absolute ${
+                                      item.image2
+                                        ? "left-[5px] top-[-5px]"
+                                        : "top-[-5px] left-[15px]"
+                                    }`
+                              }
                             />
-                          )}
-                        </div>
 
-                        <div className="justify-center gap-3 pt-1 pb-0 px-0 flex-1 grow flex flex-col items-start self-stretch">
-                          <div className="flex gap-3 self-stretch w-full rounded-[80.62px] flex-col items-start">
-                            <div className="gap-3 self-stretch w-full flex items-center">
-                              <div className="flex-1 font-h4">{item.name}</div>
-                            </div>
+                            {item.image2 && (
+                              <Image
+                                src={item.image2}
+                                alt="Domiburger papitas"
+                                width={57}
+                                height={84}
+                                className="object-cover absolute top-5 left-[41px]"
+                              />
+                            )}
                           </div>
 
-                          {/* {item.modifications.length > 0 && (
-                            <div className="flex flex-wrap gap-[4px_4px] self-stretch w-full items-start">
-                              {item.modifications.map((mod, index) => (
-                                <Badge
-                                  key={index}
-                                  variant="outline"
-                                  className="inline-flex h-5 items-center justify-center gap-1 px-1.5 py-2 rounded-[30px] border border-solid border-[#808080]"
-                                >
-                                  <img
-                                    className="w-3 h-3 mt-[-4.00px] mb-[-4.00px]"
-                                    alt="Modification"
-                                    src={mod.icon}
-                                  />
-
-                                  <div className="text-neutrosblack-80 leading-[18px] w-fit mt-[-2.00px] [font-family:'Montserrat',Helvetica] font-normal text-[8px] tracking-[0] whitespace-nowrap">
-                                    {mod.text}
-                                  </div>
-
-                                  <XIcon className="w-3 h-3 mt-[-4.00px] mb-[-4.00px]" />
-                                </Badge>
-                              ))}
+                          <div className="justify-center w-full max-w-[316px] gap-2 xl:gap-3 pt-1 pb-0 px-0 flex-1 grow flex flex-col items-start self-stretch">
+                            <div className="flex gap-3 self-stretch w-full rounded-[80.62px] flex-col items-start">
+                              <div className="gap-3 self-stretch w-full flex items-center">
+                                <div className="flex-1 font-h4">
+                                  {item.name}
+                                </div>
+                              </div>
                             </div>
-                          )} */}
 
-                          <div className="flex h-8 items-center justify-between w-full rounded-[50px]">
-                            <h4 className="">{item.price}</h4>
+                            <Complements
+                              complements={item.complements}
+                            />
 
-                            <h4 className="">Cantidad: {item.quantity}</h4>
+                            <div className="flex h-8 items-center justify-between w-full rounded-[50px]">
+                              <h4 className="">
+                                ${item.price.toLocaleString("es-CO")}
+                              </h4>
+
+                              <h4 className="">
+                                Cantidad: {item.quantity}
+                              </h4>
+                            </div>
                           </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
 
                 <Separator orientation="horizontal" className="w-full!" />
               </div>
@@ -244,7 +247,7 @@ export default function InfoOrder() {
                     <div className="flex items-start gap-10 w-full">
                       <p className="flex-1 mt-[-0.93px] body-font">Subtotal</p>
 
-                      <p className="w-fit mt-[-0.93px] body-font">$ 36.800</p>
+                      <p className="w-fit mt-[-0.93px] body-font">${prices.subtotal.toLocaleString("es-CO")}</p>
                     </div>
 
                     <div className="flex items-start gap-10 w-full">
@@ -252,7 +255,7 @@ export default function InfoOrder() {
                         Envío
                       </div>
 
-                      <p className="w-fit body-font font-bold">4.400</p>
+                      <p className="w-fit body-font font-bold">{address.deliveryPrice.toLocaleString("es-CO")}</p>
                     </div>
 
                     <Separator orientation="horizontal" className="w-full!" />
@@ -260,7 +263,7 @@ export default function InfoOrder() {
                     <div className="flex items-center gap-10 w-full">
                       <p className="flex-1 body-font font-bold">Total</p>
 
-                      <h2 className="w-fit mt-[-0.93px]">$36.800</h2>
+                      <h2 className="w-fit mt-[-0.93px]">${prices.total.toLocaleString("es-CO")}</h2>
                     </div>
                   </div>
                 </div>
@@ -271,5 +274,7 @@ export default function InfoOrder() {
         </Card>
       </div>
     </div>
-  );
+  ) : <div className="h-[500px] w-full flex flex-col items-center justify-center mt-20">
+    <h1 className="text-center mt-20">No hay ultimo pedido disponible.</h1>
+  </div>;
 }

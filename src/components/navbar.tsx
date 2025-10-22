@@ -13,6 +13,7 @@ import Link from "next/link";
 import { LogInModal } from "./login/logInModal";
 import { KitchenModal } from "./kitchen/kitchenModal";
 import { useCartStore } from "@/store/cartStore";
+import { WorkingOnModal } from "./ui/workingOnModal";
 
 export const Navbar = () => {
   const [isAcountModalOpen, setIsAcountModalOpen] = useState(false);
@@ -76,7 +77,11 @@ export const Navbar = () => {
             >
               <WhatsAppIcon className="w-5 h-5 md:w-6 md:h-6" />
             </Button>
-            <Link href={"/cart"} tabIndex={-1} className="focus:outline-0! focus:ring-0! focus:bg-[#E10300] rounded-[30px]">
+            <Link
+              href={"/cart"}
+              tabIndex={-1}
+              className="focus:outline-0! focus:ring-0! focus:bg-[#E10300] rounded-[30px]"
+            >
               <Button
                 variant="default"
                 className="h-[44px] min-w-16 lg:h-12 py-2 ps-3 pe-[7px] lg:pl-5 lg:pr-2 lg:py-2 items-center justify-center gap-2 rounded-[30px] cursor-pointer focus:outline-0! focus:ring-0! focus:bg-[#E10300]"
@@ -96,13 +101,21 @@ export const Navbar = () => {
         </div>
       </nav>
       <div>
-        <LogInModal
+        {/* <LogInModal
+          isOpen={isAcountModalOpen}
+          onClose={() => setIsAcountModalOpen(false)}
+        /> */}
+        <WorkingOnModal
           isOpen={isAcountModalOpen}
           onClose={() => setIsAcountModalOpen(false)}
         />
       </div>
       <div>
-        <KitchenModal
+        {/* <KitchenModal
+          isOpen={isKitchenModalOpen}
+          onClose={() => setIsKitchenModalOpen(false)}
+        /> */}
+        <WorkingOnModal
           isOpen={isKitchenModalOpen}
           onClose={() => setIsKitchenModalOpen(false)}
         />
