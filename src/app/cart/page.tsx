@@ -29,6 +29,7 @@ import { CustomizationModalCart } from "@/components/cart/customizationModalCart
 import useFormCart from "@/hooks/cart/useFormcart";
 import Link from "next/link";
 import Tooltip from "@/components/ui/tooltip";
+import { ConfirmDeleteModal } from "@/components/cart/confirmDeleteModal";
 
 export default function Cart() {
   const formatCurrency = (value: number): string => {
@@ -64,7 +65,17 @@ export default function Cart() {
   };
 
   const handleDecrease = (id: string, quantity: number) => {
-    updateQuantity(id, quantity - 1);
+    if (quantity === 1) {
+      // Si la cantidad es 1, mostrar modal de confirmación
+      const item = items.find((item) => item.id === id);
+      if (item) {
+        setItemToDelete({ id: item.id, name: item.name });
+        setIsDeleteModalOpen(true);
+      }
+    } else {
+      // Si la cantidad es mayor a 1, disminuir normalmente
+      updateQuantity(id, quantity - 1);
+    }
   };
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -72,6 +83,24 @@ export default function Cart() {
   const [selectedCartItem, setSelectedCartItem] = useState<CartItem | null>(
     null
   );
+
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState<{
+    id: string;
+    name: string;
+  } | null>(null);
+
+  const handleConfirmDelete = () => {
+    if (itemToDelete) {
+      updateQuantity(itemToDelete.id, 0); 
+      setItemToDelete(null);
+    }
+  };
+
+  const handleCloseDeleteModal = () => {
+    setIsDeleteModalOpen(false);
+    setItemToDelete(null);
+  };
 
   const [addressToEdit, setAddressToEdit] = useState<Address | null>(
     addressStore
@@ -581,6 +610,13 @@ export default function Cart() {
             cartItem={selectedCartItem}
           />
         )}
+
+        <ConfirmDeleteModal
+          isOpen={isDeleteModalOpen}
+          onClose={handleCloseDeleteModal}
+          onConfirm={handleConfirmDelete}
+          productName={itemToDelete?.name || ""}
+        />
       </div>
     </form>
   );

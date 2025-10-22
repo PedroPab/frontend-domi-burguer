@@ -54,6 +54,7 @@ export function QuantitySelector({
       )}
     >
       <Button
+        type="button"
         variant="ghost"
         size="sm"
         onClick={onDecrease}
@@ -74,6 +75,7 @@ export function QuantitySelector({
       </span>
 
       <Button
+        type="button"
         variant="ghost"
         size="sm"
         onClick={onIncrease}
