@@ -8,6 +8,7 @@ import {
 import { Button } from "@/components/ui/button";
 import MenuSection from "@/components/home/menuSection";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Home() {
   return (
@@ -130,10 +131,12 @@ export default function Home() {
               ritmo y nuestra salsa secreta.
             </p>
 
-            <Button className="max-w-[230px] h-10 pl-5 text-[#FFF9E6] font-montserrat font-bold leading-[18px] rounded-[30px] gap-3 text-start justify-start text-[15px]">
-              SÍGUENOS EN REDES
-              <ArrowIcon className="w-[14px] h-[14px]" />
-            </Button>
+            <Link href="https://www.instagram.com/domiburguer_" target="_blank" rel="noopener noreferrer">
+              <Button className="max-w-[230px] h-10 pl-5 text-[#FFF9E6] font-montserrat font-bold leading-[18px] rounded-[30px] gap-3 text-start justify-start text-[15px]">
+                SÍGUENOS EN REDES
+                <ArrowIcon className="w-[14px] h-[14px]" />
+              </Button>
+            </Link>
           </div>
 
           {/* Imágenes */}

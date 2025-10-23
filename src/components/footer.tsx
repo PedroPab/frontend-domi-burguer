@@ -12,14 +12,14 @@ import Link from "next/link";
 
 export const Footer = () => {
   const navigationLinks = [
-    { navigation: "COBERTURA", link: "/cobertura" },
-    { navigation: "MENU", link: "/#products" },
-    { navigation: "HORARIOS", link: "/horarios" }
+    { name: "COBERTURA", link: "/cobertura" },
+    { name: "MENU", link: "/#products" },
+    { name: "HORARIOS", link: "/horarios" }
   ];
 
   const legalLinks = [
-    { legal: "TÉRMINOS DE SERVICIO", link: "/legal" },
-    { legal: "POLÍTICAS DE PRIVACIDAD", link: "/legal" }
+    { name: "TÉRMINOS DE SERVICIO", link: "/legal#terminos" },
+    { name: "POLÍTICAS DE PRIVACIDAD", link: "/legal#politicas" }
   ];
 
   return (
@@ -56,7 +56,7 @@ export const Footer = () => {
               href={link.link}
               className={`relative self-stretch font-semibold text-accentmikado-10 text-lg tracking-[0] leading-6 h-auto p-0 hover:bg-transparent`}
             >
-              {link.navigation}
+              {link.name}
             </Link>
           ))}
         </nav>
@@ -68,7 +68,7 @@ export const Footer = () => {
               href={legal.link}
               className={`relative self-stretch font-semibold text-accentmikado-10 text-lg tracking-[0] leading-6 h-auto p-0 hover:bg-transparent`}
             >
-              {legal.legal}
+              {legal.name}
             </Link>
           ))}
         </nav>
@@ -83,7 +83,7 @@ export const Footer = () => {
           <Link
             href="https://www.instagram.com/domiburguer_"
             target="_blank"
-            rel=""
+            rel="noopener noreferrer"
             className="focus:outline-0! focus:ring-0!"
           >
             <Button
