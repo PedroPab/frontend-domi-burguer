@@ -44,7 +44,8 @@ export const useAddressForm = (initialState?: Partial<AddressFormState>) => {
       formState.address !== '' &&
       formState.addressName !== '' &&
       formState.selectedType !== '' &&
-      formState.coordinates !== null
+      formState.coordinates !== null &&
+      formState.floor !== ''
     );
   };
 

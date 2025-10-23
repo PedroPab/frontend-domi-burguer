@@ -105,13 +105,8 @@ export const ModalAddress = ({
     };
   }, [isOpen, onClose]);
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    if (!isFormValid()) {
-      return;
-    }
-
+  const handleConfirm = async () => {
+    if (!isFormValid()) return;
     await submitAddress(formState);
   };
 
@@ -129,10 +124,6 @@ export const ModalAddress = ({
         }}
         className="flex-col flex p-0 bg-background h-auto rounded-2xl lg:w-[900px] lg:h-[680px] z-600"
       >
-        <form
-          className="flex-col flex p-0 h-auto lg:w-[900px] lg:h-[680px]"
-          onSubmit={handleSubmit}
-        >
           <DialogTitle className="mb-4 pt-[24px] pl-[20px] lg:pl-[32px] lg:pt-[32px] font-bold text-[18px]! md:text-[20px]! leading-[20px]! md:leading-[22px]! text-neutral-black-80">
             {addressToEdit ? "EDITAR DIRECCIÓN" : "NUEVA DIRECCIÓN"}
           </DialogTitle>
@@ -173,6 +164,7 @@ export const ModalAddress = ({
                         placeholder="Nueva dirección"
                         value={formState.address}
                         onChange={(e) => updateField("address", e.target.value)}
+                        required
                       />
                       <MapPinIcon className="w-[22px] h-[22px] absolute right-5 top-1/2 -translate-y-1/2" />
                     </div>
@@ -214,6 +206,7 @@ export const ModalAddress = ({
                     name="floor"
                     onChange={(e) => updateField("floor", e.target.value)}
                     placeholder="Unidad, piso, apto"
+                    required
                   />
                 </div>
 
@@ -262,14 +255,13 @@ export const ModalAddress = ({
               CERRAR
             </Button>
             <Button
-              type="submit"
               className="text-white rounded-[30px] flex items-center gap-2 text-[16px] w-[200px] h-[48px]"
               disabled={isSubmitting || !isFormValid()}
+              onClick={handleConfirm}
             >
               {isSubmitting ? "GUARDANDO..." : "CONFIRMAR"}
             </Button>
           </div>
-        </form>
       </DialogContent>
     </Dialog>
   );
