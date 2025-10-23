@@ -30,6 +30,8 @@ import useFormCart from "@/hooks/cart/useFormcart";
 import Link from "next/link";
 import Tooltip from "@/components/ui/tooltip";
 import { ConfirmDeleteModal } from "@/components/cart/confirmDeleteModal";
+import { useStoreHours } from "@/hooks/useStoreHours";
+import { StoreClosedModal } from "@/components/cart/storeClosedModal";
 
 export default function Cart() {
   const formatCurrency = (value: number): string => {
@@ -60,6 +62,8 @@ export default function Cart() {
     error,
   } = useFormCart();
 
+  const storeStatus = useStoreHours();
+
   const handleIncrease = (id: string, quantity: number) => {
     updateQuantity(id, quantity + 1);
   };
@@ -78,12 +82,12 @@ export default function Cart() {
     }
   };
 
+  const [isStoreClosedModalOpen, setIsStoreClosedModalOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalComplementsOpen, setIsModalComplementsOpen] = useState(false);
   const [selectedCartItem, setSelectedCartItem] = useState<CartItem | null>(
     null
   );
-
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [itemToDelete, setItemToDelete] = useState<{
     id: string;
@@ -92,7 +96,7 @@ export default function Cart() {
 
   const handleConfirmDelete = () => {
     if (itemToDelete) {
-      updateQuantity(itemToDelete.id, 0); 
+      updateQuantity(itemToDelete.id, 0);
       setItemToDelete(null);
     }
   };
@@ -130,8 +134,23 @@ export default function Cart() {
     console.log("Items en el carrito:", items);
   }, [items]);
 
+  const handleSubmitWithValidation = async (
+    e: React.FormEvent<HTMLFormElement>
+  ) => {
+    e.preventDefault();
+
+    // Verificar si la tienda está abierta
+    if (!storeStatus.isOpen) {
+      setIsStoreClosedModalOpen(true);
+      return;
+    }
+
+    // Si está abierta, proceder con el submit normal
+    await handleSubmit(e);
+  };
+
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmitWithValidation}>
       <div className="flex flex-col xl:flex-row w-full xl:justify-around items-center xl:items-start gap-5 mt-[130px] lg:mt-[130px] mb-[100px]">
         <div className="flex flex-col gap-14 pb-20 w-full lg:mt-4 max-w-[500px]">
           <div className="flex flex-col gap-6 w-full">
@@ -616,6 +635,13 @@ export default function Cart() {
           onClose={handleCloseDeleteModal}
           onConfirm={handleConfirmDelete}
           productName={itemToDelete?.name || ""}
+        />
+
+        <StoreClosedModal
+          isOpen={isStoreClosedModalOpen}
+          onClose={() => setIsStoreClosedModalOpen(false)}
+          message={storeStatus.message}
+          opensAt={storeStatus.opensAt}
         />
       </div>
     </form>
