@@ -17,7 +17,7 @@ export default function Home() {
         <MenuSection />
 
         <section className="w-full py-12 sm:py-20 md:py-[110px]">
-          <div className="max-w-screen-xl flex flex-col md:flex-row items-start md:items-start gap-8 md:gap-20">
+          <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-start md:items-start gap-8 md:gap-20">
             <div className="flex flex-col text-left">
               <div className="flex lg:gap-6 gap-0 lg:flex-row flex-col">
                 <h1 className="font-extrabold! text-primary-red! text-[65px]! sm:text-[100px]! md:text-[110px]! lg:text-[120px]! sm:leading-22! leading-13! md:leading-25! xl:leading-none!">
@@ -115,7 +115,7 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="flex flex-col xl:flex-row w-full items-start gap-20 py-20 relative">
+        <section className="flex flex-col xl:flex-row w-full items-start gap-20 py-20 relative mx-auto px-4 sm:px-6 lg:px-8">
           {/* Texto */}
           <div className="flex flex-col gap-8 flex-1 self-stretch relative max-w-[360px]">
             <h1 className="relative self-stretch mt-[-1px] text-neutral-black-80 font-bold text-[24px] leading-[25px]">
