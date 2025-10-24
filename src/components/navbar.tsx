@@ -23,18 +23,16 @@ export const Navbar = () => {
   return (
     <>
       <nav
-        className={`fixed top-0 left-0  ${
-          isAcountModalOpen || isKitchenModalOpen ? "z-600" : "z-300"
-        } w-full px-4`}
+        className={`fixed top-0 left-0  ${isAcountModalOpen || isKitchenModalOpen ? "z-600" : "z-300"
+          } w-full px-4`}
       >
         <div className="max-w-[828px] md:h-[80px] h-[62px] gap-2 py-0 mt-[20px] mb-[10px] rounded-[60px] border border-solid border-[#e6e6e6] flex items-center justify-between w-full mx-auto px-4! sm:px-6 lg:px-8 bg-[#ffffff]">
           <div className="flex w-[300px] h-14 px-0 py-3 rounded-[50px] overflow-hidden items-center">
             <Button
               onClick={() => setIsAcountModalOpen(true)}
               variant="ghost"
-              className={`inline-flex h-10 lg:h-12 justify-center px-[10px] lg:px-5 lg:py-2  mt-[-8.00px] mb-[-8.00px] rounded-[30px] items-center bg-transparent outline-none border-none focus:outline-0! focus:ring-0! focus:bg-accent-yellow-20 ${
-                isAcountModalOpen ? "bg-accent-yellow-20" : ""
-              }`}
+              className={`inline-flex h-10 lg:h-12 justify-center px-[10px] lg:px-5 lg:py-2  mt-[-8.00px] mb-[-8.00px] rounded-[30px] items-center bg-transparent outline-none border-none focus:outline-0! focus:ring-0! focus:bg-accent-yellow-20 ${isAcountModalOpen ? "bg-accent-yellow-20" : ""
+                }`}
             >
               <UserIcon className="w-5 h-5 md:w-6 md:h-6" />
               <span className="text-neutrosblack-80 font-label hidden md:block">
@@ -44,9 +42,8 @@ export const Navbar = () => {
             <Button
               onClick={() => setIsKitchenModalOpen(true)}
               variant="ghost"
-              className={`inline-flex h-10 lg:h-12 justify-center px-3 lg:px-5 py-2 mt-[-8.00px] mb-[-8.00px] rounded-[30px] items-center bg-transparent focus:outline-0! focus:ring-0! focus:bg-accent-yellow-20 ${
-                isKitchenModalOpen ? "bg-accent-yellow-20" : ""
-              }`}
+              className={`inline-flex h-10 lg:h-12 justify-center px-3 lg:px-5 py-2 mt-[-8.00px] mb-[-8.00px] rounded-[30px] items-center bg-transparent focus:outline-0! focus:ring-0! focus:bg-accent-yellow-20 ${isKitchenModalOpen ? "bg-accent-yellow-20" : ""
+                }`}
             >
               <span className="text-neutrosblack-80 font-label font-[number:var(--label-font-weight)] text-[length:var(--label-font-size)] tracking-[var(--label-letter-spacing)] leading-[var(--label-line-height)] whitespace-nowrap [font-style:var(--label-font-style)]">
                 COCINA
@@ -70,13 +67,20 @@ export const Navbar = () => {
           </div>
 
           <div className="w-[300px] items-center flex justify-end gap-2">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="flex w-12 h-12 px-3 py-2 bg-accent-yellow-20 focus:bg-accent-yellow-40 cursor-pointer items-center justify-center gap-2 rounded-[30px] focus:outline-0! focus:ring-0!"
+            <Link
+              href={`https://wa.me/573506186772?text=${encodeURIComponent("Hola, estaba en la pagina de Domi Burger y quiero más información")}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="focus:outline-0! focus:ring-0!"
             >
-              <WhatsAppIcon className="w-5 h-5 md:w-6 md:h-6" />
-            </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="flex w-10.5 h-10.5 px-3 py-2 bg-accent-yellow-20 hover:bg-accent-yellow-40 active:bg-accent-yellow-40 focus:bg-accent-yellow-40 cursor-pointer items-center justify-center gap-2 rounded-[30px] focus:outline-0! focus:ring-0!"
+              >
+                <WhatsAppIcon className="w-5 h-5 md:w-6 md:h-6" />
+              </Button>
+            </Link>
             <Link
               href={"/cart"}
               tabIndex={-1}
