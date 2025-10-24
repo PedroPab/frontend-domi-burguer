@@ -8,11 +8,19 @@ import {
   EmailIcon,
 } from "./ui/icons";
 import Image from "next/image";
+import Link from "next/link";
 
 export const Footer = () => {
-  const navigationLinks = ["COBERTURA", "MENU", "HORARIOS"];
+  const navigationLinks = [
+    { name: "COBERTURA", link: "/cobertura" },
+    { name: "MENU", link: "/#products" },
+    { name: "HORARIOS", link: "/horarios" }
+  ];
 
-  const legalLinks = ["TÉRMINOS DE SERVICIO", "POLÍTICAS DE PRIVACIDAD"];
+  const legalLinks = [
+    { name: "TÉRMINOS DE SERVICIO", link: "/legal#terminos" },
+    { name: "POLÍTICAS DE PRIVACIDAD", link: "/legal#politicas" }
+  ];
 
   return (
     <footer className="flex flex-col w-full items-start relative text-accent-yellow-10">
@@ -43,62 +51,84 @@ export const Footer = () => {
 
         <nav className="inline-flex flex-col items-start gap-2 relative">
           {navigationLinks.map((link) => (
-            <a
-              key={link}
+            <Link
+              key={link.link}
+              href={link.link}
               className={`relative self-stretch font-semibold text-accentmikado-10 text-lg tracking-[0] leading-6 h-auto p-0 hover:bg-transparent`}
             >
-              {link}
-            </a>
+              {link.name}
+            </Link>
           ))}
         </nav>
 
         <nav className="inline-flex flex-col items-end gap-2 relative">
-          {legalLinks.map((link) => (
-            <a
-              key={link}
+          {legalLinks.map((legal) => (
+            <Link
+              key={legal.link}
+              href={legal.link}
               className={`relative self-stretch font-semibold text-accentmikado-10 text-lg tracking-[0] leading-6 h-auto p-0 hover:bg-transparent`}
             >
-              {link}
-            </a>
+              {legal.name}
+            </Link>
           ))}
         </nav>
 
         <div className="flex lg:w-[394px] w-full items-center gap-3 justify-center">
-          <Button
+          {/* <Button
             variant="ghost"
             className="flex w-12 h-12 px-3 pl-4 pt-[10px] relative items-center justify-center gap-2 rounded-[30px]"
           >
             <TiktokIcon />
-          </Button>
-          <Button
-            variant="ghost"
-            className="flex w-12 h-12 px-3 py-2 relative items-center justify-center gap-2 rounded-[30px]"
+          </Button> */}
+          <Link
+            href="https://www.instagram.com/domiburguer_"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="focus:outline-0! focus:ring-0!"
           >
-            <InstagramIcon />
-          </Button>
-          <Button
-            variant="ghost"
-            className="flex w-12 h-12 px-3 py-2 relative items-center justify-center gap-2 rounded-[30px]"
+            <Button
+              variant="ghost"
+              className="flex w-12 h-12 px-3 py-2 relative items-center justify-center gap-2 rounded-[30px]"
+            >
+              <InstagramIcon />
+            </Button>
+          </Link>
+          {/* <Link
+            href="mailto:info@domiburguer.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="focus:outline-0! focus:ring-0!"
           >
-            <EmailIcon />
-          </Button>
+            <Button
+              variant="ghost"
+              className="flex w-12 h-12 px-3 py-2 relative items-center justify-center gap-2 rounded-[30px]"
+            >
+              <EmailIcon />
+            </Button>
+          </Link> */}
+          <Link
+            href={`https://wa.me/573506186772?text=${encodeURIComponent("Hola, estaba en la pagina de Domi Burger y quiero más información")}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="focus:outline-0! focus:ring-0!"
+          >
+            <Button
+              variant="ghost"
+              className="inline-flex h-12 px-5 py-2 relative items-center justify-center gap-2 rounded-[30px]  text-black"
+            >
+              <div className=" relative w-fit whitespace-nowrap ">
+                CONTÁCTANOS
+              </div>
 
-          <Button
-            variant="ghost"
-            className="inline-flex h-12 px-5 py-2 relative items-center justify-center gap-2 rounded-[30px]  text-black"
-          >
-            <div className=" relative w-fit whitespace-nowrap ">
-              CONTÁCTANOS
-            </div>
-
-            <WhatsAppIcon />
-          </Button>
+              <WhatsAppIcon />
+            </Button>
+          </Link>
         </div>
       </div>
       <div className="flex flex-col md:flex-row h-[90px] items-center justify-between px-20 py-4 relative self-stretch w-full bg-primary-red">
-        <a className="relative w-fit mb-5 md:mb-0 font-semibold text-base tracking-[0] leading-5 whitespace-nowrap h-auto p-0 hover:bg-transparent">
+        {/* <a className="relative w-fit mb-5 md:mb-0 font-semibold text-base tracking-[0] leading-5 whitespace-nowrap h-auto p-0 hover:bg-transparent">
           Cookies
-        </a>
+        </a> */}
 
         <div className="items-start flex-1 grow flex justify-end gap-2 relative">
           <div className="relative w-fit mt-[-1.00px] font-semibold text-base tracking-[0] leading-5 whitespace-nowrap">

@@ -1,5 +1,6 @@
 "use client";
 import React, { useEffect } from "react";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "../ui/input";
@@ -51,8 +52,34 @@ export const WorkingOnModal = ({ isOpen, onClose }: ModalProps) => {
             ESTAMOS TRABAJANDO EN ESTA FUNCIÓN
           </DialogTitle>
           <div className="flex flex-col gap-4">
-            
+            <p className="text-neutral-600">
+              Nuestro equipo está trabajando arduamente para implementarla y ofrecerte la mejor experiencia posible.
+            </p>
+            <p className="text-neutral-600">
+              Mientras tanto, te invitamos a explorar otras características de
+              nuestra aplicación. ¡Gracias por tu paciencia y comprensión!
+            </p>
           </div>
+          {/* imagen de gato trabajando  */}
+          <div className="flex justify-center">
+            <Image
+              src="/catWork.jpg"
+              alt="Gato trabajando"
+              className="w-[200px] h-[200px] md:w-[250px] md:h-[250px] object-contain mb-5"
+              width={200}
+              height={400}
+            />
+          </div>
+        </div>
+
+        <div className="flex pr-[32px] w-full justify-center pl-[20px] pb-[24px] mt-[16px] lg:pl-[32px] lg:pb-[32px] lg:mt-[32px]">
+          <Button
+            type="button"
+            className="text-neutral-black-80 bg-accent-yellow-40 hover:bg-accent-yellow-60 active:bg-accent-yellow-60 rounded-[30px] flex items-center gap-2 text-[16px] w-[200px] h-[48px]"
+            onClick={onClose}
+          >
+            CERRAR
+          </Button>
         </div>
       </DialogContent>
     </Dialog>

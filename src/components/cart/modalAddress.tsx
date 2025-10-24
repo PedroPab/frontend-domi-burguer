@@ -110,6 +110,8 @@ export const ModalAddress = ({
     if (!isFormValid()) return;
     await submitAddress(formState);
   };
+  //es la cede de medellin, esta es la refencia para centrar el mapa y para buscar los resultados del autocomplete
+  const centerOrigin = { lat: 6.3017314, lng: -75.5743796 };
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -161,7 +163,13 @@ export const ModalAddress = ({
                         "types",
                       ]}
                       options={{
-                        componentRestrictions: { country: ["CO"] },
+                        componentRestrictions: { country: "co" },
+                        bounds: {
+                          north: centerOrigin.lat + 0.5,
+                          south: centerOrigin.lat - 0.5,
+                          east: centerOrigin.lng + 0.5,
+                          west: centerOrigin.lng - 0.5,
+                        },
                         strictBounds: true,
                       }}
                     >
@@ -173,7 +181,6 @@ export const ModalAddress = ({
                           onChange={(e) =>
                             updateField("address", e.target.value)
                           }
-                          required
                         />
                         <MapPinIcon className="w-[22px] h-[22px] absolute right-5 top-1/2 -translate-y-1/2" />
                       </div>
@@ -187,7 +194,6 @@ export const ModalAddress = ({
                     onChange={(e) => updateField("addressName", e.target.value)}
                     id="name"
                     name="name"
-                    required
                   />
 
                   <div className="flex gap-2">
@@ -256,17 +262,17 @@ export const ModalAddress = ({
               </div>
             </div>
 
-            <div className="flex pr-[32px] w-full justify-between pl-[20px] pb-[24px] mt-[16px] lg:pl-[32px] lg:pb-[32px] lg:mt-[32px]">
+            <div className="flex px-[20px] w-full gap-7 pb-[24px] justify-center mt-[16px] lg:pl-[32px] lg:pb-[32px] lg:mt-[32px]">
               <Button
                 type="button"
-                className="text-neutral-black-80 bg-accent-yellow-40 hover:bg-accent-yellow-60 active:bg-accent-yellow-60 rounded-[30px] flex items-center gap-2 text-[16px] w-[200px] h-[48px]"
+                className="text-neutral-black-80 bg-accent-yellow-40 hover:bg-accent-yellow-60 active:bg-accent-yellow-60 rounded-[30px] flex items-center gap-2 text-[16px] w-[151px] h-[40px] lg:w-[200px] lg:h-[48px]"
                 onClick={onClose}
                 disabled={isSubmitting}
               >
                 CERRAR
               </Button>
               <Button
-                className="text-white rounded-[30px] flex items-center gap-2 text-[16px] w-[200px] h-[48px]"
+                className="text-white rounded-[30px] flex items-center gap-2 text-[16px] w-[151px] h-[40px] lg:w-[200px] lg:h-[48px]"
                 disabled={isSubmitting || !isFormValid()}
                 onClick={handleConfirm}
               >

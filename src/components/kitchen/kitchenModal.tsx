@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import {
@@ -20,6 +20,10 @@ import { Card, CardContent } from "../ui/card";
 import { Calendar, Clock, X } from "lucide-react";
 import { Separator } from "../ui/separator";
 import { MapComponent } from "../map/map";
+import { AddressService } from "@/services/kitchenService";
+import { Kitchen } from "@/types/kitchens";
+import { LocationService } from "@/services/locationService";
+
 
 interface KitchenModalProps {
   isOpen: boolean;
@@ -27,6 +31,11 @@ interface KitchenModalProps {
 }
 
 export const KitchenModal = ({ isOpen, onClose }: KitchenModalProps) => {
+  const [kitchens, setKitchens] = useState<Kitchen[]>([]);
+  const [selectedKitchen, setSelectedKitchen] = useState<Kitchen | null>(null);
+  const [loading, setLoading] = useState(false);
+
+
   useEffect(() => {
     const handlePopState = () => {
       onClose();
@@ -46,10 +55,45 @@ export const KitchenModal = ({ isOpen, onClose }: KitchenModalProps) => {
     };
   }, [isOpen, onClose]);
 
-  const [coordinates, setCoordinates] = useState<{
-    lat: number;
-    lng: number;
-  } | null>(null);
+  useEffect(() => {
+    const fetchKitchens = async () => {
+      if (!isOpen) return;
+
+      try {
+        setLoading(true);
+        const response = await AddressService.findKitchens();
+        // ponemos la primer cocian como defecto
+        if (response.body.length > 0) {
+          setSelectedKitchen(response.body[0]);
+        }
+        // consultamos las ubicacioines de manera asincrona con getLocationId
+        // ponemos las coordenadas
+        const listKitchens: Kitchen[] = [];
+        response.body.forEach(async (kitchen) => {
+          const locationResponse = await LocationService.getLocationId(kitchen.locationId);
+          // ponemos las coordenadas
+          if (locationResponse && locationResponse.body) {
+            kitchen.location = locationResponse.body;
+          }
+          listKitchens.push(kitchen);
+
+        });
+        setKitchens(listKitchens);
+      } catch (error) {
+        console.error('Error al cargar las cocinas:', error);
+        setKitchens([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchKitchens();
+  }, [isOpen]);
+
+  useEffect(() => {
+    console.log('selectedKitchen', selectedKitchen);
+  }, [selectedKitchen]);
+
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -79,29 +123,41 @@ export const KitchenModal = ({ isOpen, onClose }: KitchenModalProps) => {
         <div className="flex flex-col-reverse lg:flex-row gap-2 px-[20px] lg:px-[32px] pb-[32px] lg:gap-6 h-full">
           <div className="flex flex-1 flex-col">
             <div className="flex flex-col gap-3 lg:gap-4">
-              <Select>
+              <Select onValueChange={(value) => {
+                const kitchen = kitchens.find(k => k.id === value);
+                setSelectedKitchen(kitchen || null);
+              }}>
                 <SelectTrigger className="text-neutral-black-50! body-font">
-                  <SelectValue placeholder="Cocina" />
+                  <SelectValue placeholder={loading ? "Cargando cocinas..." : selectedKitchen?.name || "Seleccionar cocina"} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="op1">Opcion 1</SelectItem>
-                  <SelectItem value="op2">Opcion 2</SelectItem>
-                  <SelectItem value="op3">Opcion 3</SelectItem>
+                  {kitchens.map((kitchen) => (
+                    <SelectItem key={kitchen.id} value={kitchen.id}>
+                      {kitchen.name}
+                    </SelectItem>
+                  ))}
+                  {!loading && kitchens.length === 0 && (
+                    <SelectItem key="no-kitchens" value="no-kitchens" disabled>
+                      Cocinas no encontradas
+                    </SelectItem>
+                  )}
                 </SelectContent>
               </Select>
-              <div className="flex h-10 items-center gap-4 px-4 py-2 bg-[#ecfce6] rounded-[12px] border border-solid border-[#68bc73]">
+
+
+              {/* <div className="flex h-10 items-center gap-4 px-4 py-2 bg-[#ecfce6] rounded-[12px] border border-solid border-[#68bc73]">
                 <div className="flex justify-between gap-2 flex-1">
                   <span className="font-normal text-neutral-black-80 text-sm tracking-[0] leading-[18px]">
-                    Abierto
+                    {selectedKitchen?.status === 'active' ? 'Abierto' : 'Cerrado'}
                   </span>
                   <div className="font-normal text-neutral-black-80 text-sm tracking-[0] leading-[18px]">
                     <span className="font-normal text-[#313131] text-sm tracking-[0] leading-[18px]">
-                      Cerramos en{" "}
+                      {selectedKitchen?.phone || 'Teléfono no disponible'}
                     </span>
-                    <span className="font-bold">04:28</span>
                   </div>
                 </div>
-              </div>
+              </div> */}
+
               <Card className="bg-[#F7F7F7] shadow-none rounded-2xl border-0">
                 <CardContent className="p-6 flex flex-col gap-5">
                   <div className="flex items-center gap-2">
@@ -114,17 +170,17 @@ export const KitchenModal = ({ isOpen, onClose }: KitchenModalProps) => {
                   <div className="flex items-center gap-2">
                     <Clock className="w-5 h-5" />
                     <div className="flex items-start gap-1 flex-1">
-                      <span className="flex-1 body-font">Lunes a Viernes</span>
-                      <span className="body-font font-bold">09 pm / 8 pm</span>
+                      <span className="flex-1 body-font">Lunes a Sabado</span>
+                      <span className="body-font font-bold">4:30 pm / 10 pm</span>
                     </div>
                   </div>
-                  <div className="flex items-center gap-2">
+                  {/* <div className="flex items-center gap-2">
                     <Clock className="w-5 h-5" />
                     <div className="flex items-start gap-1 flex-1">
-                      <span className="flex-1 body-font">Sábado y Domingo</span>
-                      <span className="body-font font-bold">11 am / 11 pm</span>
+                      <span className="flex-1 body-font">Domingo</span>
+                      <span className="body-font font-bold">Descansando</span>
                     </div>
-                  </div>
+                  </div> */}
                 </CardContent>
               </Card>
 
@@ -135,7 +191,7 @@ export const KitchenModal = ({ isOpen, onClose }: KitchenModalProps) => {
                     <span className="flex-1 body-font">
                       Valor domicilio aprox.
                     </span>
-                    <span className="body-font font-bold">$4.200</span>
+                    <span className="body-font font-bold">$3.500</span>
                   </div>
                 </CardContent>
               </Card>
@@ -143,21 +199,16 @@ export const KitchenModal = ({ isOpen, onClose }: KitchenModalProps) => {
               <div className="flex gap-4 w-full">
                 <Button
                   variant="ghost"
-                  className="flex w-12 h-12 px-3 pl-4 pt-[10px] relative items-center justify-center gap-2 rounded-[30px]"
-                >
-                  <TiktokIcon />
-                </Button>
-                <Button
-                  variant="ghost"
                   className="flex w-12 h-12 px-3 py-2 relative items-center justify-center gap-2 rounded-[30px]"
                 >
                   <InstagramIcon />
                 </Button>
+                {/* boton para googel maps */}
                 <Button
                   variant="ghost"
                   className="flex w-12 h-12 px-3 py-2 relative items-center justify-center gap-2 rounded-[30px]"
                 >
-                  <EmailIcon />
+                  <MapPinIcon className="w-5 h-5" />
                 </Button>
                 <Button
                   variant="ghost"
@@ -173,7 +224,10 @@ export const KitchenModal = ({ isOpen, onClose }: KitchenModalProps) => {
           </div>
           <div className="flex-1 min-h-[200px] w-full bg-accent-yellow-40">
             <MapComponent
-              coordinates={coordinates}
+              coordinates={{
+                lat: selectedKitchen?.location?.coordinates?.lat ?? 6.3017314,
+                lng: selectedKitchen?.location?.coordinates?.lng ?? -75.5743796,
+              }}
               minHeight="200px"
             />
           </div>
