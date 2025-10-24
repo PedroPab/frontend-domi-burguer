@@ -177,14 +177,12 @@ export default function Cart() {
 
               <div className="inline-flex flex-col gap-2 items-start w-full">
                 <Input
-                  className=""
                   id="name"
                   name="name"
                   maxLength={70}
                   placeholder="Nombres y Apellidos"
                   onChange={handleChange}
                   value={formData.name}
-                  required
                 />
 
                 <div className="flex flex-col lg:flex-row w-full gap-2">
@@ -196,7 +194,6 @@ export default function Cart() {
                     placeholder="Escribe tu número de teléfono"
                     onChange={handlePhoneChange}
                     value={formData.phone}
-                    required
                   />
                 </div>
 
