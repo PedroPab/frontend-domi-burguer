@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { CalendarIcon, Pencil, PencilIcon, Plus, Trash2 } from "lucide-react";
+import { CalendarIcon, Loader2, Pencil, PencilIcon, Plus, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -150,7 +150,12 @@ export default function Cart() {
   };
 
   return (
-    <form onSubmit={handleSubmitWithValidation}>
+    isSubmitting ? (
+      <div className="h-screen flex items-center justify-center">
+        <Loader2 className="animate-spin text-red-500" size={70} />
+      </div>
+    ):(
+      <form onSubmit={handleSubmitWithValidation}>
       <div className="flex flex-col xl:flex-row w-full xl:justify-around items-center xl:items-start gap-5 mt-[130px] lg:mt-[130px] mb-[100px]">
         <div className="flex flex-col gap-14 pb-20 w-full lg:mt-4 max-w-[500px]">
           <div className="flex flex-col gap-6 w-full">
@@ -172,14 +177,12 @@ export default function Cart() {
 
               <div className="inline-flex flex-col gap-2 items-start w-full">
                 <Input
-                  className=""
                   id="name"
                   name="name"
                   maxLength={70}
                   placeholder="Nombres y Apellidos"
                   onChange={handleChange}
                   value={formData.name}
-                  required
                 />
 
                 <div className="flex flex-col lg:flex-row w-full gap-2">
@@ -191,7 +194,6 @@ export default function Cart() {
                     placeholder="Escribe tu número de teléfono"
                     onChange={handlePhoneChange}
                     value={formData.phone}
-                    required
                   />
                 </div>
 
@@ -645,5 +647,7 @@ export default function Cart() {
         />
       </div>
     </form>
+    )
+    
   );
 }

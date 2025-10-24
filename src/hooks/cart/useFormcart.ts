@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BancolombiaIcon, MoneyIcon, NequiIcon } from "@/components/ui/icons";
 import { useCartStore } from "@/store/cartStore";
 import { useRouter } from "next/navigation";
@@ -50,36 +50,52 @@ function useFormCart() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  useEffect(() => {
+    if (address && error === "Debes agregar una dirección de entrega") {
+      setError(null);
+    }
+  }, [address, error]);
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+    if (error) {
+      setError(null);
+    }
   };
 
   const handlePhoneChange = (value: string | undefined) => {
     setFormData((prev) => ({ ...prev, phone: value || "" }));
+    if (error) {
+      setError(null);
+    }
   };
 
   //   validacion de campos
   const validateForm = (): boolean => {
     if (!formData.name.trim()) {
       setError("El nombre es requerido");
+      window.scrollTo({ top: 0, behavior: 'smooth' });
       return false;
     }
 
     if (!formData.phone.trim()) {
       setError("El teléfono es requerido");
+      window.scrollTo({ top: 0, behavior: 'smooth' });
       return false;
     }
 
     if (items.length === 0) {
       setError("El carrito está vacío");
+      window.scrollTo({ top: 0, behavior: 'smooth' });
       return false;
     }
 
     if (!address || !address.coordinates) {
       setError("Debes agregar una dirección de entrega");
+      window.scrollTo({ top: 0, behavior: 'smooth' });
       return false;
     }
 
