@@ -19,7 +19,7 @@ export const Navbar = () => {
   const [isAcountModalOpen, setIsAcountModalOpen] = useState(false);
   const [isKitchenModalOpen, setIsKitchenModalOpen] = useState(false);
   const { items } = useCartStore();
-
+  const itemsCount = items.map((item) => item.quantity).reduce((a, b) => a + b, 0);
   return (
     <>
       <nav
@@ -92,7 +92,7 @@ export const Navbar = () => {
                 </span>
                 <div className="flex flex-col w-8 h-8 items-center justify-center gap-2 bg-accentmikado-10 rounded-[20px]">
                   <span className="text-black whitespace-nowrap font-bold text-[16px] bg-amber-50 h-8 w-8 rounded-[20px] text-center pt-1 lg:mr-2">
-                    {items.length}
+                    {itemsCount}
                   </span>
                 </div>
               </Button>

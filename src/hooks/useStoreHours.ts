@@ -16,14 +16,7 @@ export const useStoreHours = () => {
   });
 
   const checkStoreHours = (): StoreStatus => {
-    // Obtener hora actual de Colombia
-
-    return {
-      isOpen: false,
-      message: "Ya estamos cerrados por hoy",
-      opensAt: "Mañana a las 4:30 PM",
-    };
-    
+    // Obtener hora actual de Colombia    
     const now = new Date();
     const colombiaTime = new Intl.DateTimeFormat("es-CO", {
       timeZone: "America/Bogota",
