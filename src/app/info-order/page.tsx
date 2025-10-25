@@ -82,6 +82,13 @@ export default function InfoOrder() {
   const address = lastOrder ? JSON.parse(lastOrder).address : null;
   const paymentMethod = lastOrder ? JSON.parse(lastOrder).paymentMethod : null;
   const prices = lastOrder ? JSON.parse(lastOrder).prices : null;
+  const name = lastOrder ? JSON.parse(lastOrder).name : null;
+  const phone = lastOrder ? JSON.parse(lastOrder).phone : null;
+  const comment = lastOrder ? JSON.parse(lastOrder).comment : null;
+
+  const paymentMethodDetails = paymentMethods.find(
+    (method) => method.id === paymentMethod
+  );
 
   return lastOrder ? (
     <div className="flex flex-col xl:flex-row w-full xl:justify-around items-center xl:items-start gap-5 mt-[130px] lg:mt-[130px] mb-[100px]">
@@ -97,12 +104,45 @@ export default function InfoOrder() {
                 Estado del pedido:
               </span>
               <div className="font-normal text-neutral-black-80 text-sm tracking-[0] leading-[18px]">
-                <span className="font-bold">En repartición</span>
+                <span className="font-bold">Aprobado por cocina</span>
               </div>
             </div>
           </div>
           {/* tu pedido ya fue aprobado en cocina te mandaremos un mensaje cuando tu pedido este en reparto si tienes alguna duda puedes comunicarte al whatsapp boton de whatsapp quitar metodo de pago y ponerlo de bajo del total, poner el nombre y el numero de telefono y comentarios en una card como la de direccion */}
           <div className="flex flex-col gap-4 w-full">
+            <div>
+              <p>
+                Tu pedido ya fue aprobado en cocina, te mandaremos un mensaje
+                cuando tu pedido esté en reparto. Si tienes alguna duda, puedes
+                comunicarte al WhatsApp.
+              </p>
+            </div>
+            <p className="body-font font-bold">Tus datos:</p>
+            <Card className="gap-6 p-4 w-full bg-accent-yellow-10 rounded-[12px] shadow-none border-0">
+              <CardContent className="p-0">
+                <div className="flex justify-between gap-6 w-full">
+                  <div className="flex gap-4">
+                    <div className="flex flex-col gap-2">
+                      <div className="flex">
+                        <h5 className="body-font font-bold me-4">Nombre: </h5>
+                        <h5 className="body-font ">{name}</h5>
+                      </div>
+
+                      <div className="flex">
+                        <h5 className="body-font font-bold me-4">Telefono: </h5>
+                        <h5 className="body-font ">{phone}</h5>
+                      </div>
+
+                      <div className="flex">
+                        <h5 className="body-font font-bold me-4">Comentario: </h5>
+                        <h5 className="body-font ">{comment || "sin comentarios"}</h5>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
             <p className="body-font font-bold">Direccion de envío:</p>
 
             <Card className="gap-6 p-4 w-full bg-accent-yellow-10 rounded-[12px] shadow-none border-0">
@@ -129,41 +169,6 @@ export default function InfoOrder() {
                 </div>
               </CardContent>
             </Card>
-          </div>
-
-          <div className="flex flex-col gap-4 w-full">
-            <h5 className="body-font font-bold">Método de pago</h5>
-            {/* tendra que mostrarse solo la opcion que se eligio antes no todas las opciones de pago */}
-            <div className="flex gap-5 xl:gap-2  w-full">
-              {paymentMethods
-                .filter((method) => method.id === paymentMethod)
-                .map((method) => (
-                  <label
-                    key={method.id}
-                    className={`cursor-pointer inline-flex flex-col items-start justify-center p-3 flex-[0_0_auto] rounded-[8px] transition-colors ${
-                      selectedMethod === method.id
-                        ? "bg-[#F7F7F7]"
-                        : "bg-[#FFFFFF]"
-                    }`}
-                  >
-                    <div className="inline-flex items-center gap-4">
-                      <div className="flex flex-col xl:flex-row xl:gap-2 items-center">
-                        <method.icon className={method.iconClass} />
-
-                        <div
-                          className={`w-fit font-normal text-xs text-center leading-[18px] whitespace-nowrap ${
-                            selectedMethod === method.id
-                              ? "text-neutral-black-80"
-                              : "text-neutral-black-50"
-                          }`}
-                        >
-                          {method.label}
-                        </div>
-                      </div>
-                    </div>
-                  </label>
-                ))}
-            </div>
           </div>
         </div>
       </div>
@@ -266,6 +271,18 @@ export default function InfoOrder() {
 
                       <h2 className="w-fit mt-[-0.93px]">
                         ${prices.total.toLocaleString("es-CO")}
+                      </h2>
+                    </div>
+
+                    <Separator orientation="horizontal" className="w-full!" />
+
+                    <div className="flex items-center gap-10 w-full">
+                      <p className="flex-1 body-font font-bold">
+                        Metodo de pago
+                      </p>
+
+                      <h2 className="w-fit mt-[-0.93px]">
+                        {paymentMethodDetails?.label || ""}
                       </h2>
                     </div>
                   </div>

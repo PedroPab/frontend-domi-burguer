@@ -196,7 +196,7 @@ export default function MenuSection() {
                   showFoodToast(currentProduct.name);
                   resetCurrentProduct();
                 }}
-                className="text-white rounded-[30px] flex items-center gap-2 text-[16px] w-[199px] h-[48px] transition-all hover:scale-105 active:scale-95"
+                className="text-white leading-[18px]! font-semibold rounded-[30px] flex items-center gap-2 text-[16px] w-[199px] h-[48px] transition-all hover:scale-105 active:scale-95"
               >
                 <HamburgerIcon className="w-6 h-6" />
                 PAGAR AHORA
@@ -204,7 +204,7 @@ export default function MenuSection() {
             </Link>
             <Button
               variant="ghost"
-              className="bg-accent-yellow-40 hover:bg-accent-yellow-60 active:bg-accent-yellow-60 rounded-[30px] flex items-center gap-2 text-[16px] w-[199px] h-[48px] transition-all hover:scale-105 active:scale-95"
+              className="bg-accent-yellow-40 hover:bg-accent-yellow-60 active:bg-accent-yellow-60 rounded-[30px] flex items-center gap-2 text-[16px] w-[215px] h-[48px] transition-all hover:scale-105 active:scale-95"
               onClick={() => {
                 handleAddToCart(currentProduct);
                 showFoodToast(currentProduct.name);

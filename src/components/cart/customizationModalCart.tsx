@@ -363,13 +363,13 @@ export const CustomizationModalCart = ({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="p-0 bg-background modal-scrollbar rounded-2xl z-500 max-h-[90vh] overflow-y-auto">
         <DialogHeader className="p-10 pb-0">
-          <DialogTitle className="font-bold text-[16px] md:text-[20px] text-center leading-[18px] md:leading-[22px] text-neutral-black-80">
+          <DialogTitle className="font-bold text-[16px] md:text-[20px] leading-[18px] md:leading-[22px] text-neutral-black-80">
             ¿QUIERES PERSONALIZAR TU {cartItem?.name}?
           </DialogTitle>
         </DialogHeader>
 
         <div className="flex flex-col gap-6 px-10 pb-10">
-          <p className="body-font text-center text-neutral-black-60">
+          <p className="body-font mt-5 text-start text-neutral-black-60">
             Selecciona los ingredientes que quieres agregar o los que deseas
             retirar.
           </p>

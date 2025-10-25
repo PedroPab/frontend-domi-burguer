@@ -7,9 +7,10 @@ import { HeroUIProvider } from "@heroui/system";
 import { ToastProvider } from "@heroui/toast";
 
 const montserrat = Montserrat({
-  subsets: ["latin"],
-  weight: ["400", "600", "700", "800"],
-  variable: "--font-montserrat",
+  subsets: ['latin'],
+  weight: ['400', '600', '700', '800'],
+  variable: '--font-montserrat',
+  display: 'swap',
 });
 
 export const metadata: Metadata = {
@@ -24,8 +25,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${montserrat.variable} antialiased`}
-        style={{ fontFamily: 'var(--font-montserrat), sans-serif' }}
+        className={montserrat.variable}
       >
         <Navbar />
         <HeroUIProvider>
