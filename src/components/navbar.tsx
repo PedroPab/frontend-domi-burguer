@@ -105,14 +105,14 @@ export const Navbar = () => {
         </div>
       </nav>
       <div>
-        {/* <LogInModal
-          isOpen={isAcountModalOpen}
-          onClose={() => setIsAcountModalOpen(false)}
-        /> */}
-        <WorkingOnModal
+        <LogInModal
           isOpen={isAcountModalOpen}
           onClose={() => setIsAcountModalOpen(false)}
         />
+        {/* <WorkingOnModal
+          isOpen={isAcountModalOpen}
+          onClose={() => setIsAcountModalOpen(false)}
+        /> */}
       </div>
       <div>
         {/* <KitchenModal
