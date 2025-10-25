@@ -1,12 +1,10 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Montserrat } from "next/font/google";
 import "./globals.css";
 import { Footer } from "@/components/footer";
 import { Navbar } from "@/components/navbar";
 import { HeroUIProvider } from "@heroui/system";
 import { ToastProvider } from "@heroui/toast";
-
-import { Montserrat } from 'next/font/google';
 
 const montserrat = Montserrat({
   subsets: ['latin'],
@@ -14,7 +12,6 @@ const montserrat = Montserrat({
   variable: '--font-montserrat',
   display: 'swap',
 });
-
 
 export const metadata: Metadata = {
   title: "DomiBurguer, ¡pídela ya!",
