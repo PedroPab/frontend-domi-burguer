@@ -15,7 +15,7 @@
   --color-neutral-black-50: #808080;
   --color-neutral-black-80: #313131;
   /* Typography */
-  --font-family-primary: "Montserrat, Helvetica", -apple-system,
+  --font-family-primary: var(--font-montserrat), "Montserrat", -apple-system,
     BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-weight-regular: 400;
   --font-weight-semibold: 600;
