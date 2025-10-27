@@ -22,7 +22,7 @@ export default function LegalPage() {
                     <div>
                         <h1 className="text-3xl font-extrabold tracking-tight text-neutral-900">LEGAL</h1>
                         <p className="mt-2 max-w-2xl text-neutral-700">
-                            En DomiBurger, creemos que la confianza también se cocina a fuego lento.
+                            En Domi Burger, creemos que la confianza también se cocina a fuego lento.
                             Por eso, esta página está hecha para contarte de forma clara y sin rodeos cómo usamos tu
                             información, qué derechos tienes como usuario y bajo qué reglas jugamos.
                         </p>
@@ -105,7 +105,7 @@ function TermsOfService() {
     return (
         <div>
             <p className="mt-4 max-w-3xl">
-                Bienvenido a DomiBurger. Al usar nuestro sitio web, app, servicios de entrega o cualquier otro canal digital,
+                Bienvenido a Domi Burger. Al usar nuestro sitio web, app, servicios de entrega o cualquier otro canal digital,
                 aceptas estos Términos de Servicio.
             </p>
 
