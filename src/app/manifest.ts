@@ -22,9 +22,9 @@ export default function manifest(): MetadataRoute.Manifest {
       { src: '/LogoMobile.png', sizes: '128x128', type: 'image/png', purpose: 'any' },
       { src: '/LogoDesktop.png', sizes: '144x144', type: 'image/png', purpose: 'any' },
       { src: '/LogoDesktop.png', sizes: '152x152', type: 'image/png', purpose: 'any' },
-      { src: '/LogoDesktop.png', sizes: '192x192', type: 'image/png', purpose: 'any maskable' },
+      { src: '/LogoDesktop.png', sizes: '192x192', type: 'image/png', purpose: 'maskable' },
       { src: '/LogoDesktop.png', sizes: '384x384', type: 'image/png', purpose: 'any' },
-      { src: '/LogoDesktop.png', sizes: '512x512', type: 'image/png', purpose: 'any maskable' },
+      { src: '/LogoDesktop.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
     ],
     shortcuts: [
       {
