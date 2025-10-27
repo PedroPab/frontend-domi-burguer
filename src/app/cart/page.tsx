@@ -1,7 +1,14 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { CalendarIcon, Loader2, Pencil, PencilIcon, Plus, Trash2 } from "lucide-react";
+import {
+  CalendarIcon,
+  Loader2,
+  Pencil,
+  PencilIcon,
+  Plus,
+  Trash2,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -150,12 +157,12 @@ export default function Cart() {
   };
 
   return (
-    isSubmitting ? (
-      <div className="h-screen flex items-center justify-center">
-        <Loader2 className="animate-spin text-red-500" size={70} />
-      </div>
-    ):(
-      <form onSubmit={handleSubmitWithValidation}>
+    <form onSubmit={handleSubmitWithValidation}>
+      {isSubmitting && (
+        <div className="absolute inset-0 z-50 bg-black/40 flex items-center justify-center">
+          <Loader2 className="animate-spin text-primary-red" size={70} />
+        </div>
+      )}
       <div className="flex flex-col xl:flex-row w-full xl:justify-around items-center xl:items-start gap-5 mt-[130px] lg:mt-[130px] mb-[100px]">
         <div className="flex flex-col gap-14 pb-20 w-full lg:mt-4 max-w-[500px]">
           <div className="flex flex-col gap-6 w-full">
@@ -608,7 +615,7 @@ export default function Cart() {
                         isSubmitting ? "w-auto" : "w-[128px]"
                       }`}
                     >
-                      {isSubmitting ? "PROCESANDO..." : "COMPRAR"}
+                      COMPRAR
                     </Button>
                   </div>
                 </div>
@@ -647,7 +654,5 @@ export default function Cart() {
         />
       </div>
     </form>
-    )
-    
   );
 }
