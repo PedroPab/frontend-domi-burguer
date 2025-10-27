@@ -125,12 +125,12 @@ export default function InfoOrder() {
                     <div className="flex flex-col gap-2">
                       <div className="flex">
                         <h5 className="body-font font-bold me-4">Nombre: </h5>
-                        <h5 className="body-font ">{name}</h5>
+                        <h5 className="body-font ">{name || ""}</h5>
                       </div>
 
                       <div className="flex">
                         <h5 className="body-font font-bold me-4">Telefono: </h5>
-                        <h5 className="body-font ">{phone}</h5>
+                        <h5 className="body-font ">{phone || ""}</h5>
                       </div>
 
                       <div className="flex">
