@@ -183,7 +183,7 @@ export default function MenuSection() {
             />
             <div>
               <h1 className="font-bold! text-[28px]! md:text-[32px]! leading-[30px]! md:leading-[28px]!">
-                ${currentProduct.price.toLocaleString("es-CO")}
+                ${(currentProduct.price * currentProduct.quantity).toLocaleString("es-CO")}
               </h1>
             </div>
           </div>
