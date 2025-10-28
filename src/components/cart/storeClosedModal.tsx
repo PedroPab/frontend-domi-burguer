@@ -34,6 +34,7 @@ export const StoreClosedModal = ({
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent
+        onOpenChange={onClose}
         className="flex flex-col p-6 pt-0 z-500 bg-background rounded-2xl w-full sm:max-w-[400px]"
         aria-describedby="tienda-cerrada"
       >

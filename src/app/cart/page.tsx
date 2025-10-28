@@ -159,7 +159,7 @@ export default function Cart() {
   return (
     <form onSubmit={handleSubmitWithValidation}>
       {isSubmitting && (
-        <div className="absolute inset-0 z-50 bg-black/40 flex items-center justify-center">
+        <div className="absolute inset-0 z-500 bg-black/40 flex items-center justify-center">
           <Loader2 className="animate-spin text-primary-red" size={70} />
         </div>
       )}

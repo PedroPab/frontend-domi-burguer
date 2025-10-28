@@ -98,6 +98,7 @@ export const KitchenModal = ({ isOpen, onClose }: KitchenModalProps) => {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent
+        onOpenChange={onClose}
         aria-describedby="seleccionar direccion"
         onInteractOutside={(event) => {
           if (
