@@ -239,7 +239,7 @@ export const ModalAddress = ({
                   id="comment"
                   name="comment"
                   maxLength={200}
-                  className="body-font w-full placeholder:text-neutral-black-50 h-[100px] shadow-sm px-5 py-4 rounded-2xl border-[1.5px] border-[#cccccc] resize-none outline-none text-neutrosblack-80"
+                  className="body-font w-full placeholder:text-neutral-black-50 h-[100px] shadow-sm px-5 py-4 rounded-2xl border-[1.5px] border-[#cccccc] resize-none outline-none text-neutral-black-80 text-base"
                 />
                 <span className="absolute bottom-3 right-3 text-gray-400 text-sm pointer-events-none">
                   {formState.comment.length}/200

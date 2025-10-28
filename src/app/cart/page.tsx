@@ -212,7 +212,7 @@ export default function Cart() {
                     value={formData.comment}
                     maxLength={200}
                     placeholder="Algún comentario?"
-                    className="w-full h-[100px] shadow-sm px-5 py-4 rounded-2xl border-[1.5px] border-[#cccccc] resize-none outline-none [font-family:'Montserrat',Helvetica] font-normal text-neutrosblack-80 text-sm leading-[18px] tracking-[0] focus:border-[#808080]"
+                    className="w-full h-[100px] shadow-sm px-5 py-4 rounded-2xl border-[1.5px] border-[#cccccc] resize-none outline-none text-base font-normal text-neutrosblack-80 leading-[18px] tracking-[0] focus:border-[#808080]"
                   />
                   <span className="absolute bottom-3 right-3 text-gray-400 text-sm pointer-events-none">
                     {formData.comment.length}/200
