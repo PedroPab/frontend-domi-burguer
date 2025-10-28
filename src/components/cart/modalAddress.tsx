@@ -1,7 +1,12 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Input } from "../ui/input";
 import { MapPinIcon } from "../ui/icons";
 import { Switch } from "../ui/switch";
@@ -116,6 +121,7 @@ export const ModalAddress = ({
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent
+        onOpenChange={onClose}
         aria-describedby="seleccionar direccion"
         onInteractOutside={(event) => {
           if (
@@ -127,9 +133,11 @@ export const ModalAddress = ({
         }}
         className="flex-col flex p-0 bg-background h-auto rounded-2xl lg:w-[900px] lg:h-[680px] z-600"
       >
-        <DialogTitle className="mb-4 pt-[24px] pl-[20px] lg:pl-[32px] lg:pt-[32px] font-bold text-[18px]! md:text-[20px]! leading-[20px]! md:leading-[22px]! text-neutral-black-80">
-          {addressToEdit ? "EDITAR DIRECCIÓN" : "NUEVA DIRECCIÓN"}
-        </DialogTitle>
+        <DialogHeader className="lg:px-[32px]!">
+          <DialogTitle className="mb-4 pt-[24px] pl-[20px] lg:pt-[32px] font-bold text-[18px]! md:text-[20px]! leading-[20px]! md:leading-[22px]! text-neutral-black-80 text-center lg:text-left lg:pl-0!">
+            {addressToEdit ? "EDITAR DIRECCIÓN" : "NUEVA DIRECCIÓN"}
+          </DialogTitle>
+        </DialogHeader>
 
         {error && (
           <div className="mx-[20px] lg:mx-[32px] mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
