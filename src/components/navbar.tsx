@@ -68,7 +68,7 @@ export const Navbar = () => {
 
           <div className="w-[300px] items-center flex justify-end gap-2">
             <Link
-              href={`https://wa.me/573506186772?text=${encodeURIComponent("Hola, estaba en la pagina de Domi Burger y quiero más información")}`}
+              href={`https://wa.me/573506186772?text=${encodeURIComponent("Hola, estaba en la pagina de Domi Burguer y quiero más información")}`}
               target="_blank"
               rel="noopener noreferrer"
               className="focus:outline-0! focus:ring-0!"
