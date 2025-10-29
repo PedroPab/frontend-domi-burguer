@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
@@ -174,7 +175,7 @@ export const CustomizationModalSection = ({
 
   // Estados de los acordeones
   const [isFavoritosOpen, setIsFavoritosOpen] = useState(true);
-  const [isOtrosOpen, setIsOtrosOpen] = useState(true);
+  const [isOtrosOpen, setIsOtrosOpen] = useState(false);
   const [isGaseosasOpen, setIsGaseosasOpen] = useState(false);
 
   // Sincronizar ingredientes con complementos guardados
@@ -320,7 +321,30 @@ export const CustomizationModalSection = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent onOpenChange={onClose} className="p-0 bg-background modal-scrollbar rounded-2xl z-500 max-h-[90vh] overflow-y-auto">
+      <DialogContent
+        footer={
+          <DialogFooter>
+            <div className="flex justify-between items-center pt-4">
+              <Button
+                variant="ghost"
+                className="bg-accent-yellow-40 hover:bg-accent-yellow-60 rounded-[30px] w-[133px] h-[48px]"
+                onClick={() => {
+                  handleReset();
+                  onClose();
+                }}
+              >
+                CANCELAR
+              </Button>
+              <Button
+                className="text-white rounded-[30px] w-[133px] h-[48px]"
+                onClick={onClose}
+              >
+                CONFIRMAR
+              </Button>
+            </div>
+          </DialogFooter>
+        }
+        onOpenChange={onClose} className="p-0 bg-background modal-scrollbar rounded-2xl z-500 max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="font-bold text-[16px] md:text-[20px] leading-[18px] md:leading-[22px] text-neutral-black-80">
             ¿QUIERES PERSONALIZAR TU {productName}?
@@ -383,7 +407,7 @@ export const CustomizationModalSection = ({
               className="flex items-center gap-4 px-0 py-3 w-full border-b border-neutral-black-30"
             >
               <div className="flex-1 body-font font-bold text-left">
-                Gaseosas
+                Bebidas
               </div>
               {isGaseosasOpen ? (
                 <ChevronUp className="w-5 h-5" />
@@ -400,24 +424,7 @@ export const CustomizationModalSection = ({
           </div>
 
           {/* Botones de acción */}
-          <div className="flex justify-between items-center pt-4">
-            <Button
-              variant="ghost"
-              className="bg-accent-yellow-40 hover:bg-accent-yellow-60 rounded-[30px] w-[133px] h-[48px]"
-              onClick={() => {
-                handleReset();
-                onClose();
-              }}
-            >
-              CANCELAR
-            </Button>
-            <Button
-              className="text-white rounded-[30px] w-[133px] h-[48px]"
-              onClick={onClose}
-            >
-              CONFIRMAR
-            </Button>
-          </div>
+
         </div>
       </DialogContent>
     </Dialog>
