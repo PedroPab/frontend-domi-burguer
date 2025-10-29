@@ -1,10 +1,19 @@
 "use client";
 
 import { LogoMobile } from "@/components/ui/icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function LegalPage() {
   const [tab, setTab] = useState<"tos" | "privacy">("tos");
+
+  useEffect(() => {
+    const hash = window.location.hash;
+    if (hash === "#politicas") {
+      setTab("privacy");
+    } else {
+      setTab("tos");
+    }
+  }, []);
 
   return (
     <main className="min-h-screen w-full text-neutral-800">
@@ -35,7 +44,10 @@ export default function LegalPage() {
           <div className="sticky top-4 space-y-3">
             <button
               type="button"
-              onClick={() => setTab("tos")}
+              onClick={() => {
+                setTab("tos");
+                window.location.hash = "terminos";
+              }}
               aria-pressed={tab === "tos"}
               className={[
                 "w-[243px] rounded-full border px-5 py-3 text-left text-sm font-semibold transition",
@@ -49,7 +61,10 @@ export default function LegalPage() {
 
             <button
               type="button"
-              onClick={() => setTab("privacy")}
+              onClick={() => {
+                setTab("privacy");
+                window.location.hash = "politicas";
+              }}
               aria-pressed={tab === "privacy"}
               className={[
                 "w-[243px] rounded-full border px-5 py-3 text-left text-sm font-semibold transition",
