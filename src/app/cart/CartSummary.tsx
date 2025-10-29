@@ -56,7 +56,7 @@ export const CartSummary: React.FC<CartSummaryProps> = ({
                                 <p className="body-font font-bold flex-1">
                                     Programar el envío de mi pedido
                                 </p>
-                                <Tooltip text="Proximamente">
+                                <Tooltip text="Próximamente">
                                     <Button
                                         type="button"
                                         variant="outline"

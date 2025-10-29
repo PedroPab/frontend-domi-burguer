@@ -150,10 +150,10 @@ export default function Cart() {
         </div>
       )}
       <div className="flex flex-col xl:flex-row w-full xl:justify-around items-center xl:items-start gap-5 mt-[130px] lg:mt-[130px] mb-[100px]">
-        <div className="flex flex-col gap-14 pb-20 w-full lg:mt-4 max-w-[500px]">
+        <div className="flex flex-col gap-14 pb-6 w-full lg:mt-4 max-w-[500px]">
           <div className="flex flex-col gap-6 w-full">
             <div className="inline-flex gap-4 flex-col">
-              <h2 className="items-start">INFORMACIÓN DE PAGO</h2>
+              <h2 className="items-start">INFORMACIÓN DE COMPRA</h2>
               <p className="body-font">
                 Completa el siguiente formulario con tu información.
               </p>
