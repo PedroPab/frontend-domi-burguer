@@ -19,7 +19,7 @@ import {
 } from "../ui/icons";
 import { QuantitySelector } from "../ui/quantitySelector";
 import { Complement } from "@/types/products";
-import { ChevronDown, ChevronUp, CupSoda  } from "lucide-react";
+import { ChevronDown, ChevronUp, CupSoda } from "lucide-react";
 
 const iconMap: { [key: string]: React.FC<LogoProps> } = {
   CarneIcon,
@@ -88,8 +88,10 @@ const otrosData: Complement[] = [
     price: null,
     icon: "LechugaIcon",
     quantity: 1,
-    type: "removable",
-    minusComplement: true,
+    type: "special",
+    additionId: 29,
+    minusId: 11,
+    minusComplement: false,
   },
   {
     id: 300,
@@ -122,39 +124,29 @@ const otrosData: Complement[] = [
     type: "removable",
     minusComplement: true,
   },
-  
+
 ];
 
 // GASEOSAS - Bebidas
 const gaseosasData: Complement[] = [
   {
-    id: 501,
-    name: "Coca Cola",
-    price: 3000,
+    id: 10,
+    name: "Coca-Cola personal",
+    price: 4000,
     icon: "CupSoda",
     quantity: 0,
     type: "addable",
-    additionId: 501,
+    additionId: 10,
     minusComplement: false,
   },
   {
-    id: 502,
-    name: "Sprite",
-    price: 3000,
+    id: 9,
+    name: "Coca-Cola 1/ litro",
+    price: 9000,
     icon: "CupSoda",
     quantity: 0,
     type: "addable",
-    additionId: 502,
-    minusComplement: false,
-  },
-  {
-    id: 503,
-    name: "Fanta",
-    price: 3000,
-    icon: "CupSoda",
-    quantity: 0,
-    type: "addable",
-    additionId: 503,
+    additionId: 9,
     minusComplement: false,
   },
 ];
