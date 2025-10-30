@@ -192,7 +192,7 @@ export function useMenu() {
       name: "HAMBURGUESA ARTESANAL",
       basePrice: 18900,
       price: 18900,
-      body: "Pan artesanal echo en casa, carne jugosa, tocineta crocante, queso mozzarella lechuga fresca, tomate , pepinos, cebolla y el toque de nuestra Salsa de Ajo.",
+      body: "Pan artesanal hecho en casa, carne jugosa, tocineta crocante, queso mozzarella lechuga fresca, tomate , pepinos, cebolla y el toque de nuestra Salsa de Ajo.",
       bigImage: "/burgerBig.png",
       image1: "/burgerSmall.png",
       icons: [CarneIcon, TomateIcon, QuesoIcon, TocinetaIcon],

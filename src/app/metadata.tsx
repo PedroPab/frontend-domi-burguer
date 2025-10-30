@@ -34,6 +34,20 @@ export const metadataConfig: Metadata = {
         siteName: 'Domi Burguer',
         locale: 'es_CO',
         type: 'website',
-        images: [{ url: '/LogoDesktop.png' }],
+        images: [
+            {
+                url: '/soloPiensaEnDomi.jpg',
+                width: 736,
+                height: 920,
+                alt: 'Domi Burguer - Hamburguesas artesanales'
+            }
+        ],
+    },
+    twitter: {
+        card: 'summary_large_image',
+        title: 'Domi Burguer - ¡Pídela ya!',
+        description:
+            '¡Haz tu pedido de hamburguesas artesanales! Creamos nuestro propio sabor con ingredientes frescos y recetas familiares.',
+        images: ['/soloPiensaEnDomi.jpg'],
     },
 };
