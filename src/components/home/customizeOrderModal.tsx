@@ -3,161 +3,17 @@ import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import {
-  CarneIcon,
-  FrenchFriesIcon,
-  LechugaIcon,
-  PicklesIcon,
-  QuesoIcon,
-  SouceIcon,
-  TocinetaIcon,
-  TomateIcon,
-  LogoProps,
-} from "../ui/icons";
 import { QuantitySelector } from "../ui/quantitySelector";
 import { Complement } from "@/types/products";
-import { ChevronDown, ChevronUp, CupSoda  } from "lucide-react";
+import { favoritosData, otrosData, gaseosasData, iconMap } from "@/utils/complementSections";
 
-const iconMap: { [key: string]: React.FC<LogoProps> } = {
-  CarneIcon,
-  FrenchFriesIcon,
-  LechugaIcon,
-  PicklesIcon,
-  QuesoIcon,
-  SouceIcon,
-  TocinetaIcon,
-  TomateIcon,
-  CupSoda,
-};
+import { ChevronDown, ChevronUp } from "lucide-react";
 
-// FAVORITOS - Ingredientes principales
-const favoritosData: Complement[] = [
-  {
-    id: 1002,
-    name: "Carne",
-    price: 6000,
-    icon: "CarneIcon",
-    quantity: 1,
-    type: "special",
-    additionId: 4,
-    minusId: 20,
-    minusComplement: false,
-  },
-  {
-    id: 244,
-    name: "Queso americano",
-    price: 2000,
-    icon: "QuesoIcon",
-    quantity: 1,
-    type: "special",
-    additionId: 5,
-    minusId: 24,
-    minusComplement: false,
-  },
-  {
-    id: 666,
-    name: "Tocineta",
-    price: 3500,
-    icon: "TocinetaIcon",
-    quantity: 1,
-    type: "special",
-    additionId: 6,
-    minusId: 18,
-    minusComplement: false,
-  },
-  {
-    id: 7,
-    name: "Papas rizadas",
-    price: 6800,
-    icon: "FrenchFriesIcon",
-    quantity: 0,
-    type: "addable",
-    additionId: 7,
-    minusComplement: false,
-  },
-];
 
-// OTROS - Ingredientes secundarios y vegetales
-const otrosData: Complement[] = [
-  {
-    id: 14,
-    name: "Lechuga",
-    price: null,
-    icon: "LechugaIcon",
-    quantity: 1,
-    type: "removable",
-    minusComplement: true,
-  },
-  {
-    id: 300,
-    name: "Tomate",
-    price: null,
-    icon: "TomateIcon",
-    quantity: 1,
-    type: "special",
-    additionId: 30,
-    minusId: 12,
-    minusComplement: false,
-  },
-  {
-    id: 288,
-    name: "Pepinillos",
-    price: null,
-    icon: "PicklesIcon",
-    quantity: 1,
-    type: "special",
-    additionId: 28,
-    minusId: 13,
-    minusComplement: false,
-  },
-  {
-    id: 15,
-    name: "Salsas",
-    price: null,
-    icon: "SouceIcon",
-    quantity: 1,
-    type: "removable",
-    minusComplement: true,
-  },
-  
-];
-
-// GASEOSAS - Bebidas
-const gaseosasData: Complement[] = [
-  {
-    id: 501,
-    name: "Coca Cola",
-    price: 3000,
-    icon: "CupSoda",
-    quantity: 0,
-    type: "addable",
-    additionId: 501,
-    minusComplement: false,
-  },
-  {
-    id: 502,
-    name: "Sprite",
-    price: 3000,
-    icon: "CupSoda",
-    quantity: 0,
-    type: "addable",
-    additionId: 502,
-    minusComplement: false,
-  },
-  {
-    id: 503,
-    name: "Fanta",
-    price: 3000,
-    icon: "CupSoda",
-    quantity: 0,
-    type: "addable",
-    additionId: 503,
-    minusComplement: false,
-  },
-];
 
 interface CustomizationModalSectionProps {
   isOpen: boolean;
@@ -182,7 +38,7 @@ export const CustomizationModalSection = ({
 
   // Estados de los acordeones
   const [isFavoritosOpen, setIsFavoritosOpen] = useState(true);
-  const [isOtrosOpen, setIsOtrosOpen] = useState(true);
+  const [isOtrosOpen, setIsOtrosOpen] = useState(false);
   const [isGaseosasOpen, setIsGaseosasOpen] = useState(false);
 
   // Sincronizar ingredientes con complementos guardados
@@ -328,7 +184,30 @@ export const CustomizationModalSection = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent onOpenChange={onClose} className="p-0 bg-background modal-scrollbar rounded-2xl z-500 max-h-[90vh] overflow-y-auto">
+      <DialogContent
+        footer={
+          <DialogFooter>
+            <div className="flex justify-between items-center pt-4">
+              <Button
+                variant="ghost"
+                className="bg-accent-yellow-40 hover:bg-accent-yellow-60 rounded-[30px] w-[133px] h-[48px]"
+                onClick={() => {
+                  handleReset();
+                  onClose();
+                }}
+              >
+                CANCELAR
+              </Button>
+              <Button
+                className="text-white rounded-[30px] w-[133px] h-[48px]"
+                onClick={onClose}
+              >
+                CONFIRMAR
+              </Button>
+            </div>
+          </DialogFooter>
+        }
+        onOpenChange={onClose} className="p-0 bg-background modal-scrollbar rounded-2xl z-500 max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="font-bold text-[16px] md:text-[20px] leading-[18px] md:leading-[22px] text-neutral-black-80">
             ¿QUIERES PERSONALIZAR TU {productName}?
@@ -391,7 +270,7 @@ export const CustomizationModalSection = ({
               className="flex items-center gap-4 px-0 py-3 w-full border-b border-neutral-black-30"
             >
               <div className="flex-1 body-font font-bold text-left">
-                Gaseosas
+                Bebidas
               </div>
               {isGaseosasOpen ? (
                 <ChevronUp className="w-5 h-5" />
@@ -408,24 +287,7 @@ export const CustomizationModalSection = ({
           </div>
 
           {/* Botones de acción */}
-          <div className="flex justify-between items-center pt-4">
-            <Button
-              variant="ghost"
-              className="bg-accent-yellow-40 hover:bg-accent-yellow-60 rounded-[30px] w-[133px] h-[48px]"
-              onClick={() => {
-                handleReset();
-                onClose();
-              }}
-            >
-              CANCELAR
-            </Button>
-            <Button
-              className="text-white rounded-[30px] w-[133px] h-[48px]"
-              onClick={onClose}
-            >
-              CONFIRMAR
-            </Button>
-          </div>
+
         </div>
       </DialogContent>
     </Dialog>
