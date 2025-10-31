@@ -40,9 +40,9 @@ export const useAddressSubmit = (
         address: street,
         fullAddress: formState.address,
         name: formState.addressName,
-        deliveryPrice: responseDelivery.body.delivery.price || 0,
-        kitchen: responseDelivery.body.kitchen.name || '',
-        distance: responseDelivery.body.delivery.distance || 0,
+        deliveryPrice: responseDelivery?.body?.delivery?.price || null  ,
+        kitchen: responseDelivery?.body?.kitchen?.name || 'sin cocina asignada',
+        distance: responseDelivery?.body?.delivery?.distance || null,
       };
 
       localStorage.setItem('userAddress', JSON.stringify(addressData));

@@ -10,9 +10,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import {
-  CuponIcon,
-} from "@/components/ui/icons";
 import { ModalAddress } from "@/components/cart/modalAddress";
 
 import { Address } from "@/types/address";
