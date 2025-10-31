@@ -14,7 +14,7 @@ export default function Thankyou() {
         <div className="flex flex-col items-start justify-center gap-2 max-w-[720px] w-full mx-auto relative">
           <div className="w-full aspect-[1/1] relative h-full">
             <Image
-              src={"/graciasImage.png"}
+              src={"/productos-gracias.jpg"}
               alt={"Hamburguesa"}
               fill
               className="object-cover"
