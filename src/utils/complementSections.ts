@@ -106,9 +106,9 @@ const otrosData: Complement[] = [
     price: null,
     icon: "LechugaIcon",
     quantity: 1,
-    type: "special",
+    type: "removable",
     additionId: 29,
-    minusId: 11,
+    minusId: 14,
     minusComplement: false,
   },
   {
