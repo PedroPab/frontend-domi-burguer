@@ -1,55 +1,59 @@
-'use client';
+"use client";
 
-import Link from "next/link";
-import { useState } from "react";
+import { LogoMobile } from "@/components/ui/icons";
+import { useEffect, useState } from "react";
 
 export default function LegalPage() {
     const [tab, setTab] = useState<"tos" | "privacy">("tos");
 
-    return (
-        <main className="min-h-screen bg-[#FFF6E1] text-neutral-800">
-            {/* Header simple con breadcrumb y espacio reservado para logo */}
-            <header className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8 pt-6">
-                <ol className="flex items-center gap-2">
-                    <li>
-                        <Link href="/" className="hover:text-neutral-700 underline-offset-2 hover:underline">Home</Link>
-                    </li>
-                    <li className="select-none">/</li>
-                    <li className="text-neutral-800 font-medium">Legal</li>
-                </ol>
+    useEffect(() => {
+        const hash = window.location.hash;
+        if (hash === "#politicas") {
+            setTab("privacy");
+        } else {
+            setTab("tos");
+        }
+    }, []);
 
-                <div className="flex items-start justify-between">
-                    <div>
-                        <h1 className="text-3xl font-extrabold tracking-tight text-neutral-900">LEGAL</h1>
-                        <p className="mt-2 max-w-2xl text-neutral-700">
-                            En DomiBurger, creemos que la confianza también se cocina a fuego lento.
-                            Por eso, esta página está hecha para contarte de forma clara y sin rodeos cómo usamos tu
-                            información, qué derechos tienes como usuario y bajo qué reglas jugamos.
+    return (
+        <main className="min-h-screen w-full text-neutral-800">
+            <header className="relative left-1/2 right-1/2 -mx-[50vw] w-screen bg-[#FFF6E1] pb-10 pt-30 md:pt-40 px-5 sm:px-10 md:px-10 lg:px-10 xl:px-16 mb-2">
+                <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 flex h-full items-end justify-between">
+                    <div className="max-w-[480px]">
+                        <h1 className="text-3xl font-extrabold tracking-tight text-neutral-900 mb-4">
+                            LEGAL
+                        </h1>
+                        <p className="body-font">
+                            En DomiBurger, creemos que la confianza también se cocina a fuego
+                            lento. Por eso, esta página está hecha para contarte de forma
+                            clara y sin rodeos cómo usamos tu información, qué derechos tienes
+                            como usuario y bajo qué reglas jugamos.
                         </p>
                     </div>
-                    {/* Espacio reservado para el logo/mascota */}
-                    <div className="ml-6 hidden sm:block" aria-hidden>
-                        <div className="h-20 w-16 rounded-md opacity-70 border border-dashed border-neutral-300 grid place-items-center">
-                            <span className="text-[10px] text-neutral-400">LOGO</span>
-                        </div>
+
+                    <div className="ms-4">
+                        <LogoMobile width={51} height={72} />
                     </div>
                 </div>
             </header>
 
             {/* Layout principal */}
-            <section className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8 py-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
+            <section className="mx-auto w-full max-w-6xl py-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
                 {/* Sidebar */}
                 <aside className="lg:col-span-4 xl:col-span-3">
                     <div className="sticky top-4 space-y-3">
                         <button
                             type="button"
-                            onClick={() => setTab("tos")}
+                            onClick={() => {
+                                setTab("tos");
+                                window.location.hash = "terminos";
+                            }}
                             aria-pressed={tab === "tos"}
                             className={[
-                                "w-full rounded-full border px-5 py-3 text-left text-sm font-semibold transition",
+                                "w-[243px] rounded-full border px-5 py-3 text-left text-sm font-semibold transition",
                                 tab === "tos"
-                                    ? "bg-neutral-900 text-white border-neutral-900 shadow-sm"
-                                    : "bg-white/60 text-neutral-800 border-neutral-300 hover:bg-white"
+                                    ? "text-neutral-black-80 border-neutral-900 shadow-sm"
+                                    : "bg-white/60 text-neutral-800 border-neutral-300 hover:bg-white",
                             ].join(" ")}
                         >
                             TÉRMINOS DE SERVICIO
@@ -57,13 +61,16 @@ export default function LegalPage() {
 
                         <button
                             type="button"
-                            onClick={() => setTab("privacy")}
+                            onClick={() => {
+                                setTab("privacy");
+                                window.location.hash = "politicas";
+                            }}
                             aria-pressed={tab === "privacy"}
                             className={[
-                                "w-full rounded-full border px-5 py-3 text-left text-sm font-semibold transition",
+                                "w-[243px] rounded-full border px-5 py-3 text-left text-sm font-semibold transition",
                                 tab === "privacy"
-                                    ? "bg-neutral-900 text-white border-neutral-900 shadow-sm"
-                                    : "bg-white/60 text-neutral-800 border-neutral-300 hover:bg-white"
+                                    ? "text-neutral-black-80 border-neutral-900 shadow-sm"
+                                    : "bg-white/60 text-neutral-800 border-neutral-300 hover:bg-white",
                             ].join(" ")}
                         >
                             POLÍTICAS DE PRIVACIDAD
@@ -71,10 +78,11 @@ export default function LegalPage() {
                     </div>
                 </aside>
 
-                {/* Contenido */}
                 <div className="lg:col-span-8 xl:col-span-9">
-                    <article className="rounded-2xl bg-white p-6 sm:p-8 shadow-sm ring-1 ring-black/5">
-                        <p className="text-xs font-semibold tracking-wide text-neutral-500">ÚLTIMA ACTUALIZACIÓN, 16 DE JULIO DE 2025</p>
+                    <article className="rounded-2xl bg-white p-6 px-2">
+                        <p className="text-xs font-semibold tracking-wide text-neutral-500">
+                            ÚLTIMA ACTUALIZACIÓN, 16 DE JULIO DE 2025
+                        </p>
 
                         {tab === "tos" ? <TermsOfService /> : <PrivacyPolicy />}
                     </article>
@@ -92,11 +100,21 @@ function List({ children }: { children: React.ReactNode }) {
     );
 }
 
-function Section({ id, title, children }: { id: string; title: string; children: React.ReactNode }) {
+function Section({
+    id,
+    title,
+    children,
+}: {
+    id: string;
+    title: string;
+    children: React.ReactNode;
+}) {
     return (
         <section id={id} className="mt-6">
-            <h2 className="text-xl font-extrabold tracking-tight text-neutral-900">{title}</h2>
-            <div className="mt-2 text-neutral-800 leading-relaxed">{children}</div>
+            <h2 className="text-xl font-extrabold tracking-tight mb-7 text-neutral-900">
+                {title}
+            </h2>
+            <div className="mt-2 ps-2 text-neutral-800 leading-relaxed">{children}</div>
         </section>
     );
 }
@@ -105,16 +123,23 @@ function TermsOfService() {
     return (
         <div>
             <p className="mt-4 max-w-3xl">
-                Bienvenido a DomiBurger. Al usar nuestro sitio web, app, servicios de entrega o cualquier otro canal digital,
-                aceptas estos Términos de Servicio.
+                Bienvenido a DomiBurger. Al usar nuestro sitio web, app, servicios de
+                entrega o cualquier otro canal digital, aceptas estos Términos de
+                Servicio.
             </p>
 
             <Section id="tos-1" title="1.0 ¿CÓMO FUNCIONAN NUESTROS SERVICIOS?">
                 <List>
-                    <li>Puedes realizar pedidos a través de nuestro sitio web o WhatsApp.</li>
-                    <li>Al confirmar tu orden, aceptas el precio, el tiempo estimado de entrega y los productos seleccionados.</li>
                     <li>
-                        Puedes personalizar tu hamburguesa retirando ingredientes, pero no aceptamos cambios después de confirmado el pedido.
+                        Puedes realizar pedidos a través de nuestro sitio web o WhatsApp.
+                    </li>
+                    <li>
+                        Al confirmar tu orden, aceptas el precio, el tiempo estimado de
+                        entrega y los productos seleccionados.
+                    </li>
+                    <li>
+                        Puedes personalizar tu hamburguesa retirando ingredientes, pero no
+                        aceptamos cambios después de confirmado el pedido.
                     </li>
                 </List>
             </Section>
@@ -122,20 +147,26 @@ function TermsOfService() {
             <Section id="tos-2" title="2.0 MÉTODOS DE PAGO">
                 <List>
                     <li>
-                        Aceptamos pagos con tarjeta de crédito/débito, billeteras digitales y otras pasarelas seguras.
+                        Aceptamos pagos con tarjeta de crédito/débito, billeteras digitales
+                        y otras pasarelas seguras.
                     </li>
                     <li>
-                        No almacenamos tu información bancaria directamente; usamos plataformas certificadas para ello.
+                        No almacenamos tu información bancaria directamente; usamos
+                        plataformas certificadas para ello.
                     </li>
                 </List>
             </Section>
 
             <Section id="tos-3" title="3.0 CANCELACIONES Y DEVOLUCIONES">
                 <List>
-                    <li>No aceptamos cancelaciones después de que el pedido ha sido preparado.</li>
                     <li>
-                        Si tu pedido llegó en mal estado o incompleto, contáctanos inmediatamente. Evaluaremos el caso y, si corresponde,
-                        haremos una reposición o devolución del dinero.
+                        No aceptamos cancelaciones después de que el pedido ha sido
+                        preparado.
+                    </li>
+                    <li>
+                        Si tu pedido llegó en mal estado o incompleto, contáctanos
+                        inmediatamente. Evaluaremos el caso y, si corresponde, haremos una
+                        reposición o devolución del dinero.
                     </li>
                 </List>
             </Section>
@@ -147,8 +178,9 @@ function PrivacyPolicy() {
     return (
         <div>
             <p className="mt-4 max-w-3xl">
-                En DomiBurger, respetamos tu privacidad tanto como respetamos el punto de cocción de nuestra carne. Esta política
-                explica cómo recolectamos, usamos y protegemos tus datos.
+                En DomiBurger, respetamos tu privacidad tanto como respetamos el punto
+                de cocción de nuestra carne. Esta política explica cómo recolectamos,
+                usamos y protegemos tus datos.
             </p>
 
             <Section id="pp-1" title="1.0 RECOLECCIÓN DE DATOS">
@@ -169,20 +201,24 @@ function PrivacyPolicy() {
 
             <Section id="pp-3" title="3.0 COMPARTIR INFORMACIÓN">
                 <p className="mt-2">
-                    Jamás vendemos tu información. Podemos compartirla con servicios de terceros como plataformas de pago u herramientas
-                    de envío, pero solo para completar tu pedido y bajo estrictos acuerdos de confidencialidad.
+                    Jamás vendemos tu información. Podemos compartirla con servicios de
+                    terceros como plataformas de pago u herramientas de envío, pero solo
+                    para completar tu pedido y bajo estrictos acuerdos de
+                    confidencialidad.
                 </p>
             </Section>
 
             <Section id="pp-4" title="4.0 PROTECCIÓN DE TU INFORMACIÓN">
                 <p className="mt-2">
-                    Usamos cifrado SSL, autenticación segura y almacenamos la menor cantidad de datos posible.
+                    Usamos cifrado SSL, autenticación segura y almacenamos la menor
+                    cantidad de datos posible.
                 </p>
             </Section>
 
             <Section id="pp-5" title="5.0 TUS DERECHOS">
                 <p className="mt-2">
-                    Puedes acceder, modificar o eliminar tus datos cuando quieras. Escríbenos y lo gestionamos.
+                    Puedes acceder, modificar o eliminar tus datos cuando quieras.
+                    Escríbenos y lo gestionamos.
                 </p>
             </Section>
         </div>

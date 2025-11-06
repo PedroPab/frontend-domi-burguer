@@ -35,6 +35,7 @@ export const WorkingOnModal = ({ isOpen, onClose }: ModalProps) => {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent
+        onOpenChange={onClose}
         aria-describedby="Iniciar sesión"
         onInteractOutside={(event) => {
           // evita cerrar si el click viene del contenedor de Google
@@ -45,9 +46,9 @@ export const WorkingOnModal = ({ isOpen, onClose }: ModalProps) => {
             event.preventDefault();
           }
         }}
-        className="flex-col flex bg-background sm:top-105 p-4 lg:p-6 rounded-2xl lg:w-[820px] h-[600px] z-600"
+        className="flex-col flex bg-background sm:top-105 p-4 lg:p-6 rounded-2xl lg:w-[820px] h-auto lg:h-[600px] z-600"
       >
-        <div className="flex mt-6 lg:mt-0 flex-col rounded-2xl px-[30px] lg:px-[140px] w-full justify-center gap-6 h-full bg-[#F7F7F7]">
+        <div className="flex mt-6 lg:mt-0 flex-col rounded-2xl px-[30px] lg:px-[140px] w-full justify-center gap-6 h-full ">
           <DialogTitle className=" font-bold text-[20px]! md:text-[24px]! leading-[22px]! md:leading-[26px]! text-neutral-black-80;">
             ESTAMOS TRABAJANDO EN ESTA FUNCIÓN
           </DialogTitle>

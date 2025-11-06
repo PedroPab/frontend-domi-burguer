@@ -1,25 +1,21 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Montserrat } from "next/font/google";
 import "./globals.css";
 import { Footer } from "@/components/footer";
 import { Navbar } from "@/components/navbar";
 import { HeroUIProvider } from "@heroui/system";
 import { ToastProvider } from "@heroui/toast";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { Metadata } from "next";
+import { metadataConfig } from "./metadata";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+const montserrat = Montserrat({
+  subsets: ['latin'],
+  weight: ['400', '600', '700', '800'],
+  variable: '--font-montserrat',
+  display: 'swap',
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
-export const metadata: Metadata = {
-  title: "DomiBurguer, ¡pídela ya!",
-};
+export const metadata: Metadata = metadataConfig
 
 export default function RootLayout({
   children,
@@ -27,9 +23,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="es">
+      <head>
+        <meta name="apple-mobile-web-app-title" content="Domi Burguer" /></head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={montserrat.variable}
       >
         <AuthProvider>
           <Navbar />
@@ -45,6 +43,18 @@ export default function RootLayout({
           </HeroUIProvider>
           <Footer />
         </AuthProvider>
+        <Navbar />
+        <HeroUIProvider>
+          <ToastProvider
+            placement="top-right"
+            toastOffset={100}
+            maxVisibleToasts={10}
+          />
+          <div className="container mx-auto overflow-x-hidden px-5 sm:px-10 md:px-10 lg:px-10 xl:px-16  max-w-[1440px] h-auto">
+            {children}
+          </div>
+        </HeroUIProvider>
+        <Footer />
       </body>
     </html>
   );

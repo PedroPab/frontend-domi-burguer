@@ -194,6 +194,7 @@ export const LogInModal = ({ isOpen, onClose }: ModalProps) => {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent
+        onOpenChange={onClose}
         aria-describedby="Iniciar sesión"
         onInteractOutside={(event) => {
           // evita cerrar si el click viene del contenedor de Google

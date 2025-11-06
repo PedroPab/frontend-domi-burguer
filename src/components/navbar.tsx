@@ -68,7 +68,7 @@ export const Navbar = () => {
 
           <div className="w-[300px] items-center flex justify-end gap-2">
             <Link
-              href={`https://wa.me/573506186772?text=${encodeURIComponent("Hola, estaba en la pagina de Domi Burger y quiero más información")}`}
+              href={`https://wa.me/573506186772?text=${encodeURIComponent("Hola, estaba en la pagina de Domi Burguer y quiero más información")}`}
               target="_blank"
               rel="noopener noreferrer"
               className="focus:outline-0! focus:ring-0!"
@@ -94,8 +94,8 @@ export const Navbar = () => {
                 <span className="text-white whitespace-nowrap font-bold hidden md:block">
                   ORDENAR
                 </span>
-                <div className="flex flex-col w-8 h-8 items-center justify-center gap-2 bg-accentmikado-10 rounded-[20px]">
-                  <span className="text-black whitespace-nowrap font-bold text-[16px] bg-amber-50 h-8 w-8 rounded-[20px] text-center pt-1 lg:mr-2">
+                <div className="flex flex-col w-8 h-8 items-center justify-center gap-2 rounded-[20px]">
+                  <span className="text-black whitespace-nowrap font-bold text-[16px] bg-amber-50 h-8 w-8 rounded-[20px] text-center flex items-center justify-center">
                     {itemsCount}
                   </span>
                 </div>

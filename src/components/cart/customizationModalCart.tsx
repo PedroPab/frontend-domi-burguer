@@ -6,156 +6,12 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import {
-  CarneIcon,
-  FrenchFriesIcon,
-  LechugaIcon,
-  PicklesIcon,
-  QuesoIcon,
-  SouceIcon,
-  TocinetaIcon,
-  TomateIcon,
-  LogoProps,
-} from "../ui/icons";
-import { ChevronDown, ChevronUp, CupSoda } from "lucide-react";
+import { ChevronDown, ChevronUp } from "lucide-react";
 import { QuantitySelector } from "../ui/quantitySelector";
 import { Complement } from "@/types/products";
 import { useCartStore, CartItem } from "@/store/cartStore";
+import { favoritosData, otrosData, gaseosasData, iconMap } from "@/utils/complementSections";
 
-const iconMap: { [key: string]: React.FC<LogoProps> } = {
-  CarneIcon,
-  FrenchFriesIcon,
-  LechugaIcon,
-  PicklesIcon,
-  QuesoIcon,
-  SouceIcon,
-  TocinetaIcon,
-  TomateIcon,
-  CupSoda,
-};
-
-// SECCIONES
-const favoritosData: Complement[] = [
-  {
-    id: 1002,
-    name: "Carne",
-    price: 6000,
-    icon: "CarneIcon",
-    quantity: 1,
-    type: "special",
-    additionId: 4,
-    minusId: 20,
-    minusComplement: false,
-  },
-  {
-    id: 244,
-    name: "Queso americano",
-    price: 2000,
-    icon: "QuesoIcon",
-    quantity: 1,
-    type: "special",
-    additionId: 5,
-    minusId: 24,
-    minusComplement: false,
-  },
-  {
-    id: 666,
-    name: "Tocineta",
-    price: 3500,
-    icon: "TocinetaIcon",
-    quantity: 1,
-    type: "special",
-    additionId: 6,
-    minusId: 18,
-    minusComplement: false,
-  },
-  {
-    id: 7,
-    name: "Papas rizadas",
-    price: 6800,
-    icon: "FrenchFriesIcon",
-    quantity: 0,
-    type: "addable",
-    additionId: 7,
-    minusComplement: false,
-  },
-];
-
-const otrosData: Complement[] = [
-  {
-    id: 14,
-    name: "Lechuga",
-    price: null,
-    icon: "LechugaIcon",
-    quantity: 1,
-    type: "removable",
-    minusComplement: true,
-  },
-  {
-    id: 300,
-    name: "Tomate",
-    price: null,
-    icon: "TomateIcon",
-    quantity: 1,
-    type: "special",
-    additionId: 30,
-    minusId: 12,
-    minusComplement: false,
-  },
-  {
-    id: 288,
-    name: "Pepinillos",
-    price: null,
-    icon: "PicklesIcon",
-    quantity: 1,
-    type: "special",
-    additionId: 28,
-    minusId: 13,
-    minusComplement: false,
-  },
-  {
-    id: 15,
-    name: "Salsas",
-    price: null,
-    icon: "SouceIcon",
-    quantity: 1,
-    type: "removable",
-    minusComplement: true,
-  },
-];
-
-const gaseosasData: Complement[] = [
-  {
-    id: 501,
-    name: "Coca Cola",
-    price: 3000,
-    icon: "CupSoda",
-    quantity: 0,
-    type: "addable",
-    additionId: 501,
-    minusComplement: false,
-  },
-  {
-    id: 502,
-    name: "Sprite",
-    price: 3000,
-    icon: "CupSoda",
-    quantity: 0,
-    type: "addable",
-    additionId: 502,
-    minusComplement: false,
-  },
-  {
-    id: 503,
-    name: "Fanta",
-    price: 3000,
-    icon: "CupSoda",
-    quantity: 0,
-    type: "addable",
-    additionId: 503,
-    minusComplement: false,
-  },
-];
 
 interface CustomizationModalCartProps {
   isOpen: boolean;
@@ -361,15 +217,15 @@ export const CustomizationModalCart = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="p-0 bg-background modal-scrollbar rounded-2xl z-500 max-h-[90vh] overflow-y-auto">
-        <DialogHeader className="p-10 pb-0">
-          <DialogTitle className="font-bold text-[16px] md:text-[20px] text-center leading-[18px] md:leading-[22px] text-neutral-black-80">
+      <DialogContent onOpenChange={onClose} className="p-0 bg-background modal-scrollbar rounded-2xl z-500 max-h-[90vh] overflow-y-auto">
+        <DialogHeader>
+          <DialogTitle className="font-bold text-[16px] md:text-[20px] leading-[18px] md:leading-[22px] text-neutral-black-80">
             ¿QUIERES PERSONALIZAR TU {cartItem?.name}?
           </DialogTitle>
         </DialogHeader>
 
         <div className="flex flex-col gap-6 px-10 pb-10">
-          <p className="body-font text-center text-neutral-black-60">
+          <p className="body-font mt-5 text-start text-neutral-black-60">
             Selecciona los ingredientes que quieres agregar o los que deseas
             retirar.
           </p>
