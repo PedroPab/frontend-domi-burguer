@@ -43,6 +43,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user: User | null) => {
+            console.log('Auth state changed:', user);
             setUser(user);
             setLoading(false);
         });
@@ -52,6 +53,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
     const signIn = async (email: string, password: string) => {
         try {
+            console.log('Attempting to sign in with email:', email);
             await signInWithEmailAndPassword(auth, email, password);
         } catch (error) {
             console.error('Error signing in:', error);
