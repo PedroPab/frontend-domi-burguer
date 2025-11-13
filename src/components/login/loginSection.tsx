@@ -5,14 +5,16 @@ import { Button } from "@/components/ui/button";
 import { Input } from "../ui/input";
 import { GoogleIcon } from "../ui/icons";
 import { Separator } from "../ui/separator";
-import { signInWithPhoneNumber, RecaptchaVerifier, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { signInWithPhoneNumber, RecaptchaVerifier, GoogleAuthProvider, signInWithPopup, linkWithPhoneNumber, ConfirmationResult } from "firebase/auth";
 import { auth } from "@/lib/firebase";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface LoginSectionProps {
     onClose: () => void;
 }
 
 export const LoginSection = ({ onClose }: LoginSectionProps) => {
+    const { user } = useAuth();
     // Configurar el idioma de Firebase Auth
     useEffect(() => {
         auth.languageCode = "es";
@@ -92,9 +94,9 @@ export const LoginSection = ({ onClose }: LoginSectionProps) => {
             );
 
             // Guardar el resultado en una variable del componente
-            window.confirmationResult = confirmationResult;
+            confirmationResultRef.current = confirmationResult;
             setStep("code");
-        } catch (error: Error) {
+        } catch (error: any) {
             console.error("Error al enviar el código:", error);
             setError(error.message || "No se pudo enviar el SMS.");
 
@@ -106,7 +108,7 @@ export const LoginSection = ({ onClose }: LoginSectionProps) => {
         }
     };
 
-    const [confirmationResultRef] = useState<{ current: any }>({ current: null });
+    const [confirmationResultRef] = useState<{ current: ConfirmationResult | null }>({ current: null });
 
     const handleVerifyCode = async () => {
         try {
@@ -117,10 +119,18 @@ export const LoginSection = ({ onClose }: LoginSectionProps) => {
                 throw new Error("Por favor, solicita un nuevo código.");
             }
 
-            const result = await confirmationResultRef.current.confirm(code);
-            if (result.user) {
-                console.log("Usuario autenticado:", result.user);
+            if (user) {
+                // Vincular el número de teléfono a la cuenta existente
+                await confirmationResultRef.current.confirm(code);
+                console.log("Número de teléfono vinculado con éxito.");
                 onClose();
+            } else {
+                // Iniciar sesión con el número de teléfono
+                const result = await confirmationResultRef.current.confirm(code);
+                if (result.user) {
+                    console.log("Usuario autenticado:", result.user);
+                    onClose();
+                }
             }
         } catch (error: unknown) {
             const errorMessage = error instanceof Error ? error.message : "Código inválido o expirado.";
