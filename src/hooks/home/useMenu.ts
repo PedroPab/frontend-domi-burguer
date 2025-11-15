@@ -190,8 +190,8 @@ export function useMenu() {
     {
       id: 2,
       name: "HAMBURGUESA ARTESANAL",
-      basePrice: 18900,
-      price: 18900,
+      basePrice: 23900,
+      price: 23900,
       body: "Pan artesanal hecho en casa, carne jugosa, tocineta crocante, queso mozzarella lechuga fresca, tomate , pepinos, cebolla y el toque de nuestra Salsa de Ajo.",
       bigImage: "/burgerBig.png",
       image1: "/burgerSmall.png",
@@ -202,8 +202,8 @@ export function useMenu() {
     {
       id: 1,
       name: "COMBO ESPECIAL",
-      basePrice: 22900,
-      price: 22900,
+      basePrice: 28900,
+      price: 28900,
       body: "Nuestra hamburguesa estrella, acompañada de papas rizadas, crocantes.",
       bigImage: "/comboEspecial.png",
       image1: "/burgerSmall.png",
@@ -215,8 +215,8 @@ export function useMenu() {
     {
       id: 38,
       name: "SALSA DE AJO",
-      basePrice: 25000,
-      price: 25000,
+      basePrice: 27000,
+      price: 27000,
       body: "Cremosa, intensa y perfectamente balanceada, nuestra receta familiar de Salsa de Ajo. Es el secreto que se queda en tu memoria.",
       bigImage: "/salsaAjo.png",
       image1: "/salsaSmall.png",
