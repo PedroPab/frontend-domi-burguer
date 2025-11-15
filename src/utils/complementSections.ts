@@ -34,7 +34,7 @@ const favoritosData: Complement[] = [
   {
     id: 1002,
     name: "Carne",
-    price: 6000,
+    price: 6500,
     icon: "CarneIcon",
     quantity: 1,
     type: "special",
@@ -45,7 +45,7 @@ const favoritosData: Complement[] = [
   {
     id: 244,
     name: "Queso americano",
-    price: 2000,
+    price: 3000,
     icon: "QuesoIcon",
     quantity: 1,
     type: "special",
@@ -56,7 +56,7 @@ const favoritosData: Complement[] = [
   {
     id: 666,
     name: "Tocineta",
-    price: 3500,
+    price: 4000,
     icon: "TocinetaIcon",
     quantity: 1,
     type: "special",
@@ -67,7 +67,7 @@ const favoritosData: Complement[] = [
   {
     id: 7,
     name: "Papas rizadas",
-    price: 6800,
+    price: 6000,
     icon: "FrenchFriesIcon",
     quantity: 0,
     type: "addable",
@@ -147,7 +147,7 @@ const otrosData: Complement[] = [
   {
     id: 71,
     name: "1 oz Salsa de Ajo",
-    price: 1500,
+    price: 2000,
     icon: "AjoIcon",
     quantity: 0,
     type: "addable",
