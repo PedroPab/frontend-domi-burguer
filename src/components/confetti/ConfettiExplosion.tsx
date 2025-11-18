@@ -3,7 +3,11 @@
 import confetti from "canvas-confetti";
 import { useEffect } from "react";
 
-export default function ConfettiExplosion({ trigger }) {
+interface ConfettiExplosionProps {
+    trigger: boolean;
+}
+
+export default function ConfettiExplosion({ trigger }: ConfettiExplosionProps) {
     useEffect(() => {
         if (!trigger) return;
 
