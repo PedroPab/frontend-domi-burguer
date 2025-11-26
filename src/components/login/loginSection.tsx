@@ -22,7 +22,7 @@ export const LoginSection = ({ onClose }: LoginSectionProps) => {
 
     const [phone, setPhone] = useState("");
     const [code, setCode] = useState("");
-    const recaptchaVerifierRef = useRef<RecaptchaVerifier | null>(null);
+    let recaptchaVerifierRef
     const [step, setStep] = useState<"phone" | "code">("phone");
     const [sending, setSending] = useState(false);
     const [verifying, setVerifying] = useState(false);
@@ -64,37 +64,48 @@ export const LoginSection = ({ onClose }: LoginSectionProps) => {
             if (normalized.length < 10) {
                 throw new Error("Ingresa un número de teléfono válido.");
             }
-
+            console.log("Número de teléfono normalizado:", normalized);
             // Crear una nueva instancia de RecaptchaVerifier si no existe
-            if (!recaptchaVerifierRef.current) {
-                recaptchaVerifierRef.current = new RecaptchaVerifier(
+            console.log(recaptchaVerifierRef)
+            if (!recaptchaVerifierRef) {
+                console.log("Creando nueva instancia de reCAPTCHA");
+                recaptchaVerifierRef = new RecaptchaVerifier(
                     auth,
                     "send-code-btn",
                     {
                         size: "invisible",
-                        callback: () => {
+                        callback: (response) => {
+                            console.log(response)
                             console.log("reCAPTCHA resuelto correctamente");
-                        },
-                        "expired-callback": () => {
-                            setError("reCAPTCHA vencido, inténtalo de nuevo.");
-                            recaptchaVerifierRef.current?.clear();
-                            recaptchaVerifierRef.current = null;
                         },
                     }
                 );
 
+                console.log("Instancia de reCAPTCHA creada");
+                console.log(recaptchaVerifierRef)
+
                 // Asegurarse de que el reCAPTCHA está renderizado
-                await recaptchaVerifierRef.current.render();
+                await recaptchaVerifierRef.render();
+            }
+            console.log("reCAPTCHA renderizado");
+            try {
+                console.log("Código enviado, ConfirmationResult:", auth,
+                    normalized,
+                    recaptchaVerifierRef);
+                const confirmationResult = await signInWithPhoneNumber(
+                    auth,
+                    normalized,
+                    recaptchaVerifierRef
+                );
+
+                confirmationResultRef.current = confirmationResult;
+
+            } catch (error) {
+                console.error("Error during signInWithPhoneNumber:", error);
+                throw error;
             }
 
-            const confirmationResult = await signInWithPhoneNumber(
-                auth,
-                normalized,
-                recaptchaVerifierRef.current
-            );
-
             // Guardar el resultado en una variable del componente
-            confirmationResultRef.current = confirmationResult;
             setStep("code");
         } catch (error: any) {
             console.error("Error al enviar el código:", error);
