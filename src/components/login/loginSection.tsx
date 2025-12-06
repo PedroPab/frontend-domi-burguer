@@ -5,9 +5,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "../ui/input";
 import { GoogleIcon } from "../ui/icons";
 import { Separator } from "../ui/separator";
-import { signInWithPhoneNumber, RecaptchaVerifier, GoogleAuthProvider, signInWithPopup, linkWithPhoneNumber, ConfirmationResult } from "firebase/auth";
+import { signInWithPhoneNumber, RecaptchaVerifier, GoogleAuthProvider, signInWithPopup, ConfirmationResult } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 import { useAuth } from "@/contexts/AuthContext";
+import { useRouter } from "next/navigation";
 
 interface LoginSectionProps {
     onClose: () => void;
@@ -15,6 +16,8 @@ interface LoginSectionProps {
 
 export const LoginSection = ({ onClose }: LoginSectionProps) => {
     const { user } = useAuth();
+    const router = useRouter();
+
     // Configurar el idioma de Firebase Auth
     useEffect(() => {
         auth.languageCode = "es";
@@ -22,7 +25,7 @@ export const LoginSection = ({ onClose }: LoginSectionProps) => {
 
     const [phone, setPhone] = useState("");
     const [code, setCode] = useState("");
-    let recaptchaVerifierRef
+    let recaptchaVerifierRef: RecaptchaVerifier | null = null
     const [step, setStep] = useState<"phone" | "code">("phone");
     const [sending, setSending] = useState(false);
     const [verifying, setVerifying] = useState(false);
@@ -74,7 +77,7 @@ export const LoginSection = ({ onClose }: LoginSectionProps) => {
                     "send-code-btn",
                     {
                         size: "invisible",
-                        callback: (response) => {
+                        callback: (response: unknown) => {
                             console.log(response)
                             console.log("reCAPTCHA resuelto correctamente");
                         },
@@ -107,13 +110,14 @@ export const LoginSection = ({ onClose }: LoginSectionProps) => {
 
             // Guardar el resultado en una variable del componente
             setStep("code");
-        } catch (error: any) {
+        } catch (error: unknown) {
+            const errorMessage = error instanceof Error ? error.message : "No se pudo enviar el SMS.";
             console.error("Error al enviar el código:", error);
-            setError(error.message || "No se pudo enviar el SMS.");
+            setError(errorMessage);
 
             // Limpiar y reiniciar el reCAPTCHA
-            recaptchaVerifierRef.current?.clear();
-            recaptchaVerifierRef.current = null;
+            recaptchaVerifierRef?.clear();
+            recaptchaVerifierRef = null;
         } finally {
             setSending(false);
         }
@@ -135,12 +139,14 @@ export const LoginSection = ({ onClose }: LoginSectionProps) => {
                 await confirmationResultRef.current.confirm(code);
                 console.log("Número de teléfono vinculado con éxito.");
                 onClose();
+                router.push("/profile");
             } else {
                 // Iniciar sesión con el número de teléfono
                 const result = await confirmationResultRef.current.confirm(code);
                 if (result.user) {
                     console.log("Usuario autenticado:", result.user);
                     onClose();
+                    router.push("/profile");
                 }
             }
         } catch (error: unknown) {
@@ -162,6 +168,7 @@ export const LoginSection = ({ onClose }: LoginSectionProps) => {
             const user = result.user;
             console.log("Usuario autenticado con Google:", user);
             onClose();
+            router.push("/profile");
         } catch (error: unknown) {
             const errorMessage = error instanceof Error ? error.message : "Error al iniciar sesión con Google";
             console.error("Error de autenticación con Google:", error);
