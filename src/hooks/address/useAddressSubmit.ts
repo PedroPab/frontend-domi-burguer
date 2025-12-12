@@ -11,6 +11,7 @@ export const useAddressSubmit = (
   const [error, setError] = useState<string | null>(null);
 
   const submitAddress = async (formState: AddressFormState) => {
+    console.log('formState', formState);
     if (!formState.coordinates) {
       setError('Las coordenadas son requeridas');
       return;
@@ -21,8 +22,9 @@ export const useAddressSubmit = (
 
     try {
       const { street, city, country } = AddressService.parseAddress(formState.address);
-
+      
       const formData = {
+        name: formState.name,
         address: formState.address,
         floor: formState.floor,
         comment: formState.comment || 'sin comentarios',
@@ -33,6 +35,7 @@ export const useAddressSubmit = (
       };
 
       const response = await AddressService.createAddress(formData);
+
       const responseDelivery = await AddressService.createDelivery(response.body.id || '');
       console.log('responseDelivery', responseDelivery);
       const addressData = {

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { useAuth } from "@/contexts/AuthContext";
 import {
   Loader2,
   Pencil,
@@ -29,6 +30,7 @@ export default function Cart() {
   };
 
   const isMounted = useIsMounted();
+  const { user } = useAuth();
 
   const {
     items,
@@ -165,6 +167,16 @@ export default function Cart() {
             <div className="flex flex-col gap-4 w-full">
               <h5 className="body-font font-bold">Tus datos</h5>
 
+              {user && (
+                <div className="p-4 mb-2 bg-green-50 border border-green-200 rounded-lg text-green-800">
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="font-bold">Usuario autenticado:</span>
+                    {user.displayName || user.email}
+                  </div>
+                  <p className="text-sm">Tus datos se han autocompletado</p>
+                </div>
+              )}
+
               <div className="inline-flex flex-col gap-2 items-start w-full">
                 <Input
                   id="name"
@@ -173,6 +185,7 @@ export default function Cart() {
                   placeholder="Nombres y Apellidos"
                   onChange={handleChange}
                   value={formData.name}
+                  disabled={!!(user && user.displayName)}
                 />
 
                 <div className="flex flex-col lg:flex-row w-full gap-2">
@@ -184,6 +197,7 @@ export default function Cart() {
                     placeholder="Escribe tu número de teléfono"
                     onChange={handlePhoneChange}
                     value={formData.phone}
+                    disabled={!!(user && user.phoneNumber)}
                   />
                 </div>
 
@@ -205,7 +219,15 @@ export default function Cart() {
             </div>
 
             <div className="flex flex-col gap-4 w-full">
-              <p className="body-font font-bold">¡Necesitamos tu dirección!</p>
+              <div className="flex items-center justify-between">
+                <p className="body-font font-bold">¡Necesitamos tu dirección!</p>
+                {user && (
+                  <span className="text-sm text-primary-red">
+                    Usando dirección personal
+                  </span>
+                )}
+              </div>
+
               {addressStore?.coordinates && addressStore?.country ? null : (
                 <Button
                   type="button"
@@ -213,7 +235,7 @@ export default function Cart() {
                   className="bg-accent-yellow-20 hover:bg-accent-yellow-40 active:bg-accent-yellow-40 rounded-[30px] flex items-center gap-2 xl:w-[260px] xl:h-[48px] h-[40px] w-full label-font"
                   onClick={() => setIsModalOpen(true)}
                 >
-                  <Plus /> AGREGAR DIRECCIÓN
+                  <Plus /> {user ? "AGREGAR DIRECCIÓN PERSONAL" : "AGREGAR DIRECCIÓN"}
                 </Button>
               )}
               {addressStore?.coordinates && addressStore?.country && (

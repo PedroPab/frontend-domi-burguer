@@ -1,3 +1,4 @@
+import { auth } from "@/lib/firebase";
 import { Location } from "@/types/locations"; 
 
 export class LocationService {
@@ -15,4 +16,52 @@ export class LocationService {
       throw error;
     }
   }
+
+  //add location 
+  static async addLocation(token:string, location:object) : Promise<{ body: Location}> {
+    console.log('holi 2')
+    try {
+      const options = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(location),
+      }
+
+
+      const response = await fetch(`${this.API_URL}api/v2/locations`, options);
+      if (!response.ok) {
+        throw new Error("Error fetching location");
+      }
+      return await response.json();
+    } catch (error) {
+      console.error("Error fetching location:", error);
+      throw error;
+    }
+  }
+
+  static async getUserAddresses(token:string) : Promise<{ body: [Location]}> {
+       try {
+       console.log("n: ", token , this.API_URL)
+      const response = await fetch(`${this.API_URL}api/v2/locations/me`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Error fetching location");
+      }
+      return await response.json();
+    } catch (error) {
+      console.error("Error fetching location:", error);
+      throw error;
+    }
+  }
+
+
 }

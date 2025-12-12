@@ -1,6 +1,7 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect } from "react";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/contexts/AuthContext";
 import {
   Dialog,
   DialogContent,
@@ -9,8 +10,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "../ui/input";
 import { MapPinIcon } from "../ui/icons";
-import { Switch } from "../ui/switch";
-import { Autocomplete, useLoadScript } from "@react-google-maps/api";
+import { Autocomplete } from "@react-google-maps/api";
 import {
   Select,
   SelectContent,
@@ -27,6 +27,14 @@ import { useCartStore } from "@/store/cartStore";
 import { Address, PropertyType } from "@/types/address";
 import { Loader2 } from "lucide-react";
 
+import { LocationService } from "@/services/locationService";
+import { getIdToken } from "firebase/auth";
+
+// Constants
+const DEFAULT_COORDINATES = { lat: 6.3017314, lng: -75.5743796 };
+const DEFAULT_ADDRESS_NAME = 'Mi dirección';
+const DEFAULT_PROPERTY_TYPE: PropertyType = 'house';
+
 interface ModalAddressProps {
   isOpen: boolean;
   onClose: () => void;
@@ -39,9 +47,8 @@ export const ModalAddress = ({
   addressToEdit,
 }: ModalAddressProps) => {
   const { setAddress } = useCartStore();
-  // Referencias para el input del autocomplete
-  const inputRef = useRef<HTMLInputElement | null>(null);
-  const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
+  const { user } = useAuth();
+  // Google Maps ya maneja esto internamente a través del hook useGooglePlaces
 
   // Hook de formulario con datos iniciales si está editando
   const initialData = addressToEdit
@@ -62,7 +69,7 @@ export const ModalAddress = ({
       resetForm();
     },
     (error) => {
-      console.error("Error al crear dirección:", error);
+      console.error('Error al crear dirección:', error);
     }
   );
 
@@ -89,7 +96,7 @@ export const ModalAddress = ({
       updateField("coordinates", addressToEdit.coordinates);
       updateField("selectedType", addressToEdit.propertyType || "");
     }
-  }, [isOpen, addressToEdit]);
+  }, [isOpen, addressToEdit, updateField]);
 
   // Manejo de navegación del navegador
   useEffect(() => {
@@ -113,10 +120,60 @@ export const ModalAddress = ({
 
   const handleConfirm = async () => {
     if (!isFormValid()) return;
+
+    try {
+      if (user) {
+        await handleAuthenticatedUser();
+      } else {
+        await handleGuestUser();
+      }
+    } catch (error) {
+      console.error('Error al confirmar dirección:', error);
+    }
+  };
+
+  const handleAuthenticatedUser = async () => {
+    try {
+      if (!user) {
+        throw new Error("Usuario no autenticado");
+      }
+
+      const locationData = createLocationData();
+      const token = await getIdToken(user);
+      const location = await LocationService.addLocation(token, locationData);
+
+      if (!location || !location.body) {
+        throw new Error("Respuesta inválida del servidor al crear la ubicación");
+      }
+
+      // setAddress(location.body);
+      resetForm();
+      onClose();
+    } catch (err) {
+      const message =
+        err instanceof Error
+          ? err.message
+          : "Ocurrió un error inesperado al guardar la dirección";
+
+      console.error("Error al crear ubicación:", err);
+      alert(message);
+    }
+  };
+
+  const handleGuestUser = async () => {
     await submitAddress(formState);
   };
-  //es la cede de medellin, esta es la refencia para centrar el mapa y para buscar los resultados del autocomplete
-  const centerOrigin = { lat: 6.3017314, lng: -75.5743796 };
+
+  const createLocationData = () => ({
+    name: formState.addressName || DEFAULT_ADDRESS_NAME,
+    address: formState.address,
+    coordinates: formState.coordinates || DEFAULT_COORDINATES,
+    propertyType: formState.selectedType || DEFAULT_PROPERTY_TYPE,
+    floor: formState.floor || '',
+    comment: formState.comment || ''
+  });
+  // Reference coordinates for Medellín - used to center map and autocomplete search bounds
+  const centerOrigin = DEFAULT_COORDINATES;
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>

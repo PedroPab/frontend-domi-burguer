@@ -63,13 +63,35 @@ export default function ProfilePage() {
         <div className="min-h-screen bg-gray-50 py-8 px-4">
             <div className="max-w-4xl mx-auto">
                 {/* Header */}
-                <div className="mb-8">
-                    <h1 className="text-3xl md:text-4xl font-bold text-neutral-black-80 mb-2">
-                        Mi Cuenta
-                    </h1>
-                    <p className="text-neutral-black-60">
-                        Administra tu información personal y preferencias
-                    </p>
+                <div className="mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                    <div>
+                        <h1 className="text-3xl md:text-4xl font-bold text-neutral-black-80 mb-2">
+                            Mi Cuenta
+                        </h1>
+                        <p className="text-neutral-black-60">
+                            Administra tu información personal y preferencias
+                        </p>
+                    </div>
+
+                    {/* Botón de Cerrar Sesión en la cabecera */}
+                    <Button
+                        onClick={handleLogout}
+                        disabled={isLoggingOut}
+                        className="h-11 px-4 flex items-center gap-2 rounded-lg text-white hover:bg-red-700 transition-colors"
+                        variant="destructive"
+                    >
+                        {isLoggingOut ? (
+                            <>
+                                <Loader2 className="animate-spin w-4 h-4" />
+                                Saliendo...
+                            </>
+                        ) : (
+                            <>
+                                <LogOut className="w-4 h-4" />
+                                Cerrar sesión
+                            </>
+                        )}
+                    </Button>
                 </div>
 
                 {/* Tarjeta de Perfil Principal */}

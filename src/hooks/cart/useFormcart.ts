@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { BancolombiaIcon, MoneyIcon, NequiIcon } from "@/components/ui/icons";
 import { useCartStore } from "@/store/cartStore";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/contexts/AuthContext";
 
 type PaymentMethod = {
   id: string;
@@ -14,6 +15,7 @@ type PaymentMethod = {
 function useFormCart() {
   const router = useRouter();
   const { items, address, clearCart, getSubtotal, getTotal} = useCartStore();
+  const { user } = useAuth();
 
   const API_URL = `${process.env.NEXT_PUBLIC_API_URL}`;
   const paymentMethods: PaymentMethod[] = [
@@ -46,6 +48,17 @@ function useFormCart() {
     comment: "",
     paymentMethod: "cash",
   });
+  
+  // Actualizar el formulario con los datos del usuario cuando se autentica
+  useEffect(() => {
+    if (user) {
+      setFormData(prev => ({
+        ...prev,
+        name: user.displayName || prev.name,
+        phone: user.phoneNumber || prev.phone
+      }));
+    }
+  }, [user]);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -110,6 +123,8 @@ function useFormCart() {
       phone: formData.phone,
       comment: formData.comment,
       locationId: address?.id,
+      userId: user?.uid || null, // Incluir ID de usuario si está autenticado
+      userEmail: user?.email || null, // Incluir email del usuario si está autenticado
       delivery: {
         price: address?.deliveryPrice || 0,
         distance: address?.distance || 0,
@@ -123,7 +138,7 @@ function useFormCart() {
         })),
       })),
       paymentMethod: formData.paymentMethod,
-      origin: "public",
+      origin: user ? "authenticated" : "public", // Cambiar el origen si está autenticado
     };
   };
 
