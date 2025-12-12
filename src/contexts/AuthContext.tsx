@@ -1,34 +1,48 @@
 "use client";
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import {
-    User,
-    onAuthStateChanged,
-    signInWithEmailAndPassword,
-    createUserWithEmailAndPassword,
-    signOut,
-    sendPasswordResetEmail,
-    GoogleAuthProvider,
-    signInWithPopup
-} from 'firebase/auth';
+import { User, onAuthStateChanged, ConfirmationResult } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
+import { AuthService, AuthError } from '@/services/authService';
 
+/**
+ * Interface que define los datos y métodos disponibles en el contexto de autenticación
+ */
 interface AuthContextType {
+    // Datos del usuario
     user: User | null;
     loading: boolean;
-    signIn: (email: string, password: string) => Promise<void>;
-    signUp: (email: string, password: string) => Promise<void>;
+
+    // Métodos de autenticación con correo/contraseña
+    signIn: (email: string, password: string) => Promise<User>;
+    signUp: (email: string, password: string) => Promise<User>;
     logout: () => Promise<void>;
     resetPassword: (email: string) => Promise<void>;
-    signInWithGoogle: () => Promise<void>;
+
+    // Autenticación con Google
+    signInWithGoogle: () => Promise<User>;
+
+    // Autenticación con teléfono
+    phoneSignIn: {
+        sendVerificationCode: (phoneNumber: string, recaptchaContainerId: string) => Promise<ConfirmationResult>;
+        verifyCode: (confirmationResult: ConfirmationResult, code: string) => Promise<User>;
+    };
+
+    // Estado del error
+    error: AuthError | null;
+    clearError: () => void;
 }
 
+// Crear el contexto
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+/**
+ * Hook para acceder al contexto de autenticación
+ */
 export const useAuth = () => {
     const context = useContext(AuthContext);
     if (context === undefined) {
-        throw new Error('useAuth must be used within an AuthProvider');
+        throw new Error('useAuth debe ser usado dentro de un AuthProvider');
     }
     return context;
 };
@@ -37,13 +51,18 @@ interface AuthProviderProps {
     children: React.ReactNode;
 }
 
+/**
+ * Proveedor del contexto de autenticación
+ */
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
+    // Estado del usuario y carga
     const [user, setUser] = useState<User | null>(null);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<AuthError | null>(null);
 
+    // Escuchar cambios en el estado de autenticación
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user: User | null) => {
-            console.log('Auth state changed:', user);
             setUser(user);
             setLoading(false);
         });
@@ -51,53 +70,117 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         return () => unsubscribe();
     }, []);
 
-    const signIn = async (email: string, password: string) => {
-        try {
-            console.log('Attempting to sign in with email:', email);
-            await signInWithEmailAndPassword(auth, email, password);
-        } catch (error) {
-            console.error('Error signing in:', error);
+    // Limpiar error
+    const clearError = () => setError(null);
+
+    /**
+     * Manejador de errores genérico
+     */
+    const handleAuthError = (error: unknown) => {
+        if ((error as AuthError).code && (error as AuthError).message) {
+            setError(error as AuthError);
             throw error;
+        } else {
+            const genericError: AuthError = {
+                code: 'auth/unknown',
+                message: 'Ha ocurrido un error inesperado',
+            };
+            setError(genericError);
+            throw genericError;
         }
     };
 
-    const signUp = async (email: string, password: string) => {
+    /**
+     * Iniciar sesión con correo y contraseña
+     */
+    const signIn = async (email: string, password: string): Promise<User> => {
         try {
-            await createUserWithEmailAndPassword(auth, email, password);
+            clearError();
+            const result = await AuthService.signInWithEmail(email, password);
+            return result.user;
         } catch (error) {
-            console.error('Error signing up:', error);
-            throw error;
+            return handleAuthError(error);
         }
     };
 
-    const logout = async () => {
+    /**
+     * Registrarse con correo y contraseña
+     */
+    const signUp = async (email: string, password: string): Promise<User> => {
         try {
-            await signOut(auth);
+            clearError();
+            const result = await AuthService.signUpWithEmail(email, password);
+            return result.user;
         } catch (error) {
-            console.error('Error signing out:', error);
-            throw error;
+            return handleAuthError(error);
         }
     };
 
-    const resetPassword = async (email: string) => {
+    /**
+     * Cerrar sesión
+     */
+    const logout = async (): Promise<void> => {
         try {
-            await sendPasswordResetEmail(auth, email);
+            clearError();
+            await AuthService.signOut();
         } catch (error) {
-            console.error('Error resetting password:', error);
-            throw error;
+            handleAuthError(error);
         }
     };
 
-    const signInWithGoogle = async () => {
+    /**
+     * Restablecer contraseña
+     */
+    const resetPassword = async (email: string): Promise<void> => {
         try {
-            const provider = new GoogleAuthProvider();
-            await signInWithPopup(auth, provider);
+            clearError();
+            await AuthService.resetPassword(email);
         } catch (error) {
-            console.error('Error signing in with Google:', error);
-            throw error;
+            handleAuthError(error);
         }
     };
 
+    /**
+     * Iniciar sesión con Google
+     */
+    const signInWithGoogle = async (): Promise<User> => {
+        try {
+            clearError();
+            const result = await AuthService.signInWithGoogle();
+            return result.user;
+        } catch (error) {
+            return handleAuthError(error);
+        }
+    };
+
+    /**
+     * Autenticación con teléfono
+     */
+    const phoneSignIn = {
+        // Enviar código de verificación
+        sendVerificationCode: async (phoneNumber: string, recaptchaContainerId: string): Promise<ConfirmationResult> => {
+            try {
+                clearError();
+                const recaptchaVerifier = AuthService.createRecaptchaVerifier(recaptchaContainerId);
+                return await AuthService.sendPhoneVerificationCode(phoneNumber, recaptchaVerifier);
+            } catch (error) {
+                return handleAuthError(error);
+            }
+        },
+
+        // Verificar código
+        verifyCode: async (confirmationResult: ConfirmationResult, code: string): Promise<User> => {
+            try {
+                clearError();
+                const result = await AuthService.verifyPhoneCode(confirmationResult, code);
+                return result.user;
+            } catch (error) {
+                return handleAuthError(error);
+            }
+        }
+    };
+
+    // Valor que se proporcionará al contexto
     const value: AuthContextType = {
         user,
         loading,
@@ -106,6 +189,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         logout,
         resetPassword,
         signInWithGoogle,
+        phoneSignIn,
+        error,
+        clearError,
     };
 
     return (
