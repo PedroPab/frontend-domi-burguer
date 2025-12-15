@@ -232,7 +232,7 @@ export default function ProfilePage() {
                     </h3>
                     <div className="space-y-3">
                         <button
-                            onClick={() => router.push("/cart")}
+                            onClick={() => router.push("/locations")}
                             className="w-full flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
                         >
                             <div className="flex items-center gap-3">
@@ -252,6 +252,19 @@ export default function ProfilePage() {
                             </div>
                             <ChevronRight className="w-5 h-5 text-neutral-black-60" />
                         </button>
+
+                        {/* ver mis pedidos */}
+                        <button
+                            onClick={() => router.push("/orders")}
+                            className="w-full flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+                        >
+                            <div className="flex items-center gap-3">
+                                <Calendar className="w-5 h-5 text-primary-red" />
+                                <span className="font-medium text-neutral-black-80">Mis Pedidos</span>
+                            </div>
+                            <ChevronRight className="w-5 h-5 text-neutral-black-60" />
+                        </button>
+
                     </div>
                 </Card>
 

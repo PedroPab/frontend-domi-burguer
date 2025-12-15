@@ -1,0 +1,76 @@
+export interface Order {
+  id: string;
+  orderNumber: string;
+  status: OrderStatus;
+  createdAt: string;
+  updatedAt: string;
+  total: number;
+  deliveryPrice: number;
+  subtotal: number;
+  items: OrderItem[];
+  customerInfo: CustomerInfo;
+  deliveryAddress: DeliveryAddress;
+  paymentMethod: PaymentMethod;
+  comment?: string;
+  estimatedDeliveryTime?: string;
+}
+
+export interface OrderItem {
+  id: string;
+  name: string;
+  price: number;
+  quantity: number;
+  image1: string;
+  image2?: string;
+  modifications?: OrderModification[];
+  complements?: OrderComplement[];
+}
+
+export interface OrderModification {
+  icon: string;
+  text: string;
+  price?: number;
+}
+
+export interface OrderComplement {
+  name: string;
+  quantity: number;
+  price: number;
+}
+
+export interface CustomerInfo {
+  name: string;
+  phone: string;
+  email?: string;
+}
+
+export interface DeliveryAddress {
+  name: string;
+  address: string;
+  city: string;
+  country: string;
+  floor?: string;
+  coordinates: {
+    lat: number;
+    lng: number;
+  };
+  deliveryPrice: number;
+}
+
+export type PaymentMethod = 'cash' | 'bancolombia' | 'nequi';
+
+export type OrderStatus = 
+  | 'pending'
+  | 'confirmed'
+  | 'preparing'
+  | 'ready'
+  | 'delivering'
+  | 'delivered'
+  | 'cancelled';
+
+export interface OrderStatusInfo {
+  status: OrderStatus;
+  label: string;
+  color: string;
+  bgColor: string;
+}
