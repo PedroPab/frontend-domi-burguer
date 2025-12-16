@@ -33,7 +33,7 @@ interface CheckoutFormProps {
     handlePhoneChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 
     // Address
-    addressStore: Address | null;
+    addressStore: Address;
     onOpenAddressModal: () => void;
     onEditAddress: () => void;
     onRemoveAddress: () => void;
@@ -68,7 +68,7 @@ export function CheckoutForm({
 
                 <AddressSection
                     user={user}
-                    addressStore={addressStore}
+                    addressClient={addressStore}
                     onOpenModal={onOpenAddressModal}
                     onEditAddress={onEditAddress}
                     onRemoveAddress={onRemoveAddress}
