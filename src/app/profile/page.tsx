@@ -272,8 +272,8 @@ export default function ProfilePage() {
                 <Button
                     onClick={handleLogout}
                     disabled={isLoggingOut}
-                    className="w-full h-12 text-white rounded-lg flex items-center justify-center gap-2 hover:bg-red-700 transition-colors"
-                    variant="destructive"
+                    className="w-full h-12 rounded-lg flex items-center justify-center gap-2 transition-colors border border-destructive text-destructive hover:bg-destructive hover:text-destructive-foreground"
+                    variant="outline"
                 >
                     {isLoggingOut ? (
                         <>

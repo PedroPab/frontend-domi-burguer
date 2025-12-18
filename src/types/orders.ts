@@ -57,6 +57,12 @@ export interface DeliveryAddress {
   deliveryPrice: number;
 }
 
+export interface Delivery  {
+  distance: number;
+  price: number;
+  duration: number;
+}
+
 export type PaymentMethod = 'cash' | 'bancolombia' | 'nequi';
 
 export type OrderStatus = 

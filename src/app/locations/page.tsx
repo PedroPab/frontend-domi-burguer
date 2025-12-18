@@ -10,6 +10,7 @@ import { ModalAddress } from "@/components/cart/modalAddress";
 import { LocationService } from "@/services/locationService";
 import { getIdToken } from "firebase/auth";
 import { LocationCard } from "./LocationCard";
+import { CheckoutFormProvider } from "@/contexts/CheckoutFormContext";
 
 // Tipo local para adaptar un Location al shape que espera ModalAddress
 type AddressLike = {
@@ -139,64 +140,67 @@ export default function LocationsPage() {
     }
 
     return (
-        <div className="mt-[130px] min-h-screen bg-gray-50 py-8 px-4">
-            <div className="max-w-4xl mx-auto">
-                <div className="mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                    <div>
-                        <h1 className="text-3xl md:text-4xl font-bold text-neutral-black-80 mb-2">
-                            Mis direcciones
-                        </h1>
-                        <p className="text-neutral-black-60">
-                            Gestiona las ubicaciones donde recibes tus pedidos
-                        </p>
-                    </div>
+        <CheckoutFormProvider>
 
-                    <Button
-                        onClick={handleOpenCreate}
-                        className="h-11 px-4 flex items-center gap-2 rounded-lg"
-                    >
-                        <Plus className="w-4 h-4" />
-                        Nueva dirección
-                    </Button>
-                </div>
+            <div className="mt-[130px] min-h-screen bg-gray-50 py-8 px-4">
+                <div className="max-w-4xl mx-auto">
+                    <div className="mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                        <div>
+                            <h1 className="text-3xl md:text-4xl font-bold text-neutral-black-80 mb-2">
+                                Mis direcciones
+                            </h1>
+                            <p className="text-neutral-black-60">
+                                Gestiona las ubicaciones donde recibes tus pedidos
+                            </p>
+                        </div>
 
-                {error && (
-                    <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg text-sm">
-                        {error}
-                    </div>
-                )}
-
-                {isLoadingAddresses ? (
-                    <div className="flex justify-center py-10">
-                        <Loader2 className="animate-spin text-primary-red" size={40} />
-                    </div>
-                ) : locations.length === 0 ? (
-                    <div className="py-10 text-center text-neutral-black-60">
-                        <p className="mb-4">Aún no tienes direcciones guardadas.</p>
-                        <Button onClick={handleOpenCreate}>
-                            <Plus className="w-4 h-4 mr-2" /> Agregar primera dirección
+                        <Button
+                            onClick={handleOpenCreate}
+                            className="h-11 px-4 flex items-center gap-2 rounded-lg"
+                        >
+                            <Plus className="w-4 h-4" />
+                            Nueva dirección
                         </Button>
                     </div>
-                ) : (
-                    <div className="space-y-4">
-                        {locations.map((location) => (
-                            <LocationCard
-                                key={location.id}
-                                location={location}
-                                onEdit={handleOpenEdit}
-                                onDelete={handleDelete}
-                            />
-                        ))}
-                    </div>
-                )}
-            </div>
 
-            <ModalAddress
-                isOpen={isModalOpen}
-                onClose={handleCloseModal}
-                // Cast local porque ModalAddress espera Address, pero aquí usamos Location -> AddressLike
-                addressToEdit={addressToEdit as any}
-            />
-        </div>
+                    {error && (
+                        <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg text-sm">
+                            {error}
+                        </div>
+                    )}
+
+                    {isLoadingAddresses ? (
+                        <div className="flex justify-center py-10">
+                            <Loader2 className="animate-spin text-primary-red" size={40} />
+                        </div>
+                    ) : locations.length === 0 ? (
+                        <div className="py-10 text-center text-neutral-black-60">
+                            <p className="mb-4">Aún no tienes direcciones guardadas.</p>
+                            <Button onClick={handleOpenCreate}>
+                                <Plus className="w-4 h-4 mr-2" /> Agregar primera dirección
+                            </Button>
+                        </div>
+                    ) : (
+                        <div className="space-y-4">
+                            {locations.map((location) => (
+                                <LocationCard
+                                    key={location.id}
+                                    location={location}
+                                    onEdit={handleOpenEdit}
+                                    onDelete={handleDelete}
+                                />
+                            ))}
+                        </div>
+                    )}
+                </div>
+
+                <ModalAddress
+                    isOpen={isModalOpen}
+                    onClose={handleCloseModal}
+                    // Cast local porque ModalAddress espera Address, pero aquí usamos Location -> AddressLike
+                    addressToEdit={addressToEdit as any}
+                />
+            </div>
+        </CheckoutFormProvider>
     );
 }

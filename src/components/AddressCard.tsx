@@ -4,16 +4,17 @@ import { Pencil, Trash2 } from "lucide-react";
 
 interface addressCardProps {
     address: Address
-    onEditAddress: () => void;
-    onRemoveAddress: () => void;
+    // onEditAddress: () => void;
+    // onRemoveAddress: () => void;
 }
 
 const AddressCard = ({
-    onEditAddress,
-    onRemoveAddress,
+    // onEditAddress,
+    // onRemoveAddress,
     address
 }: addressCardProps) => {
-    console.log('address in AddressCard :', address);
+    console.log('siii address in AddressCard :', address);
+
     return <Card className="gap-6 p-5 w-full bg-accent-yellow-10 rounded-[12px] shadow-none border-0">
         <CardContent className="p-0">
             <div className="flex justify-between gap-6 w-full">
@@ -38,14 +39,14 @@ const AddressCard = ({
                         </h2>
                         <span>{address.kitchen || ""}</span>
                     </div>
-                    <div className="flex flex-col justify-between">
+                    {/* <div className="flex flex-col justify-between">
                         <Pencil
                             className="h-[18px] w-[18px] xl:mt-[2px] cursor-pointer hover:text-neutral-black-60"
                             onClick={onEditAddress} />
                         <Trash2
                             className="h-[18px] w-[18px] xl:mt-[2px] cursor-pointer text-red-500 hover:text-red-700"
                             onClick={onRemoveAddress} />
-                    </div>
+                    </div> */}
                 </div>
             </div>
         </CardContent>

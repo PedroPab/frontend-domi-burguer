@@ -1,27 +1,28 @@
 import React from "react";
-import { User } from "firebase/auth";
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import AddressCard from "../addressCard";
-import { Address } from "@/types/address";
+import AddressCard from "../AddressCard";
+import { useCheckoutForm } from "@/contexts/CheckoutFormContext";
+import { ModalAddress } from "./modalAddress";
+import { useAddressManagement } from "@/hooks/cart/useAddressManagement";
+import { useAuth } from "@/contexts/AuthContext";
 
-interface AddressSectionProps {
-    user: User | null;
-    addressClient: Address;
-    onOpenModal: () => void;
-    onEditAddress: () => void;
-    onRemoveAddress: () => void;
-}
 
-export function AddressSection({
-    user,
-    addressClient,
-    onOpenModal,
-    onEditAddress,
-    onRemoveAddress,
-}: AddressSectionProps) {
+export function AddressSection() {
 
     //si no es usuario autenticado , miramos si tiene direccion en el local storage
+    const { addressClient, location } = useCheckoutForm();
+    console.log('%caddressClient in AddressSection :', 'color: blue;', addressClient);
+    const {
+        isModalOpen,
+        addressToEdit,
+        handleEditAddress,
+        removeAddress,
+        handleCloseModal,
+        handleOpenModal,
+    } = useAddressManagement();
+
+    const { user } = useAuth();
 
 
 
@@ -47,18 +48,26 @@ export function AddressSection({
                 type="button"
                 variant="ghost"
                 className="bg-accent-yellow-20 hover:bg-accent-yellow-40 active:bg-accent-yellow-40 rounded-[30px] flex items-center gap-2 xl:w-[260px] xl:h-[48px] h-[40px] w-full label-font"
-                onClick={onOpenModal}
+                onClick={handleOpenModal}
             >
                 <Plus />
                 {user ? "AGREGAR DIRECCIÓN PERSONAL" : "AGREGAR DIRECCIÓN"}
             </Button>
 
-            <AddressCard
-                address={addressClient}
-                onEditAddress={onEditAddress}
-                onRemoveAddress={onRemoveAddress}
-            />
 
+            {addressClient && (
+                <AddressCard
+                    address={addressClient}
+                />
+            )}
+
+
+
+            <ModalAddress
+                isOpen={isModalOpen}
+                onClose={handleCloseModal}
+                addressToEdit={addressToEdit}
+            />
 
         </div>
     );

@@ -48,10 +48,6 @@ export function CheckoutForm({
     formData,
     handleChange,
     handlePhoneChange,
-    addressStore,
-    onOpenAddressModal,
-    onEditAddress,
-    onRemoveAddress,
     paymentMethods,
 }: CheckoutFormProps) {
     return (
@@ -66,13 +62,7 @@ export function CheckoutForm({
                     handlePhoneChange={handlePhoneChange}
                 />
 
-                <AddressSection
-                    user={user}
-                    addressClient={addressStore}
-                    onOpenModal={onOpenAddressModal}
-                    onEditAddress={onEditAddress}
-                    onRemoveAddress={onRemoveAddress}
-                />
+                <AddressSection />
 
                 <PaymentMethodsSection
                     paymentMethods={paymentMethods}

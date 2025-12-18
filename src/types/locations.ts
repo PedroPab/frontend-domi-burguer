@@ -1,3 +1,5 @@
+export type PropertyType = 'house' | 'building' | 'urbanization' | 'office';
+
 /**
  * Interfaz para representar la estructura de una Ubicación.
  * Refleja las propiedades definidas en el constructor de la clase Location.
@@ -13,13 +15,13 @@ export interface Location {
     postalCode: string; // Código postal
     floor: string; // Piso del inmueble
     comment: string; // Comentarios adicionales
-    propertyType: string; // Tipo de inmueble (debe coincidir con Location.TYPES)
+    propertyType: PropertyType; // Tipo de inmueble (debe coincidir con Location.TYPES)
     status: string; // Estado de la locación (debe coincidir con Location.STATUS)
 
     // Coordenadas
     coordinates: {
-        lat: number | null;
-        lng: number | null;
+        lat: number;
+        lng: number;
     };
 
     // Propiedades de usuario y cliente

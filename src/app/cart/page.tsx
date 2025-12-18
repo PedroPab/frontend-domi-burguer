@@ -4,6 +4,7 @@ import React from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCartStore } from "@/store/cartStore";
 import { useIsMounted } from "@/hooks/useIsMounted";
+import { CheckoutFormProvider } from "@/contexts/CheckoutFormContext";
 
 // Custom Hooks
 import { useCartActions } from "@/hooks/cart/useCartActions";
@@ -72,58 +73,61 @@ export default function Cart() {
   } = useCartSubmit();
 
   return (
-    <form onSubmit={handleSubmitWithValidation}>
-      <LoadingOverlay isLoading={isSubmitting} />
+    <CheckoutFormProvider>
+      <form onSubmit={handleSubmitWithValidation}>
+        <LoadingOverlay isLoading={isSubmitting} />
 
-      <div className="flex flex-col xl:flex-row w-full xl:justify-around items-center xl:items-start gap-5 mt-[130px] lg:mt-[130px] mb-[100px]">
-        {/* Formulario de checkout */}
-        <CheckoutForm
-          user={user}
-          error={error}
-          formData={formData}
-          handleChange={handleChange}
-          handlePhoneChange={handlePhoneChange}
-          addressStore={addressStore}
-          onOpenAddressModal={handleOpenAddressModal}
-          onEditAddress={handleEditAddress}
-          onRemoveAddress={removeAddress}
-          paymentMethods={paymentMethods}
-        />
+        <div className="flex flex-col xl:flex-row w-full xl:justify-around items-center xl:items-start gap-5 mt-[130px] lg:mt-[130px] mb-[100px]">
+          {/* Formulario de checkout */}
+          <CheckoutForm
+            user={user}
+            error={error}
+            formData={formData}
+            handleChange={handleChange}
+            handlePhoneChange={handlePhoneChange}
+            addressStore={addressStore}
+            onOpenAddressModal={handleOpenAddressModal}
+            onEditAddress={handleEditAddress}
+            onRemoveAddress={removeAddress}
+            paymentMethods={paymentMethods}
+          />
 
-        {/* Resumen del pedido */}
-        <CartSummary
-          items={items}
-          formatCurrency={formatCurrency}
-          isMounted={isMounted}
-          getSubtotal={getSubtotal}
-          getDeliveryFee={getDeliveryFee}
-          getTotal={getTotal}
-          handleEditComplements={handleEditComplements}
-          removeComplement={removeComplement}
-          handleDecrease={handleDecrease}
-          handleIncrease={handleIncrease}
-          addItem={addItem}
-          isSubmitting={isSubmitting}
-        />
+          {/* Resumen del pedido */}
+          <CartSummary
+            items={items}
+            formatCurrency={formatCurrency}
+            isMounted={isMounted}
+            getSubtotal={getSubtotal}
+            getDeliveryFee={getDeliveryFee}
+            getTotal={getTotal}
+            handleEditComplements={handleEditComplements}
+            removeComplement={removeComplement}
+            handleDecrease={handleDecrease}
+            handleIncrease={handleIncrease}
+            addItem={addItem}
+            isSubmitting={isSubmitting}
+          />
 
-        {/* Todos los modales */}
-        <CartModals
-          isAddressModalOpen={isAddressModalOpen}
-          onCloseAddressModal={handleCloseAddressModal}
-          addressToEdit={addressToEdit}
-          isComplementsModalOpen={isModalComplementsOpen}
-          onCloseComplementsModal={handleCloseComplementsModal}
-          selectedCartItem={selectedCartItem}
-          isDeleteModalOpen={isDeleteModalOpen}
-          onCloseDeleteModal={handleCloseDeleteModal}
-          onConfirmDelete={handleConfirmDelete}
-          itemToDeleteName={itemToDelete?.name || ""}
-          isStoreClosedModalOpen={isStoreClosedModalOpen}
-          onCloseStoreModal={handleCloseStoreModal}
-          storeClosedMessage={storeStatus.message}
-          opensAt={storeStatus.opensAt}
-        />
-      </div>
-    </form>
+          {/* Todos los modales */}
+          <CartModals
+            isAddressModalOpen={isAddressModalOpen}
+            onCloseAddressModal={handleCloseAddressModal}
+            addressToEdit={addressToEdit}
+
+            isComplementsModalOpen={isModalComplementsOpen}
+            onCloseComplementsModal={handleCloseComplementsModal}
+            selectedCartItem={selectedCartItem}
+            isDeleteModalOpen={isDeleteModalOpen}
+            onCloseDeleteModal={handleCloseDeleteModal}
+            onConfirmDelete={handleConfirmDelete}
+            itemToDeleteName={itemToDelete?.name || ""}
+            isStoreClosedModalOpen={isStoreClosedModalOpen}
+            onCloseStoreModal={handleCloseStoreModal}
+            storeClosedMessage={storeStatus.message}
+            opensAt={storeStatus.opensAt}
+          />
+        </div>
+      </form>
+    </CheckoutFormProvider>
   );
 }

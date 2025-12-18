@@ -36,7 +36,8 @@ export const useAddressSubmit = (
 
       const response = await AddressService.createAddress(formData);
 
-      const responseDelivery = await AddressService.createDelivery(response.body.id || '');
+      const responseDelivery = await AddressService.createDelivery(response.body.id );
+      
       console.log('responseDelivery', responseDelivery);
       const addressData = {
         ...response.body,
@@ -50,6 +51,8 @@ export const useAddressSubmit = (
 
       localStorage.setItem('userAddress', JSON.stringify(addressData));
       onSuccess?.(addressData);
+
+
       return addressData;
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Error al crear la dirección';
@@ -59,7 +62,7 @@ export const useAddressSubmit = (
     } finally {
       setIsSubmitting(false);
     }
-  };
+  }
 
   return {
     submitAddress,

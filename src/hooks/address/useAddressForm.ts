@@ -38,7 +38,7 @@ export const useAddressForm = (initialState?: Partial<AddressFormState>) => {
       comment: '',
       addressName: '',
       coordinates: null,
-      selectedType: '',
+      selectedType: 'house',
     });
   };
 
