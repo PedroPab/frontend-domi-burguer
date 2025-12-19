@@ -1,6 +1,10 @@
+import useGetLocationByUser from "@/hooks/locations/useGetLocationByUser";
 import { Address } from "@/types/address";
 import { Location } from "@/types/locations";
-import React, { createContext, use, useContext, useEffect, useState } from "react";
+import { getIdToken } from "firebase/auth";
+import React, { createContext, useContext, useEffect, useState } from "react";
+import { useAuth } from "./AuthContext";
+import { AddressService } from "@/services/addressService";
 
 // Define aquí los campos que necesitas compartir
 export interface FormValues {
@@ -22,6 +26,25 @@ interface CheckoutFormData {
 const CheckoutFormContext = createContext<CheckoutFormData | undefined>(undefined);
 
 export const CheckoutFormProvider = ({ children }: { children: React.ReactNode }) => {
+
+    const { user } = useAuth();
+    const [token, setToken] = useState<string>("");
+
+    // Obtener el token del usuario autenticado
+    useEffect(() => {
+        const fetchToken = async () => {
+            if (user) {
+                const idToken = await getIdToken(user);
+                setToken(idToken);
+            } else {
+                setToken("");
+            }
+        };
+        fetchToken();
+    }, [user]);
+
+    const { locations, fetchLocations } = useGetLocationByUser(token);
+
     const [formData, setFormData] = useState<FormValues>({});
 
     const [addressClient, setAddressClient] = useState<Address | null>(null);
@@ -30,21 +53,46 @@ export const CheckoutFormProvider = ({ children }: { children: React.ReactNode }
 
     //la location seleccionada actualmente, o la se creo recientemente
     const [location, setLocation] = useState<Location | null>(null);
+
     useEffect(() => {
-        console.log('Location changed in CheckoutFormContext:', location);
-        //calcular el nuevo addressClient cuando location cambie
-        if (location) {
-            console.log('Updating addressClient based on location change:', location);
-        }
+        const fetchAddressData = async () => {
+            if (location) {
+                try {
+                    // Consultamos el Address del location seleccionado
+                    const { delivery, kitchen } = await AddressService.createDelivery(location.id);
+                    console.log('Datos de delivery obtenidos para la ubicación seleccionada:', { kitchen });
+                    const rta: Address = {
+                        ...location,
+                        distance: delivery.distance,
+                        fullAddress: location.address,
+                        deliveryPrice: delivery.price,
+                        // kitchen: kitchen,//por alguna razon da error si lo descomento
+
+                    };
+                    console.log('Datos de delivery obtenidos para la ubicación seleccionada:', rta);
+                    setAddressClient(rta);
+                } catch (error) {
+                    console.error("Error al obtener datos de delivery:", error);
+                    setAddressClient(null);
+                }
+            } else {
+                setAddressClient(null);
+            }
+        };
+
+        fetchAddressData();
     }, [location]);
 
     useEffect(() => {
-        console.log(addressClient);
-    }, [addressClient]);
+        setListLocationsClient(locations);
+    }, [locations]);
 
-    //consultar todos las locationes del cliente 
-
-
+    useEffect(() => {
+        if (token) {
+            fetchLocations();
+            setListLocationsClient(locations);
+        }
+    }, [token]);
 
 
     return (

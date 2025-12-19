@@ -53,9 +53,10 @@ export class AddressService {
         throw new Error(`Error al crear el precio del domicilio: ${response.statusText}`);
       }
 
-      const body =  await response.json();
-      const delivery =  body.delivery as Delivery 
-      const kitchen = body.kitchen as Kitchen
+      const data =  await response.json();
+      const delivery =  data.body.delivery as Delivery
+      const kitchen = data.body.kitchen as Kitchen
+      console.log('Respuesta de createDelivery:', {delivery, kitchen});
       return {  delivery, kitchen  };
     } catch (error) {
       console.error('Error en createDeliveryPrice:', error);

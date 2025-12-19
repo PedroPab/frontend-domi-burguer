@@ -58,7 +58,7 @@ export default function LocationsPage() {
             setError(null);
             try {
                 const token = await getIdToken(user);
-                const userAddresses = await LocationService.getUserAddresses(token);
+                const userAddresses = await LocationService.getUserLocations(token);
                 console.log("userAddresses: ", userAddresses)
                 setLocations(userAddresses.body);
             } catch (err) {
@@ -112,7 +112,7 @@ export default function LocationsPage() {
         if (user) {
             try {
                 const token = await getIdToken(user);
-                const userAddresses = await LocationService.getUserAddresses(token);
+                const userAddresses = await LocationService.getUserLocations(token);
                 setLocations(userAddresses.body);
             } catch (err) {
                 console.error("Error recargando direcciones", err);

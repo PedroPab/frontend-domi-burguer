@@ -37,6 +37,6 @@ export const createEmptyAddress = (): Address => ({
   propertyType: "house",
   deliveryPrice: 0,
   fullAddress: "",
-  kitchen: "",
+  kitchen: undefined,
   distance: 0,
 });

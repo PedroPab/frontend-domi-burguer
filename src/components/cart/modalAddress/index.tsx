@@ -128,7 +128,6 @@ export const ModalAddress = ({
             }
 
             const { delivery, kitchen } = await AddressService.createDelivery(location.id);
-
             setLocation(location);
             //
             const rta: Address = {
@@ -136,8 +135,10 @@ export const ModalAddress = ({
                 fullAddress: location.address,
                 deliveryPrice: delivery.price,
                 distance: delivery.distance,
-                kitchen: kitchen
+                // kitchen: kitchen
             }
+
+            console.log('Ubicación creada para usuario autenticado:', rta);
 
             setAddressClient(rta);
             setListLocationsClient([...listLocationsClient, location]);

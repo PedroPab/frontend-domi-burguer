@@ -19,7 +19,6 @@ export class LocationService {
 
   //add location 
   static async addLocation(token:string, location:object) : Promise<{ body: Location}> {
-    console.log('holi 2')
     try {
       const options = {
         method: 'POST',
@@ -42,9 +41,8 @@ export class LocationService {
     }
   }
 
-  static async getUserAddresses(token:string) : Promise<{ body: [Location]}> {
+  static async getUserLocations(token:string) : Promise<{ body: [Location]}> {
        try {
-       console.log("n: ", token , this.API_URL)
       const response = await fetch(`${this.API_URL}api/v2/locations/me`, {
         method: 'GET',
         headers: {
