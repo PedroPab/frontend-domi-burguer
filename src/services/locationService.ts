@@ -18,19 +18,25 @@ export class LocationService {
   }
 
   //add location 
-  static async addLocation(token:string, location:object) : Promise<{ body: Location}> {
+  static async addLocation({token, location}: {token: string | null, location: object}) : Promise<{ body: Location}> {
     try {
-      const options = {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(location),
+      const headers: HeadersInit = {
+        'Content-Type': 'application/json',
+      };
+      let url = `${this.API_URL}api/v2/locations/public`;
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+        url = `${this.API_URL}api/v2/locations`;
       }
 
+      const options = {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(location),
+      };
 
-      const response = await fetch(`${this.API_URL}api/v2/locations`, options);
+
+      const response = await fetch(url , options);
       if (!response.ok) {
         throw new Error("Error fetching location");
       }

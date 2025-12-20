@@ -22,6 +22,7 @@ import { useAddressForm } from "@/hooks/address/useAddressForm";
 import ActionsButtons from "./ActionsButtons";
 import { AddressService } from "@/services/addressService";
 import { Location } from "@/types/locations";
+import { useCartStore } from "@/store/cartStore";
 
 interface ModalAddressProps {
     isOpen: boolean;
@@ -36,7 +37,7 @@ export const ModalAddress = ({
 
     const { user } = useAuth();
 
-    // const { setAddress } = useCartStore();
+    const { setAddress } = useCartStore();
     const { setAddressClient, setLocation, setListLocationsClient, listLocationsClient } = useCheckoutForm();
     // Google Maps ya maneja esto internamente a través del hook useGooglePlaces
 
@@ -45,10 +46,11 @@ export const ModalAddress = ({
 
     // Hook de envío
     const { submitAddress, isSubmitting, error } = useAddressSubmit(
-        (addressData) => {
-            console.log('Dirección creada/actualizada con éxito:', addressData);
-            setAddressClient(addressData);
-            // setAddress(addressData);
+        ({ location, address }) => {
+            setListLocationsClient([...listLocationsClient, location]);
+
+            setAddressClient(address);
+            setAddress(address);
             onClose();
             resetForm();
         },
@@ -94,17 +96,23 @@ export const ModalAddress = ({
         if (!isFormValid()) return;
 
         try {
+            let token: string | null = null;
             if (user) {
+                token = await getIdToken(user)
+
                 console.log('Usuario autenticado, manejando dirección con autenticación');
-                await handleAuthenticatedUser();
+                // await handleAuthenticatedUser();
             } else {
                 console.log('momo Usuario invitado , manejando dirección sin autenticación');
-                await handleGuestUser();
+                // await handleGuestUser();
             }
+            const address = await submitAddress(createLocationData(), token as unknown as null | undefined)
+            console.log('Dirección confirmada:', address);
         } catch (error) {
             console.error('Error al confirmar dirección:', error);
         }
     };
+
     const createLocationData = () => ({
         name: formState.addressName,
         address: formState.address,
@@ -114,57 +122,6 @@ export const ModalAddress = ({
         comment: formState.comment || ''
     });
 
-    const handleAuthenticatedUser = async () => {
-        try {
-            if (!user) {
-                throw new Error("Usuario no autenticado");
-            }
-
-            const token = await getIdToken(user);
-            const { body: location } = await LocationService.addLocation(token, createLocationData());
-
-            if (!location) {
-                throw new Error("Respuesta inválida del servidor al crear la ubicación");
-            }
-
-            const { delivery, kitchen } = await AddressService.createDelivery(location.id);
-            setLocation(location);
-            //
-            const rta: Address = {
-                ...location,
-                fullAddress: location.address,
-                deliveryPrice: delivery.price,
-                distance: delivery.distance,
-                // kitchen: kitchen
-            }
-
-            console.log('Ubicación creada para usuario autenticado:', rta);
-
-            setAddressClient(rta);
-            setListLocationsClient([...listLocationsClient, location]);
-
-            resetForm();
-            onClose();
-        } catch (err) {
-            const message =
-                err instanceof Error
-                    ? err.message
-                    : "Ocurrió un error inesperado al guardar la dirección";
-
-            console.error("Error al crear ubicación:", err);
-            alert(message);
-        }
-    };
-
-    const handleGuestUser = async () => {
-        const address = await submitAddress(formState);
-        console.log('Ubicación creada para usuario invitado:', address);
-        // setAddressClient(address);
-        resetForm();
-        onClose();
-    };
-
-    // Reference coordinates for Medellín - used to center map and autocomplete search bounds
 
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
