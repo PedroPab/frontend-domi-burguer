@@ -1,4 +1,3 @@
-import { auth } from "@/lib/firebase";
 import { Location } from "@/types/locations"; 
 
 export class LocationService {

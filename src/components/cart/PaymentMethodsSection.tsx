@@ -1,12 +1,5 @@
 import React from "react";
-import { LucideIcon } from "lucide-react";
-
-interface PaymentMethod {
-    id: string;
-    label: string;
-    icon: LucideIcon;
-    iconClass: string;
-}
+import { PaymentMethod } from "@/types/paymentMethod";
 
 interface PaymentMethodsSectionProps {
     paymentMethods: PaymentMethod[];
@@ -66,8 +59,8 @@ function PaymentMethodOption({
             <div className="inline-flex items-center gap-4">
                 <div
                     className={`relative w-4 h-4 rounded-[10px] ${isSelected
-                            ? "bg-primary-red-60"
-                            : "bg-[#FFFFFF] border-2 border-solid border-[#cccccc]"
+                        ? "bg-primary-red-60"
+                        : "bg-[#FFFFFF] border-2 border-solid border-[#cccccc]"
                         }`}
                 >
                     {isSelected && (

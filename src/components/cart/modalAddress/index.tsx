@@ -7,21 +7,15 @@ import {
     DialogHeader,
     DialogTitle,
 } from "@/components/ui/dialog";
-
 import { useAddressSubmit } from "@/hooks/address/useAddressSubmit";
 import { useGooglePlaces } from "@/hooks/useGooglePlaces";
-
 import { Address } from "@/types/address";
 import { Loader2 } from "lucide-react";
-
-import { LocationService } from "@/services/locationService";
 import { getIdToken } from "firebase/auth";
 import { useCheckoutForm } from "@/contexts/CheckoutFormContext";
 import CreateAddressInputSection from "./createAddressInputSection";
 import { useAddressForm } from "@/hooks/address/useAddressForm";
 import ActionsButtons from "./ActionsButtons";
-import { AddressService } from "@/services/addressService";
-import { Location } from "@/types/locations";
 import { useCartStore } from "@/store/cartStore";
 
 interface ModalAddressProps {
@@ -48,7 +42,7 @@ export const ModalAddress = ({
     const { submitAddress, isSubmitting, error } = useAddressSubmit(
         ({ location, address }) => {
             setListLocationsClient([...listLocationsClient, location]);
-
+            setLocation(location);
             setAddressClient(address);
             setAddress(address);
             onClose();

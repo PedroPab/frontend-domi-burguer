@@ -1,55 +1,22 @@
 import React from "react";
-import { User } from "firebase/auth";
 import { FormHeader } from "./FormHeader";
 import { UserInfoSection } from "./UserInfoSection";
 import { AddressSection } from "./AddressSection";
 import { PaymentMethodsSection } from "./PaymentMethodsSection";
-import { Address } from "@/types/address";
-import { LucideIcon } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
+import useFormCart from "@/hooks/cart/useFormcart";
 
-interface PaymentMethod {
-    id: string;
-    label: string;
-    icon: LucideIcon;
-    iconClass: string;
-}
+export function CheckoutForm() {
+    const { user } = useAuth();
 
-interface CheckoutFormProps {
-    user: User | null;
-    error?: string;
+    const {
+        formData,
+        handleChange,
+        handlePhoneChange: setPhoneValue,
+        paymentMethods,
+        error,
+    } = useFormCart();
 
-    // Form Data
-    formData: {
-        name: string;
-        phone: string;
-        comment: string;
-        paymentMethod: string;
-    };
-
-    // Handlers
-    handleChange: (
-        e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-    ) => void;
-    handlePhoneChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-
-    // Address
-    addressStore: Address;
-    onOpenAddressModal: () => void;
-    onEditAddress: () => void;
-    onRemoveAddress: () => void;
-
-    // Payment Methods
-    paymentMethods: PaymentMethod[];
-}
-
-export function CheckoutForm({
-    user,
-    error,
-    formData,
-    handleChange,
-    handlePhoneChange,
-    paymentMethods,
-}: CheckoutFormProps) {
     return (
         <div className="flex flex-col gap-14 pb-6 w-full lg:mt-4 max-w-[500px]">
             <div className="flex flex-col gap-6 w-full">
@@ -59,7 +26,7 @@ export function CheckoutForm({
                     user={user}
                     formData={formData}
                     handleChange={handleChange}
-                    handlePhoneChange={handlePhoneChange}
+                    handlePhoneChange={(e) => setPhoneValue(e.target.value)}
                 />
 
                 <AddressSection />

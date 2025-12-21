@@ -3,14 +3,8 @@ import { BancolombiaIcon, MoneyIcon, NequiIcon } from "@/components/ui/icons";
 import { useCartStore } from "@/store/cartStore";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
+import { PaymentMethod } from "@/types/paymentMethod";
 
-type PaymentMethod = {
-  id: string;
-  label: string;
-  iconClass: string;
-  icon: React.ComponentType<{ className?: string }>;
-  selected: boolean;
-};
 
 function useFormCart() {
   const router = useRouter();

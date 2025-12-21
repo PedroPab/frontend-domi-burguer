@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { useCartStore, CartItem } from '@/store/cartStore';
+import { useCartStore } from '@/store/cartStore';
+import { useCartModalItemDeleteStore } from '@/store/cartModalItemDeleteStore';
 
 export const useCartActions = () => {
   const {
@@ -9,11 +9,12 @@ export const useCartActions = () => {
     addItem,
   } = useCartStore();
 
-  const [itemToDelete, setItemToDelete] = useState<{
-    id: string;
-    name: string;
-  } | null>(null);
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const {
+    itemToDelete,
+    isDeleteModalOpen,
+    openDeleteModal,
+    closeDeleteModal,
+  } = useCartModalItemDeleteStore();
 
   const handleIncrease = (id: string, quantity: number) => {
     updateQuantity(id, quantity + 1);
@@ -23,8 +24,7 @@ export const useCartActions = () => {
     if (quantity === 1) {
       const item = items.find((item) => item.id === id);
       if (item) {
-        setItemToDelete({ id: item.id, name: item.name });
-        setIsDeleteModalOpen(true);
+        openDeleteModal({ id: item.id, name: item.name });
       }
     } else {
       updateQuantity(id, quantity - 1);
@@ -34,13 +34,12 @@ export const useCartActions = () => {
   const handleConfirmDelete = () => {
     if (itemToDelete) {
       updateQuantity(itemToDelete.id, 0);
-      setItemToDelete(null);
+      closeDeleteModal();
     }
   };
 
   const handleCloseDeleteModal = () => {
-    setIsDeleteModalOpen(false);
-    setItemToDelete(null);
+    closeDeleteModal();
   };
 
   return {

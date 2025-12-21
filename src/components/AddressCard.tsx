@@ -1,6 +1,5 @@
 import { Address } from "@/types/address";
 import { Card, CardContent } from "./ui/card";
-import { Pencil, Trash2 } from "lucide-react";
 
 interface addressCardProps {
     address: Address
@@ -13,7 +12,6 @@ const AddressCard = ({
     // onRemoveAddress,
     address
 }: addressCardProps) => {
-    console.log('siii address in AddressCard :', address);
 
     return <Card className="gap-6 p-5 w-full bg-accent-yellow-10 rounded-[12px] shadow-none border-0">
         <CardContent className="p-0">
@@ -37,7 +35,7 @@ const AddressCard = ({
                                 ? `$${address.deliveryPrice.toLocaleString("es-CO")}`
                                 : ""}
                         </h2>
-                        <span>{address.kitchen || ""}</span>
+                        <span>{address?.kitchen?.name}</span>
                     </div>
                     {/* <div className="flex flex-col justify-between">
                         <Pencil

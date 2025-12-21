@@ -1,66 +1,56 @@
-import React from "react";
+"use client";
+import React, { useEffect } from "react";
 import { CustomizationModalCart } from "@/components/cart/customizationModalCart";
 import { ConfirmDeleteModal } from "@/components/cart/confirmDeleteModal";
 import { StoreClosedModal } from "@/components/cart/storeClosedModal";
-import { CartItem } from "@/store/cartStore";
+import { useCartActions } from "@/hooks/cart/useCartActions";
+import { useComplementsModal } from "@/hooks/cart/useComplementsModal";
+import { useCartSubmit } from "@/hooks/cart/useCartSubmit";
 
-interface CartModalsProps {
-    // Complements Modal
-    isComplementsModalOpen: boolean;
-    onCloseComplementsModal: () => void;
-    selectedCartItem: CartItem | null;
+export function CartModals() {
+    const {
+        handleConfirmDelete,
+        handleCloseDeleteModal,
+        itemToDelete,
+        isDeleteModalOpen,
+    } = useCartActions();
 
-    // Delete Modal
-    isDeleteModalOpen: boolean;
-    onCloseDeleteModal: () => void;
-    onConfirmDelete: () => void;
-    itemToDeleteName: string;
+    const {
+        isModalComplementsOpen,
+        selectedCartItem,
+        handleCloseComplementsModal,
+    } = useComplementsModal();
 
-    // Store Closed Modal
-    isStoreClosedModalOpen: boolean;
-    onCloseStoreModal: () => void;
-    storeClosedMessage: string;
-    opensAt: string | null;
-}
+    const {
+        storeStatus,
+        isStoreClosedModalOpen,
+        handleCloseStoreModal,
+    } = useCartSubmit();
 
-export function CartModals({
 
-    isComplementsModalOpen,
-    onCloseComplementsModal,
-    selectedCartItem,
-    isDeleteModalOpen,
-    onCloseDeleteModal,
-    onConfirmDelete,
-    itemToDeleteName,
-    isStoreClosedModalOpen,
-    onCloseStoreModal,
-    storeClosedMessage,
-    opensAt,
-}: CartModalsProps) {
     return (
         <>
-
-
+            hola
             {selectedCartItem && (
                 <CustomizationModalCart
-                    isOpen={isComplementsModalOpen}
-                    onClose={onCloseComplementsModal}
+                    isOpen={isModalComplementsOpen}
+                    onClose={handleCloseComplementsModal}
                     cartItem={selectedCartItem}
                 />
             )}
 
             <ConfirmDeleteModal
                 isOpen={isDeleteModalOpen}
-                onClose={onCloseDeleteModal}
-                onConfirm={onConfirmDelete}
-                productName={itemToDeleteName}
+                onClose={handleCloseDeleteModal}
+                onConfirm={handleConfirmDelete}
+                productName={itemToDelete?.name ?? ""}
             />
 
             <StoreClosedModal
                 isOpen={isStoreClosedModalOpen}
-                onClose={onCloseStoreModal}
-                message={storeClosedMessage}
-                opensAt={opensAt}
+                onClose={handleCloseStoreModal}
+                message={storeStatus?.message ?? ""}
+                opensAt={storeStatus?.opensAt ?? undefined}
             />
         </>
     );

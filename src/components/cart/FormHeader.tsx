@@ -1,7 +1,7 @@
 import React from "react";
 
 interface FormHeaderProps {
-    error?: string;
+    error?: string | null;
 }
 
 export function FormHeader({ error }: FormHeaderProps) {

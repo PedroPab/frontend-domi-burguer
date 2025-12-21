@@ -1,18 +1,20 @@
-import { useState } from 'react';
+import { useCartModalsStore } from '@/store/cartModalComplementEditStore';
 import { CartItem } from '@/store/cartStore';
 
 export const useComplementsModal = () => {
-  const [isModalComplementsOpen, setIsModalComplementsOpen] = useState(false);
-  const [selectedCartItem, setSelectedCartItem] = useState<CartItem | null>(null);
+  const {
+    isModalComplementsOpen,
+    selectedCartItem,
+    openComplementsModal,
+    closeComplementsModal,
+  } = useCartModalsStore();
 
   const handleEditComplements = (item: CartItem) => {
-    setSelectedCartItem(item);
-    setIsModalComplementsOpen(true);
+    openComplementsModal(item);
   };
 
   const handleCloseComplementsModal = () => {
-    setIsModalComplementsOpen(false);
-    setSelectedCartItem(null);
+    closeComplementsModal();
   };
 
   return {
