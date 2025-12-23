@@ -76,8 +76,12 @@ export default function ProfilePage() {
     };
 
     // ✅ reCAPTCHA helper (obligatorio en web)
+    type WindowWithRecaptcha = Window & {
+        recaptchaVerifier?: RecaptchaVerifier;
+    };
+
     const getOrCreateRecaptcha = () => {
-        const w = window as any;
+        const w = window as WindowWithRecaptcha;
 
         if (!w.recaptchaVerifier) {
             w.recaptchaVerifier = new RecaptchaVerifier(auth, "recaptcha-container", {
@@ -107,8 +111,14 @@ export default function ProfilePage() {
 
             setVerificationId(vid);
             setPhoneMsg("Código enviado por SMS. Escríbelo abajo para confirmar.");
-        } catch (e: any) {
-            setPhoneMsg(e?.message ?? "Error enviando el código SMS.");
+        } catch (e: unknown) {
+            if (e instanceof Error) {
+                setPhoneMsg(e.message);
+            } else if (typeof e === "object" && e !== null && "message" in e) {
+                setPhoneMsg(String((e as { message?: string }).message));
+            } else {
+                setPhoneMsg("Error enviando el código SMS.");
+            }
         } finally {
             setIsSendingCode(false);
         }
@@ -137,13 +147,22 @@ export default function ProfilePage() {
 
             // si tu AuthContext no re-renderiza, esto fuerza refresco
             router.refresh();
-        } catch (e: any) {
-            if (e?.code === "auth/credential-already-in-use") {
+        } catch (e: unknown) {
+            if (
+                typeof e === "object" &&
+                e !== null &&
+                "code" in e &&
+                (e as { code?: string }).code === "auth/credential-already-in-use"
+            ) {
                 setPhoneMsg(
                     "Ese número ya está en uso por otra cuenta. Usa ese teléfono para iniciar sesión o cambia el número."
                 );
+            } else if (e instanceof Error) {
+                setPhoneMsg(e.message);
+            } else if (typeof e === "object" && e !== null && "message" in e) {
+                setPhoneMsg(String((e as { message?: string }).message));
             } else {
-                setPhoneMsg(e?.message ?? "Error verificando el código.");
+                setPhoneMsg("Error verificando el código.");
             }
         } finally {
             setIsLinkingPhone(false);

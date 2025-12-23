@@ -142,30 +142,7 @@ export default function OrderDetailPage({ params }: OrderDetailPageProps) {
                         </Card>
 
                         {/* Customer Information */}
-                        <Card>
-                            <CardContent className="p-6">
-                                <h3 className="font-semibold mb-4 flex items-center gap-2">
-                                    <User className="w-5 h-5" />
-                                    Información del Cliente
-                                </h3>
-                                <div className="space-y-3">
-                                    <div className="flex justify-between">
-                                        <span className="text-gray-600">Nombre:</span>
-                                        <span>{order.customerInfo.name}</span>
-                                    </div>
-                                    <div className="flex justify-between">
-                                        <span className="text-gray-600">Teléfono:</span>
-                                        <span>{order.customerInfo.phone}</span>
-                                    </div>
-                                    {order.customerInfo.email && (
-                                        <div className="flex justify-between">
-                                            <span className="text-gray-600">Email:</span>
-                                            <span>{order.customerInfo.email}</span>
-                                        </div>
-                                    )}
-                                </div>
-                            </CardContent>
-                        </Card>
+
 
                         {/* Delivery Address */}
                         <Card>
@@ -193,20 +170,7 @@ export default function OrderDetailPage({ params }: OrderDetailPageProps) {
                             </CardContent>
                         </Card>
 
-                        {/* Order Items */}
-                        <Card>
-                            <CardContent className="p-6">
-                                <h3 className="font-semibold mb-4 flex items-center gap-2">
-                                    <Package className="w-5 h-5" />
-                                    Productos del Pedido
-                                </h3>
-                                <div className="space-y-4">
-                                    {order.items.map((item) => (
-                                        <OrderItem key={item.id} item={item} />
-                                    ))}
-                                </div>
-                            </CardContent>
-                        </Card>
+
                     </div>
 
                     {/* Order Summary */}
@@ -226,7 +190,7 @@ export default function OrderDetailPage({ params }: OrderDetailPageProps) {
                                     <Separator />
                                     <div className="flex justify-between font-semibold text-lg">
                                         <span>Total:</span>
-                                        <span>${order.total.toLocaleString('es-CO')}</span>
+                                        <span>${order.totalPrice.toLocaleString('es-CO')}</span>
                                     </div>
                                 </div>
                             </CardContent>
@@ -260,54 +224,51 @@ export default function OrderDetailPage({ params }: OrderDetailPageProps) {
     );
 }
 
-interface OrderItemProps {
-    item: any;
-}
 
-function OrderItem({ item }: OrderItemProps) {
-    return (
-        <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg">
-            <div className="w-16 h-16 bg-accent-yellow-40 rounded-lg relative flex-shrink-0">
-                <Image
-                    src={item.image1}
-                    alt={item.name}
-                    width={64}
-                    height={64}
-                    className="object-cover rounded-lg"
-                />
-                {item.image2 && (
-                    <Image
-                        src={item.image2}
-                        alt="Complement"
-                        width={32}
-                        height={32}
-                        className="absolute bottom-0 right-0 object-cover rounded"
-                    />
-                )}
-            </div>
+// function OrderItem({ item }: OrderItemProps) {
+//     return (
+//         <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg">
+//             <div className="w-16 h-16 bg-accent-yellow-40 rounded-lg relative flex-shrink-0">
+//                 <Image
+//                     src={item.image1}
+//                     alt={item.name}
+//                     width={64}
+//                     height={64}
+//                     className="object-cover rounded-lg"
+//                 />
+//                 {item.image2 && (
+//                     <Image
+//                         src={item.image2}
+//                         alt="Complement"
+//                         width={32}
+//                         height={32}
+//                         className="absolute bottom-0 right-0 object-cover rounded"
+//                     />
+//                 )}
+//             </div>
 
-            <div className="flex-1">
-                <h4 className="font-medium">{item.name}</h4>
-                <p className="text-sm text-gray-600">Cantidad: {item.quantity}</p>
-                {item.modifications && item.modifications.length > 0 && (
-                    <div className="mt-1">
-                        {item.modifications.map((mod: any, index: number) => (
-                            <span key={index} className="text-xs text-gray-500 mr-2">
-                                {mod.text}
-                            </span>
-                        ))}
-                    </div>
-                )}
-            </div>
+//             <div className="flex-1">
+//                 <h4 className="font-medium">{item.name}</h4>
+//                 <p className="text-sm text-gray-600">Cantidad: {item.quantity}</p>
+//                 {item.modifications && item.modifications.length > 0 && (
+//                     <div className="mt-1">
+//                         {item.modifications.map((mod: any, index: number) => (
+//                             <span key={index} className="text-xs text-gray-500 mr-2">
+//                                 {mod.text}
+//                             </span>
+//                         ))}
+//                     </div>
+//                 )}
+//             </div>
 
-            <div className="text-right">
-                <p className="font-semibold">
-                    ${(item.price * item.quantity).toLocaleString('es-CO')}
-                </p>
-                <p className="text-sm text-gray-600">
-                    ${item.price.toLocaleString('es-CO')} c/u
-                </p>
-            </div>
-        </div>
-    );
-}
+//             <div className="text-right">
+//                 <p className="font-semibold">
+//                     ${(item.price * item.quantity).toLocaleString('es-CO')}
+//                 </p>
+//                 <p className="text-sm text-gray-600">
+//                     ${item.price.toLocaleString('es-CO')} c/u
+//                 </p>
+//             </div>
+//         </div>
+//     );
+// }

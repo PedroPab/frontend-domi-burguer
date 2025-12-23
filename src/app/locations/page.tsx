@@ -11,26 +11,10 @@ import { LocationService } from "@/services/locationService";
 import { getIdToken } from "firebase/auth";
 import { LocationCard } from "./LocationCard";
 import { CheckoutFormProvider } from "@/contexts/CheckoutFormContext";
+import { Address } from "@/types/address";
 
 // Tipo local para adaptar un Location al shape que espera ModalAddress
-type AddressLike = {
-    id: string;
-    name: string;
-    address: string;
-    fullAddress: string;
-    city: string;
-    country: string;
-    floor?: string;
-    comment?: string;
-    propertyType: string | "";
-    coordinates: {
-        lat: number;
-        lng: number;
-    };
-    distance: number;
-    deliveryPrice: number;
-    kitchen: string;
-};
+
 
 export default function LocationsPage() {
     const { user, loading } = useAuth();
@@ -41,7 +25,7 @@ export default function LocationsPage() {
     const [error, setError] = useState<string | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     // Objeto tipo "address" solo para compatibilidad con ModalAddress (sin usar el tipo Address real)
-    const [addressToEdit, setAddressToEdit] = useState<AddressLike | null>(null);
+    const [addressToEdit, setAddressToEdit] = useState<Address | null>(null);
 
     // Proteger ruta: si no hay usuario, mandar a /login
     useEffect(() => {
@@ -79,7 +63,7 @@ export default function LocationsPage() {
         setIsModalOpen(true);
     };
 
-    const mapLocationToAddressLike = (location: Location): AddressLike => {
+    const mapLocationToAddressLike = (location: Location): Address => {
         return {
             id: location.id,
             name: location.name,
@@ -96,7 +80,6 @@ export default function LocationsPage() {
             },
             distance: 0,
             deliveryPrice: 0,
-            kitchen: "",
         };
     };
 
@@ -198,7 +181,7 @@ export default function LocationsPage() {
                     isOpen={isModalOpen}
                     onClose={handleCloseModal}
                     // Cast local porque ModalAddress espera Address, pero aquí usamos Location -> AddressLike
-                    addressToEdit={addressToEdit as any}
+                    addressToEdit={addressToEdit}
                 />
             </div>
         </CheckoutFormProvider>

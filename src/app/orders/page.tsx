@@ -5,10 +5,9 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useOrders } from "@/hooks/useOrders";
 import { useAuth } from "@/contexts/AuthContext";
-import { Loader2, Calendar, MapPin, User, Phone, Package, X } from "lucide-react";
+import { Loader2, User, Package, X } from "lucide-react";
 import { Order } from "@/types/orders";
 import { OrderService } from "@/services/orderService";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 export default function OrdersPage() {

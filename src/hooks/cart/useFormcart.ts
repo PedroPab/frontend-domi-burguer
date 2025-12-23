@@ -117,8 +117,12 @@ function useFormCart() {
   };
 
 
-
-  const buildOrderPayload = ({formData, address , items} : {formData: any, address: Address, items: any[]}): OrderPayload => {
+  interface BuildOrderPayloadParams {
+    formData: typeof formData;
+    address: Address;
+    items: typeof items;
+  }
+  const buildOrderPayload = ({formData, address , items} : BuildOrderPayloadParams): OrderPayload => {
     return {
       name: formData.name,
       phone: formData.phone,
@@ -148,7 +152,12 @@ function useFormCart() {
 
     if (!validateForm()) {
       return;
+    } 
+    if(!address) {
+      setError("Debes agregar una dirección de entrega");
+      return;
     }
+    
      const orderPayload = buildOrderPayload({formData, address , items});
 
      const token = await user?.getIdToken();

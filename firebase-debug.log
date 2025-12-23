@@ -1,0 +1,28 @@
+[debug] [2025-12-23T06:41:19.679Z] ----------------------------------------------------------------------
+[debug] [2025-12-23T06:41:19.680Z] Command:       /usr/local/bin/firebase /home/paulo/.cache/firebase/tools/lib/node_modules/firebase-tools/lib/bin/firebase init
+[debug] [2025-12-23T06:41:19.680Z] CLI Version:   13.31.2
+[debug] [2025-12-23T06:41:19.680Z] Platform:      linux
+[debug] [2025-12-23T06:41:19.681Z] Node Version:  v18.5.0
+[debug] [2025-12-23T06:41:19.681Z] Time:          Tue Dec 23 2025 01:41:19 GMT-0500 (Colombia Standard Time)
+[debug] [2025-12-23T06:41:19.681Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2025-12-23T06:41:19.685Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-12-23T06:41:19.686Z] > authorizing via signed-in user (pmontesarroyave@gmail.com)
+[info] 
+     ######## #### ########  ######## ########     ###     ######  ########
+     ##        ##  ##     ## ##       ##     ##  ##   ##  ##       ##
+     ######    ##  ########  ######   ########  #########  ######  ######
+     ##        ##  ##    ##  ##       ##     ## ##     ##       ## ##
+     ##       #### ##     ## ######## ########  ##     ##  ######  ########
+
+You're about to initialize a Firebase project in this directory:
+
+  /home/paulo/Documentos/Domiburguer/frontend-domi-burguer
+
+[info] 
+=== Project Setup
+[info] 
+[info] First, let's associate this project directory with a Firebase project.
+[info] You can create multiple project aliases by running firebase use --add, 
+[info] but for now we'll just set up a default project.
+[info] 

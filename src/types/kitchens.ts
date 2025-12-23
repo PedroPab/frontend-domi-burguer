@@ -22,6 +22,7 @@ export interface Kitchen {
   };
   address: string;
   dailyOrders: number;
+  location?: Location;
 }
 
 // id, name, locationId, address, coordinates, status, dailyOrders, phone, openingHours, createdAt, updatedAt
