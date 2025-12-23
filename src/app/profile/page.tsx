@@ -15,19 +15,43 @@ import {
     LogOut,
     Edit,
     Shield,
-    ChevronRight
+    ChevronRight,
 } from "lucide-react";
+
+// ✅ Firebase Auth (Phone linking)
+import {
+    getAuth,
+    RecaptchaVerifier,
+    PhoneAuthProvider,
+    linkWithCredential,
+} from "firebase/auth";
 
 export default function ProfilePage() {
     const { user, loading, logout } = useAuth();
     const router = useRouter();
+
     const [isLoggingOut, setIsLoggingOut] = useState(false);
+
+    // ✅ Phone states
+    const auth = getAuth();
+    const [phoneInput, setPhoneInput] = useState("+57");
+    const [smsCode, setSmsCode] = useState("");
+    const [verificationId, setVerificationId] = useState<string | null>(null);
+
+    const [isSendingCode, setIsSendingCode] = useState(false);
+    const [isLinkingPhone, setIsLinkingPhone] = useState(false);
+    const [phoneMsg, setPhoneMsg] = useState<string>("");
 
     useEffect(() => {
         if (!loading && !user) {
             router.push("/login");
         }
     }, [user, loading, router]);
+
+    // Si cambia el usuario y ya tiene phone, lo ponemos en el input
+    useEffect(() => {
+        if (user?.phoneNumber) setPhoneInput(user.phoneNumber);
+    }, [user?.phoneNumber]);
 
     const handleLogout = async () => {
         try {
@@ -47,8 +71,83 @@ export default function ProfilePage() {
         return date.toLocaleDateString("es-ES", {
             year: "numeric",
             month: "long",
-            day: "numeric"
+            day: "numeric",
         });
+    };
+
+    // ✅ reCAPTCHA helper (obligatorio en web)
+    const getOrCreateRecaptcha = () => {
+        const w = window as any;
+
+        if (!w.recaptchaVerifier) {
+            w.recaptchaVerifier = new RecaptchaVerifier(auth, "recaptcha-container", {
+                size: "invisible",
+            });
+        }
+        return w.recaptchaVerifier as RecaptchaVerifier;
+    };
+
+    // ✅ 1) Enviar SMS
+    const handleSendSmsCode = async () => {
+        try {
+            setPhoneMsg("");
+            setIsSendingCode(true);
+
+            if (!auth.currentUser) throw new Error("No hay usuario autenticado.");
+            if (!phoneInput.startsWith("+")) {
+                throw new Error(
+                    "El teléfono debe empezar por + y estar en formato internacional. Ej: +573001112233"
+                );
+            }
+
+            const recaptchaVerifier = getOrCreateRecaptcha();
+            const provider = new PhoneAuthProvider(auth);
+
+            const vid = await provider.verifyPhoneNumber(phoneInput, recaptchaVerifier);
+
+            setVerificationId(vid);
+            setPhoneMsg("Código enviado por SMS. Escríbelo abajo para confirmar.");
+        } catch (e: any) {
+            setPhoneMsg(e?.message ?? "Error enviando el código SMS.");
+        } finally {
+            setIsSendingCode(false);
+        }
+    };
+
+    // ✅ 2) Confirmar y vincular Phone al usuario actual
+    const handleConfirmAndLinkPhone = async () => {
+        try {
+            setPhoneMsg("");
+            setIsLinkingPhone(true);
+
+            if (!auth.currentUser) throw new Error("No hay usuario autenticado.");
+            if (!verificationId) throw new Error("Primero envía el código SMS.");
+            if (!smsCode || smsCode.length < 4) throw new Error("Código SMS inválido.");
+
+            const cred = PhoneAuthProvider.credential(verificationId, smsCode);
+
+            await linkWithCredential(auth.currentUser, cred);
+
+            // recargar usuario para que phoneNumber aparezca
+            await auth.currentUser.reload();
+
+            setPhoneMsg("✅ Teléfono verificado y agregado a tu cuenta.");
+            setSmsCode("");
+            setVerificationId(null);
+
+            // si tu AuthContext no re-renderiza, esto fuerza refresco
+            router.refresh();
+        } catch (e: any) {
+            if (e?.code === "auth/credential-already-in-use") {
+                setPhoneMsg(
+                    "Ese número ya está en uso por otra cuenta. Usa ese teléfono para iniciar sesión o cambia el número."
+                );
+            } else {
+                setPhoneMsg(e?.message ?? "Error verificando el código.");
+            }
+        } finally {
+            setIsLinkingPhone(false);
+        }
     };
 
     if (loading || !user) {
@@ -73,7 +172,6 @@ export default function ProfilePage() {
                         </p>
                     </div>
 
-                    {/* Botón de Cerrar Sesión en la cabecera */}
                     <Button
                         onClick={handleLogout}
                         disabled={isLoggingOut}
@@ -123,6 +221,7 @@ export default function ProfilePage() {
                             {user.email && (
                                 <p className="text-neutral-black-60 mb-4">{user.email}</p>
                             )}
+
                             <div className="flex flex-wrap gap-2 justify-center md:justify-start">
                                 {user.emailVerified && (
                                     <span className="inline-flex items-center gap-1 px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-medium">
@@ -133,6 +232,14 @@ export default function ProfilePage() {
                                 <span className="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-medium">
                                     Usuario activo
                                 </span>
+
+                                {/* Badge de teléfono */}
+                                {user.phoneNumber && (
+                                    <span className="inline-flex items-center gap-1 px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-sm font-medium">
+                                        <Phone className="w-4 h-4" />
+                                        Teléfono verificado
+                                    </span>
+                                )}
                             </div>
                         </div>
                     </div>
@@ -143,6 +250,7 @@ export default function ProfilePage() {
                     <h3 className="text-xl font-bold text-neutral-black-80 mb-4">
                         Información de Contacto
                     </h3>
+
                     <div className="space-y-4">
                         {/* Email */}
                         <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
@@ -162,17 +270,68 @@ export default function ProfilePage() {
 
                         {/* Teléfono */}
                         <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-                            <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 bg-primary-red/10 rounded-full flex items-center justify-center">
+                            <div className="flex items-start gap-3 w-full">
+                                <div className="w-10 h-10 bg-primary-red/10 rounded-full flex items-center justify-center mt-1">
                                     <Phone className="w-5 h-5 text-primary-red" />
                                 </div>
-                                <div>
+
+                                <div className="w-full">
                                     <p className="text-sm text-neutral-black-60">Teléfono</p>
-                                    <p className="font-medium text-neutral-black-80">
-                                        {user.phoneNumber || "No proporcionado"}
-                                    </p>
+
+                                    <div className="space-y-2">
+                                        <p className="font-medium text-neutral-black-80">
+                                            {user.phoneNumber || "No proporcionado"}
+                                        </p>
+
+                                        {/* ✅ Obligatorio: contenedor del reCAPTCHA */}
+                                        <div id="recaptcha-container" />
+
+                                        {/* ✅ Solo mostrar el flujo si NO tiene teléfono */}
+                                        {!user.phoneNumber && (
+                                            <div className="space-y-2">
+                                                <input
+                                                    className="w-full h-10 px-3 rounded-md border border-gray-200 bg-white"
+                                                    value={phoneInput}
+                                                    onChange={(e) => setPhoneInput(e.target.value)}
+                                                    placeholder="+573001112233"
+                                                />
+
+                                                {!verificationId ? (
+                                                    <Button
+                                                        onClick={handleSendSmsCode}
+                                                        disabled={isSendingCode}
+                                                        className="h-10"
+                                                    >
+                                                        {isSendingCode ? "Enviando..." : "Enviar código SMS"}
+                                                    </Button>
+                                                ) : (
+                                                    <div className="space-y-2">
+                                                        <input
+                                                            className="w-full h-10 px-3 rounded-md border border-gray-200 bg-white"
+                                                            value={smsCode}
+                                                            onChange={(e) => setSmsCode(e.target.value)}
+                                                            placeholder="Código SMS"
+                                                        />
+
+                                                        <Button
+                                                            onClick={handleConfirmAndLinkPhone}
+                                                            disabled={isLinkingPhone}
+                                                            className="h-10"
+                                                        >
+                                                            {isLinkingPhone ? "Verificando..." : "Confirmar y vincular"}
+                                                        </Button>
+                                                    </div>
+                                                )}
+
+                                                {phoneMsg && (
+                                                    <p className="text-sm text-neutral-black-60">{phoneMsg}</p>
+                                                )}
+                                            </div>
+                                        )}
+                                    </div>
                                 </div>
                             </div>
+
                             <ChevronRight className="w-5 h-5 text-neutral-black-60" />
                         </div>
                     </div>
@@ -253,7 +412,6 @@ export default function ProfilePage() {
                             <ChevronRight className="w-5 h-5 text-neutral-black-60" />
                         </button>
 
-                        {/* ver mis pedidos */}
                         <button
                             onClick={() => router.push("/orders")}
                             className="w-full flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
@@ -264,7 +422,6 @@ export default function ProfilePage() {
                             </div>
                             <ChevronRight className="w-5 h-5 text-neutral-black-60" />
                         </button>
-
                     </div>
                 </Card>
 
