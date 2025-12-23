@@ -12,10 +12,12 @@ export function CheckoutForm() {
     const {
         formData,
         handleChange,
-        handlePhoneChange: setPhoneValue,
+        handlePhoneChange,
         paymentMethods,
         error,
     } = useFormCart();
+
+    console.log("Rendering CheckoutForm with formData:", formData);
 
     return (
         <div className="flex flex-col gap-14 pb-6 w-full lg:mt-4 max-w-[500px]">
@@ -26,7 +28,7 @@ export function CheckoutForm() {
                     user={user}
                     formData={formData}
                     handleChange={handleChange}
-                    handlePhoneChange={(e) => setPhoneValue(e.target.value)}
+                    handlePhoneChange={handlePhoneChange}
                 />
 
                 <AddressSection />

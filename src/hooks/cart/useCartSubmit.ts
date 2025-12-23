@@ -11,7 +11,7 @@ export const useCartSubmit = () => {
     handleSubmit,
     paymentMethods,
     isSubmitting,
-    error,
+    error, 
   } = useFormCart();
 
   const [isStoreClosedModalOpen, setIsStoreClosedModalOpen] = useState(false);
@@ -21,10 +21,11 @@ export const useCartSubmit = () => {
   ) => {
     e.preventDefault();
 
-    if (!storeStatus.isOpen) {
-      setIsStoreClosedModalOpen(true);
-      return;
-    }
+    // if (!storeStatus.isOpen) {
+    //   console.log("Store is closed. Cannot submit the form.");
+    //   setIsStoreClosedModalOpen(true);
+    //   return; 
+    // }
 
     await handleSubmit(e);
   };

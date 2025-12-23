@@ -13,7 +13,7 @@ interface UserInfoSectionProps {
     handleChange: (
         e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
     ) => void;
-    handlePhoneChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    handlePhoneChange: (value: string | undefined) => void;
 }
 
 export function UserInfoSection({

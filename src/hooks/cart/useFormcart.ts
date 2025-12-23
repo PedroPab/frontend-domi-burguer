@@ -1,17 +1,40 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { BancolombiaIcon, MoneyIcon, NequiIcon } from "@/components/ui/icons";
 import { useCartStore } from "@/store/cartStore";
-import { useRouter } from "next/navigation";
+import { useCheckoutFormStore } from "@/store/checkoutFormStore";
+import { useOrderSubmit } from "@/hooks/cart/useOrderSubmit";
 import { useAuth } from "@/contexts/AuthContext";
 import { PaymentMethod } from "@/types/paymentMethod";
+import { OrderPayload } from "@/types/OrderPayload";
+import { Address } from "@/types/address";
+import { useRouter } from "next/navigation";
 
 
 function useFormCart() {
+  const { items, address } = useCartStore();
+  const { formData, setFormData, setFormField, error, setError } = useCheckoutFormStore();
+  const { resetForm } = useCheckoutFormStore();
+  const { clearCart } = useCartStore();
   const router = useRouter();
-  const { items, address, clearCart, getSubtotal, getTotal} = useCartStore();
+  const { submitOrder, isSubmitting } = useOrderSubmit(
+  (result) => {
+      console.log("Order submitted successfully:", result);
+      //guardar la última orden en el almacenamiento local
+    // saveLastOrder();
+
+      // Limpiar carrito y formulario
+      clearCart();
+      resetForm();
+
+      // Redirigir a la página de confirmación o mostrar mensaje de éxito
+      router.push("/thankyou");
+    },
+    (error) => {
+      console.error("Error submitting order:", error);
+    }
+  );
   const { user } = useAuth();
 
-  const API_URL = `${process.env.NEXT_PUBLIC_API_URL}`;
   const paymentMethods: PaymentMethod[] = [
     {
       id: "cash",
@@ -36,51 +59,34 @@ function useFormCart() {
     },
   ];
 
-  const [formData, setFormData] = useState({
-    name: "",
-    phone: "",
-    comment: "",
-    paymentMethod: "cash",
-  });
-  
   // Actualizar el formulario con los datos del usuario cuando se autentica
   useEffect(() => {
     if (user) {
-      setFormData(prev => ({
-        ...prev,
-        name: user.displayName || prev.name,
-        phone: user.phoneNumber || prev.phone
-      }));
+      setFormData({
+        name: user.displayName || "",
+        phone: user.phoneNumber || ""
+      });
     }
-  }, [user]);
-
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  }, [user, setFormData]);
 
   useEffect(() => {
     if (address && error === "Debes agregar una dirección de entrega") {
       setError(null);
     }
-  }, [address, error]);
+  }, [address, error, setError]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-    if (error) {
-      setError(null);
-    }
+    setFormField(name as keyof typeof formData, value);
   };
 
   const handlePhoneChange = (value: string | undefined) => {
-    setFormData((prev) => ({ ...prev, phone: value || "" }));
-    if (error) {
-      setError(null);
-    }
+    setFormField("phone", value || "");
   };
 
-  //   validacion de campos
+  // Validación de campos
   const validateForm = (): boolean => {
     if (!formData.name.trim()) {
       setError("El nombre es requerido");
@@ -110,15 +116,15 @@ function useFormCart() {
     return true;
   };
 
-  // objeto para enviar al backend
-  const buildOrderPayload = () => {
+
+
+  const buildOrderPayload = ({formData, address , items} : {formData: any, address: Address, items: any[]}): OrderPayload => {
     return {
       name: formData.name,
       phone: formData.phone,
       comment: formData.comment,
       locationId: address?.id,
-      userId: user?.uid || null, // Incluir ID de usuario si está autenticado
-      userEmail: user?.email || null, // Incluir email del usuario si está autenticado
+      userId: user?.uid || null,
       delivery: {
         price: address?.deliveryPrice || 0,
         distance: address?.distance || 0,
@@ -132,76 +138,21 @@ function useFormCart() {
         })),
       })),
       paymentMethod: formData.paymentMethod,
-      origin: user ? "authenticated" : "public", // Cambiar el origen si está autenticado
+      // origin: user ? "authenticated" : "public",
     };
   };
 
-  /**
-   * Maneja el envío de la orden al backend
-   */
+  // Maneja el envío de la orden
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("Formulario enviado", formData);
 
     if (!validateForm()) {
       return;
     }
+     const orderPayload = buildOrderPayload({formData, address , items});
 
-    setIsSubmitting(true);
-    setError(null);
-
-    try {
-      const orderPayload = buildOrderPayload();
-
-      console.log("Enviando orden:", orderPayload);
-
-      // Aquí haces la petición al backend
-      const response = await fetch(`${API_URL}api/v2/orders/public`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(orderPayload),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Error al crear la orden");
-      }
-
-      const result = await response.json();
-
-      console.log("Orden creada exitosamente:", result);
-
-      const lastOrder = {
-        name: formData.name,
-        phone: formData.phone,
-        comment: formData.comment,
-        locationId: address?.id,
-        address: address,
-        orderItems: items,
-        paymentMethod: formData.paymentMethod,
-        prices: {
-        subtotal: getSubtotal(),
-        total: getTotal(),
-      },
-      };
-
-      localStorage.setItem("lastOrder", JSON.stringify(lastOrder));
-
-      // Limpiar carrito después de orden exitosa
-      clearCart();
-
-      // Redirigir a página de confirmación
-      router.push("/thankyou");
-    } catch (err) {
-      console.error("Error al crear orden:", err);
-      setError(
-        err instanceof Error ? err.message : "Error al procesar la orden"
-      );
-    } finally {
-      setIsSubmitting(false);
-    }
+     const token = await user?.getIdToken();
+    await submitOrder({ orderPayload, token  });
   };
 
   return {

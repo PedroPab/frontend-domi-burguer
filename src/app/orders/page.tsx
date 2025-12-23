@@ -118,7 +118,7 @@ interface OrderCardProps {
 function OrderCard({ order, onCancel, onView }: OrderCardProps) {
     const statusInfo = OrderService.getOrderStatusInfo(order.status);
     const canCancel = ['pending', 'confirmed'].includes(order.status);
-
+    console.log("Rendering OrderCard for order:", order);
     return (
         <Card className="overflow-hidden">
             <CardContent className="p-6">
@@ -143,27 +143,20 @@ function OrderCard({ order, onCancel, onView }: OrderCardProps) {
                 <div className="space-y-3 mb-4">
                     <div className="flex items-center gap-2 text-sm text-gray-600">
                         <User className="w-4 h-4" />
-                        <span>{order.customerInfo.name}</span>
+                        {/* <span>{order.customerInfo.name}</span> */}
                     </div>
 
-                    <div className="flex items-center gap-2 text-sm text-gray-600">
-                        <Phone className="w-4 h-4" />
-                        <span>{order.customerInfo.phone}</span>
-                    </div>
 
-                    <div className="flex items-center gap-2 text-sm text-gray-600">
-                        <MapPin className="w-4 h-4" />
-                        <span>{order.deliveryAddress.address}</span>
-                    </div>
+
                 </div>
 
                 <div className="border-t pt-4">
                     <div className="flex items-center justify-between mb-3">
                         <span className="text-sm text-gray-600">
-                            {order.items.length} {order.items.length === 1 ? 'producto' : 'productos'}
+                            {order.orderItems.length} {order.orderItems.length === 1 ? 'producto' : 'productos'}
                         </span>
                         <span className="font-semibold text-lg">
-                            ${order.total.toLocaleString('es-CO')}
+                            ${order.totalPrice.toLocaleString('es-CO')}
                         </span>
                     </div>
 

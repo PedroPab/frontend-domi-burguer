@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { CheckoutFormProvider } from "@/contexts/CheckoutFormContext";
 
 import { useCartSubmit } from "@/hooks/cart/useCartSubmit";
@@ -8,13 +8,15 @@ import { useCartSubmit } from "@/hooks/cart/useCartSubmit";
 // Components
 import { LoadingOverlay } from "@/components/cart/loadingOverlay";
 import { CheckoutForm } from "@/components/cart/CheckoutForm";
-import { CartSummary } from "./CartSummary";
+import { CartSummary } from "@/components/cart/CartSummary";
 import { CartModals } from "@/components/cart/CartModals";
 
 export default function Cart() {
 
-  const { handleSubmitWithValidation, isSubmitting } = useCartSubmit();
-
+  const { handleSubmitWithValidation, isSubmitting, error } = useCartSubmit();
+  useEffect(() => {
+    console.log(error)
+  }, [error])
 
   return (
     <CheckoutFormProvider>

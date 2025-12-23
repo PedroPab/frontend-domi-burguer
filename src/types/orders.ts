@@ -4,11 +4,10 @@ export interface Order {
   status: OrderStatus;
   createdAt: string;
   updatedAt: string;
-  total: number;
+  totalPrice: number;
   deliveryPrice: number;
   subtotal: number;
-  items: OrderItem[];
-  customerInfo: CustomerInfo;
+  orderItems: OrderItem[];
   deliveryAddress: DeliveryAddress;
   paymentMethod: PaymentMethod;
   comment?: string;
@@ -20,7 +19,7 @@ export interface OrderItem {
   name: string;
   price: number;
   quantity: number;
-  image1: string;
+  image1?: string;
   image2?: string;
   modifications?: OrderModification[];
   complements?: OrderComplement[];

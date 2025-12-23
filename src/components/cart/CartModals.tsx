@@ -1,5 +1,4 @@
 "use client";
-import React, { useEffect } from "react";
 import { CustomizationModalCart } from "@/components/cart/customizationModalCart";
 import { ConfirmDeleteModal } from "@/components/cart/confirmDeleteModal";
 import { StoreClosedModal } from "@/components/cart/storeClosedModal";
@@ -30,7 +29,6 @@ export function CartModals() {
 
     return (
         <>
-            hola
             {selectedCartItem && (
                 <CustomizationModalCart
                     isOpen={isModalComplementsOpen}

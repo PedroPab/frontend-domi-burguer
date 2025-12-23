@@ -21,6 +21,7 @@ export const CartSummary = ({
 }) => {
     // Utils
     const formatCurrency = (value: number): string => {
+        if (isNaN(value)) return "0";
         return value.toLocaleString("es-CO");
     };
 
