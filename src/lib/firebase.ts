@@ -31,8 +31,12 @@ export const db = getFirestore(app);
  * Configurar emuladores para desarrollo local si es necesario
  */
 if (process.env.NODE_ENV === 'development' && process.env.NEXT_PUBLIC_USE_FIREBASE_EMULATORS === 'true') {
-  connectAuthEmulator(auth, 'http://localhost:9099');
-  connectFirestoreEmulator(db, 'localhost', 8080);
+
+  //miramos si estamos en que url estamos , pues  esa misma vamos a usar para el emulador de auth
+  const hostname = typeof window !== 'undefined' ? window.location.hostname : 'localhost';
+
+  connectAuthEmulator(auth, `http://${hostname}:9099`);
+  connectFirestoreEmulator(db, hostname, 8080);
   console.log('Firebase emulators connected');
 }
 
