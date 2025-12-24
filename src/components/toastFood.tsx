@@ -76,7 +76,7 @@ export const showFoodToast = (productName: string) => {
           </h4>
           <p className="body-font">Producto añadido exitosamente</p>
           <div className="">
-            <Link href={"/cart"}>
+            <Link href={"/closed"}>
               <Button
                 size="sm"
                 className="rounded-[30px] text-white font-medium px-4 my-2 h-[32px]"
