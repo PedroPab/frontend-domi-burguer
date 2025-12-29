@@ -1,10 +1,8 @@
 import React from "react";
-import { User } from "firebase/auth";
-import { Input } from "@/components/ui/input";
-import { PhoneNumberInput } from "@/components/ui/inputPhone";
+import { useAuth } from "@/contexts/AuthContext";
+import InputPhone from "./inputPhone";
 
 interface UserInfoSectionProps {
-    user: User | null;
     formData: {
         name: string;
         phone: string;
@@ -17,11 +15,11 @@ interface UserInfoSectionProps {
 }
 
 export function UserInfoSection({
-    user,
     formData,
     handleChange,
     handlePhoneChange,
 }: UserInfoSectionProps) {
+    const { user } = useAuth();
     return (
         <div className="flex flex-col gap-4 w-full">
             <h5 className="body-font font-bold">Tus datos</h5>
@@ -37,28 +35,8 @@ export function UserInfoSection({
             )}
 
             <div className="inline-flex flex-col gap-2 items-start w-full">
-                <Input
-                    id="name"
-                    name="name"
-                    maxLength={70}
-                    placeholder="Nombres y Apellidos"
-                    onChange={handleChange}
-                    value={formData.name}
-                    disabled={!!(user && user.displayName)}
-                />
 
-                <div className="flex flex-col lg:flex-row w-full gap-2">
-                    <PhoneNumberInput
-                        className="pl-2 w-full"
-                        id="phone"
-                        name="phone"
-                        maxLength={20}
-                        placeholder="Escribe tu número de teléfono"
-                        onChange={handlePhoneChange}
-                        value={formData.phone}
-                        disabled={!!(user && user.phoneNumber)}
-                    />
-                </div>
+                <InputPhone />
 
                 <div className="relative w-full">
                     <textarea

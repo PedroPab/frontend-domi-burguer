@@ -49,7 +49,7 @@ export const GoogleLogin = ({
             onClick={handleGoogleSignIn}
             className={`text-neutral-black-80 hover:text-neutral-black-60 rounded-[30px] flex items-center gap-2 text-[16px] w-full h-[48px] ${className}`}
         >
-            <GoogleIcon /> Continuar con Google
+            <GoogleIcon />
         </Button>
     );
 };

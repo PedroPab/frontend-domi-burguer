@@ -3,11 +3,9 @@ import { FormHeader } from "./FormHeader";
 import { UserInfoSection } from "./UserInfoSection";
 import { AddressSection } from "./AddressSection";
 import { PaymentMethodsSection } from "./PaymentMethodsSection";
-import { useAuth } from "@/contexts/AuthContext";
 import useFormCart from "@/hooks/cart/useFormcart";
 
 export function CheckoutForm() {
-    const { user } = useAuth();
 
     const {
         formData,
@@ -25,7 +23,6 @@ export function CheckoutForm() {
                 <FormHeader error={error} />
 
                 <UserInfoSection
-                    user={user}
                     formData={formData}
                     handleChange={handleChange}
                     handlePhoneChange={handlePhoneChange}
