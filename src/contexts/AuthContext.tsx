@@ -26,7 +26,11 @@ interface AuthContextType {
     phoneSignIn: {
         sendVerificationCode: (phoneNumber: string, recaptchaContainerId: string) => Promise<ConfirmationResult>;
         verifyCode: (confirmationResult: ConfirmationResult, code: string) => Promise<User>;
+        linkPhoneToAccount: (verificationId: string, verificationCode: string) => Promise<User>;
     };
+
+    // Recargar datos del usuario
+    reloadUser: () => Promise<void>;
 
     // Estado del error
     error: AuthError | null;
@@ -177,6 +181,34 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             } catch (error) {
                 return handleAuthError(error);
             }
+        },
+
+        // Vincular teléfono a cuenta existente
+        linkPhoneToAccount: async (verificationId: string, verificationCode: string): Promise<User> => {
+            try {
+                clearError();
+                if (!user) {
+                    throw { code: 'auth/no-user', message: 'No hay usuario autenticado.' };
+                }
+                const result = await AuthService.linkPhoneToAccount(user, '', verificationId, verificationCode);
+                // Recargar el usuario para obtener el phoneNumber actualizado
+                await result.user.reload();
+                setUser(result.user);
+                return result.user;
+            } catch (error) {
+                return handleAuthError(error);
+            }
+        }
+    };
+
+    /**
+     * Recargar datos del usuario actual
+     */
+    const reloadUser = async (): Promise<void> => {
+        if (user) {
+            await user.reload();
+            // Forzar actualización del estado
+            setUser(auth.currentUser);
         }
     };
 
@@ -190,6 +222,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         resetPassword,
         signInWithGoogle,
         phoneSignIn,
+        reloadUser,
         error,
         clearError,
     };

@@ -17,41 +17,21 @@ import {
     Shield,
     ChevronRight,
 } from "lucide-react";
-
-// ✅ Firebase Auth (Phone linking)
-import {
-    getAuth,
-    RecaptchaVerifier,
-    PhoneAuthProvider,
-    linkWithCredential,
-} from "firebase/auth";
+import { PhoneVerificationModal } from "@/components/phone/PhoneVerificationModal";
 
 export default function ProfilePage() {
-    const { user, loading, logout } = useAuth();
+    const { user, loading, logout, reloadUser } = useAuth();
     const router = useRouter();
 
     const [isLoggingOut, setIsLoggingOut] = useState(false);
-
-    // ✅ Phone states
-    const auth = getAuth();
-    const [phoneInput, setPhoneInput] = useState("+57");
-    const [smsCode, setSmsCode] = useState("");
-    const [verificationId, setVerificationId] = useState<string | null>(null);
-
-    const [isSendingCode, setIsSendingCode] = useState(false);
-    const [isLinkingPhone, setIsLinkingPhone] = useState(false);
-    const [phoneMsg, setPhoneMsg] = useState<string>("");
+    const [phoneModalOpen, setPhoneModalOpen] = useState(false);
+    const [phoneModalMode, setPhoneModalMode] = useState<"link" | "change">("link");
 
     useEffect(() => {
         if (!loading && !user) {
             router.push("/login");
         }
     }, [user, loading, router]);
-
-    // Si cambia el usuario y ya tiene phone, lo ponemos en el input
-    useEffect(() => {
-        if (user?.phoneNumber) setPhoneInput(user.phoneNumber);
-    }, [user?.phoneNumber]);
 
     const handleLogout = async () => {
         try {
@@ -75,98 +55,13 @@ export default function ProfilePage() {
         });
     };
 
-    // ✅ reCAPTCHA helper (obligatorio en web)
-    type WindowWithRecaptcha = Window & {
-        recaptchaVerifier?: RecaptchaVerifier;
+    const handleOpenPhoneModal = (mode: "link" | "change") => {
+        setPhoneModalMode(mode);
+        setPhoneModalOpen(true);
     };
 
-    const getOrCreateRecaptcha = () => {
-        const w = window as WindowWithRecaptcha;
-
-        if (!w.recaptchaVerifier) {
-            w.recaptchaVerifier = new RecaptchaVerifier(auth, "recaptcha-container", {
-                size: "invisible",
-            });
-        }
-        return w.recaptchaVerifier as RecaptchaVerifier;
-    };
-
-    // ✅ 1) Enviar SMS
-    const handleSendSmsCode = async () => {
-        try {
-            setPhoneMsg("");
-            setIsSendingCode(true);
-
-            if (!auth.currentUser) throw new Error("No hay usuario autenticado.");
-            if (!phoneInput.startsWith("+")) {
-                throw new Error(
-                    "El teléfono debe empezar por + y estar en formato internacional. Ej: +573001112233"
-                );
-            }
-
-            const recaptchaVerifier = getOrCreateRecaptcha();
-            const provider = new PhoneAuthProvider(auth);
-
-            const vid = await provider.verifyPhoneNumber(phoneInput, recaptchaVerifier);
-
-            setVerificationId(vid);
-            setPhoneMsg("Código enviado por SMS. Escríbelo abajo para confirmar.");
-        } catch (e: unknown) {
-            if (e instanceof Error) {
-                setPhoneMsg(e.message);
-            } else if (typeof e === "object" && e !== null && "message" in e) {
-                setPhoneMsg(String((e as { message?: string }).message));
-            } else {
-                setPhoneMsg("Error enviando el código SMS.");
-            }
-        } finally {
-            setIsSendingCode(false);
-        }
-    };
-
-    // ✅ 2) Confirmar y vincular Phone al usuario actual
-    const handleConfirmAndLinkPhone = async () => {
-        try {
-            setPhoneMsg("");
-            setIsLinkingPhone(true);
-
-            if (!auth.currentUser) throw new Error("No hay usuario autenticado.");
-            if (!verificationId) throw new Error("Primero envía el código SMS.");
-            if (!smsCode || smsCode.length < 4) throw new Error("Código SMS inválido.");
-
-            const cred = PhoneAuthProvider.credential(verificationId, smsCode);
-
-            await linkWithCredential(auth.currentUser, cred);
-
-            // recargar usuario para que phoneNumber aparezca
-            await auth.currentUser.reload();
-
-            setPhoneMsg("✅ Teléfono verificado y agregado a tu cuenta.");
-            setSmsCode("");
-            setVerificationId(null);
-
-            // si tu AuthContext no re-renderiza, esto fuerza refresco
-            router.refresh();
-        } catch (e: unknown) {
-            if (
-                typeof e === "object" &&
-                e !== null &&
-                "code" in e &&
-                (e as { code?: string }).code === "auth/credential-already-in-use"
-            ) {
-                setPhoneMsg(
-                    "Ese número ya está en uso por otra cuenta. Usa ese teléfono para iniciar sesión o cambia el número."
-                );
-            } else if (e instanceof Error) {
-                setPhoneMsg(e.message);
-            } else if (typeof e === "object" && e !== null && "message" in e) {
-                setPhoneMsg(String((e as { message?: string }).message));
-            } else {
-                setPhoneMsg("Error verificando el código.");
-            }
-        } finally {
-            setIsLinkingPhone(false);
-        }
+    const handlePhoneVerified = async () => {
+        await reloadUser();
     };
 
     if (loading || !user) {
@@ -288,71 +183,28 @@ export default function ProfilePage() {
                         </div>
 
                         {/* Teléfono */}
-                        <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-                            <div className="flex items-start gap-3 w-full">
-                                <div className="w-10 h-10 bg-primary-red/10 rounded-full flex items-center justify-center mt-1">
+                        <button
+                            onClick={() => handleOpenPhoneModal(user.phoneNumber ? "change" : "link")}
+                            className="w-full flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+                        >
+                            <div className="flex items-center gap-3">
+                                <div className="w-10 h-10 bg-primary-red/10 rounded-full flex items-center justify-center">
                                     <Phone className="w-5 h-5 text-primary-red" />
                                 </div>
-
-                                <div className="w-full">
+                                <div className="text-left">
                                     <p className="text-sm text-neutral-black-60">Teléfono</p>
-
-                                    <div className="space-y-2">
-                                        <p className="font-medium text-neutral-black-80">
-                                            {user.phoneNumber || "No proporcionado"}
+                                    <p className="font-medium text-neutral-black-80">
+                                        {user.phoneNumber || "No proporcionado"}
+                                    </p>
+                                    {!user.phoneNumber && (
+                                        <p className="text-xs text-primary-red mt-1">
+                                            Toca para verificar tu número
                                         </p>
-
-                                        {/* ✅ Obligatorio: contenedor del reCAPTCHA */}
-                                        <div id="recaptcha-container" />
-
-                                        {/* ✅ Solo mostrar el flujo si NO tiene teléfono */}
-                                        {!user.phoneNumber && (
-                                            <div className="space-y-2">
-                                                <input
-                                                    className="w-full h-10 px-3 rounded-md border border-gray-200 bg-white"
-                                                    value={phoneInput}
-                                                    onChange={(e) => setPhoneInput(e.target.value)}
-                                                    placeholder="+573001112233"
-                                                />
-
-                                                {!verificationId ? (
-                                                    <Button
-                                                        onClick={handleSendSmsCode}
-                                                        disabled={isSendingCode}
-                                                        className="h-10"
-                                                    >
-                                                        {isSendingCode ? "Enviando..." : "Enviar código SMS"}
-                                                    </Button>
-                                                ) : (
-                                                    <div className="space-y-2">
-                                                        <input
-                                                            className="w-full h-10 px-3 rounded-md border border-gray-200 bg-white"
-                                                            value={smsCode}
-                                                            onChange={(e) => setSmsCode(e.target.value)}
-                                                            placeholder="Código SMS"
-                                                        />
-
-                                                        <Button
-                                                            onClick={handleConfirmAndLinkPhone}
-                                                            disabled={isLinkingPhone}
-                                                            className="h-10"
-                                                        >
-                                                            {isLinkingPhone ? "Verificando..." : "Confirmar y vincular"}
-                                                        </Button>
-                                                    </div>
-                                                )}
-
-                                                {phoneMsg && (
-                                                    <p className="text-sm text-neutral-black-60">{phoneMsg}</p>
-                                                )}
-                                            </div>
-                                        )}
-                                    </div>
+                                    )}
                                 </div>
                             </div>
-
                             <ChevronRight className="w-5 h-5 text-neutral-black-60" />
-                        </div>
+                        </button>
                     </div>
                 </Card>
 
@@ -464,6 +316,14 @@ export default function ProfilePage() {
                     )}
                 </Button>
             </div>
+
+            {/* Modal de verificación de teléfono */}
+            <PhoneVerificationModal
+                open={phoneModalOpen}
+                onOpenChange={setPhoneModalOpen}
+                mode={phoneModalMode}
+                onSuccess={handlePhoneVerified}
+            />
         </div>
     );
 }
