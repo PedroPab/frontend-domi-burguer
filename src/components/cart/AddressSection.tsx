@@ -36,6 +36,7 @@ export function AddressSection() {
                 {user && (
                     <div className="flex gap-2">
                         <Button
+                            type="button"
                             variant="outline"
                             className="inline-flex px-3 py-2 rounded-[20px] border-[1.5px] border-solid border-[#313131] items-center justify-center gap-2 h-auto"
                             disabled={!hasMultipleLocations}

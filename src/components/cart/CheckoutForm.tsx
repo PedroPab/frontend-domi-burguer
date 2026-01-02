@@ -10,7 +10,6 @@ export function CheckoutForm() {
     const {
         formData,
         handleChange,
-        handlePhoneChange,
         paymentMethods,
         error,
     } = useFormCart();
@@ -25,7 +24,6 @@ export function CheckoutForm() {
                 <UserInfoSection
                     formData={formData}
                     handleChange={handleChange}
-                    handlePhoneChange={handlePhoneChange}
                 />
 
                 <AddressSection />

@@ -62,6 +62,10 @@ function useFormCart() {
   // Actualizar el formulario con los datos del usuario cuando se autentica
   useEffect(() => {
     if (user) {
+      console.log("Filling form with user data:", {
+        name: user.displayName,
+        phone: user.phoneNumber
+      });
       setFormData({
         name: user.displayName || "",
         phone: user.phoneNumber || ""
@@ -161,6 +165,7 @@ function useFormCart() {
      const orderPayload = buildOrderPayload({formData, address , items});
 
      const token = await user?.getIdToken();
+     console.log(orderPayload, "Submitting order with token:");
     await submitOrder({ orderPayload, token  });
   };
 

@@ -11,13 +11,11 @@ interface UserInfoSectionProps {
     handleChange: (
         e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
     ) => void;
-    handlePhoneChange: (value: string | undefined) => void;
 }
 
 export function UserInfoSection({
     formData,
     handleChange,
-    handlePhoneChange,
 }: UserInfoSectionProps) {
     const { user } = useAuth();
     return (
