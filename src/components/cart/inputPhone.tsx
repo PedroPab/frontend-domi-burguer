@@ -24,28 +24,31 @@ const InputPhone = () => {
     // Usuario autenticado con teléfono verificado
     if (user?.phoneNumber) {
         return (
-            <div className="flex items-center gap-3 p-3 bg-green-50 rounded-lg border border-green-200">
-                <CheckCircle className="w-5 h-5 text-green-600" />
-                <div className="flex-1">
-                    <p className="text-sm text-green-700 font-medium">Teléfono verificado</p>
-                    <p className="text-sm text-green-600">{user.phoneNumber}</p>
-                </div>
-                <Button
-                    type="button"
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => setPhoneModalOpen(true)}
-                    className="text-green-700 hover:text-green-800 hover:bg-green-100"
-                >
-                    Cambiar
-                </Button>
-                <PhoneVerificationModal
-                    open={phoneModalOpen}
-                    onOpenChange={setPhoneModalOpen}
-                    mode="change"
-                    onSuccess={handlePhoneVerified}
-                />
-            </div>
+            <>
+                {/* <div className="flex items-center gap-3 p-3 bg-green-50 rounded-lg border border-green-200">
+                    <CheckCircle className="w-5 h-5 text-green-600" />
+                    <div className="flex-1">
+                        <p className="text-sm text-green-700 font-medium">Teléfono verificado</p>
+                        <p className="text-sm text-green-600">{user.phoneNumber}</p>
+                    </div>
+                    <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setPhoneModalOpen(true)}
+                        className="text-green-700 hover:text-green-800 hover:bg-green-100"
+                    >
+                        Cambiar
+                    </Button>
+                    <PhoneVerificationModal
+                        open={phoneModalOpen}
+                        onOpenChange={setPhoneModalOpen}
+                        mode="change"
+                        onSuccess={handlePhoneVerified}
+                    />
+                </div> */}
+            </>
+
         );
     }
 
