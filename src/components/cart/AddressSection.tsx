@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import AddressCard from "../AddressCard";
@@ -26,6 +26,12 @@ export function AddressSection() {
 
     const { user } = useAuth();
     const [isListModalOpen, setIsListModalOpen] = useState(false);
+
+    useEffect(() => {
+        if (!addressClient) {
+            console.log("No addressClient found in AddressSection.");
+        }
+    }, []);
 
     const hasMultipleLocations = listLocationsClient && listLocationsClient.length > 0;
 
