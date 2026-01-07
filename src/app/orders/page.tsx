@@ -1,30 +1,52 @@
 "use client";
 
 import React from "react";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useOrders } from "@/hooks/useOrders";
 import { useAuth } from "@/contexts/AuthContext";
-import { Loader2, User, Package, X } from "lucide-react";
-import { Order } from "@/types/orders";
+import { Loader2, Package } from "lucide-react";
+import { Order, OrderItem } from "@/types/orders";
 import { OrderService } from "@/services/orderService";
 import { useRouter } from "next/navigation";
+import { useCartStore, CartItem } from "@/store/cartStore";
+import { generateCartItemId } from "@/lib/utils";
+import Image from "next/image";
 
 export default function OrdersPage() {
-    const { orders, loading, error, cancelOrder } = useOrders();
+    const { orders, loading, error } = useOrders();
     const { user } = useAuth();
     const router = useRouter();
+    const addItem = useCartStore((state) => state.addItem);
 
-    const handleCancelOrder = async (orderId: string) => {
-        try {
-            await cancelOrder(orderId);
-        } catch (error) {
-            console.error('Error cancelling order:', error);
-        }
+    const handleReorder = (order: Order) => {
+        order.orderItems.forEach((item) => {
+            const cartItem = convertOrderItemToCartItem(item);
+            addItem(cartItem);
+        });
+        router.push('/cart');
     };
 
-    const handleViewOrder = (orderId: string) => {
-        router.push(`/orders/${orderId}`);
+    const convertOrderItemToCartItem = (item: OrderItem): CartItem => {
+        const complements = (item.complements || []).map((c, index) => ({
+            id: index,
+            name: c.name,
+            quantity: c.quantity,
+            price: c.price,
+            minusComplement: false
+        }));
+
+        return {
+            id: generateCartItemId(Number(item.id), complements),
+            productId: Number(item.id),
+            name: item.name,
+            price: item.price,
+            basePrice: item.price,
+            quantity: item.quantity,
+            image1: item.image1 || '/placeholder.png',
+            image2: item.image2,
+            complements
+        };
     };
 
     if (!user) {
@@ -72,7 +94,7 @@ export default function OrdersPage() {
         return (
             <div className="min-h-screen bg-gray-50 mt-[130px]">
                 <div className="max-w-4xl mx-auto px-4 py-8">
-                    <h1 className="text-3xl font-bold mb-8">Mis Pedidos</h1>
+                    <h1 className="text-xl font-bold mb-8 uppercase">Mis Pedidos</h1>
                     <Card className="p-12 text-center">
                         <Package className="w-16 h-16 mx-auto mb-4 text-gray-400" />
                         <h2 className="text-xl font-semibold mb-2">No tienes pedidos aún</h2>
@@ -89,17 +111,16 @@ export default function OrdersPage() {
     }
 
     return (
-        <div className="min-h-screen bg-gray-50 mt-[130px]">
+        <div className="min-h-screen bg-white mt-[130px]">
             <div className="max-w-4xl mx-auto px-4 py-8">
-                <h1 className="text-3xl font-bold mb-8">Mis Pedidos</h1>
+                <h1 className="text-xl font-bold mb-6 uppercase">Mis Pedidos</h1>
 
-                <div className="space-y-6">
+                <div className="divide-y divide-gray-200">
                     {orders.map((order) => (
                         <OrderCard
                             key={order.id}
                             order={order}
-                            onCancel={() => handleCancelOrder(order.id)}
-                            onView={() => handleViewOrder(order.id)}
+                            onReorder={() => handleReorder(order)}
                         />
                     ))}
                 </div>
@@ -108,81 +129,90 @@ export default function OrdersPage() {
     );
 }
 
-interface OrderCardProps {
-    order: Order;
-    onCancel: () => void;
-    onView: () => void;
+interface ProductImagesProps {
+    items: OrderItem[];
 }
 
-function OrderCard({ order, onCancel, onView }: OrderCardProps) {
-    const statusInfo = OrderService.getOrderStatusInfo(order.status);
-    const canCancel = ['pending', 'confirmed'].includes(order.status);
-    console.log("Rendering OrderCard for order:", order);
+function ProductImages({ items }: ProductImagesProps) {
+    const maxVisible = 2;
+    const visibleItems = items.slice(0, maxVisible);
+    const remainingCount = items.length - maxVisible;
+
     return (
-        <Card className="overflow-hidden">
-            <CardContent className="p-6">
-                <div className="flex justify-between items-start mb-4">
-                    <div>
-                        <h3 className="font-semibold text-lg">Pedido #{order.orderNumber}</h3>
-                        <p className="text-gray-600 text-sm">
-                            {new Date(order.createdAt).toLocaleDateString('es-CO', {
-                                day: 'numeric',
-                                month: 'long',
-                                year: 'numeric',
-                                hour: '2-digit',
-                                minute: '2-digit'
-                            })}
-                        </p>
-                    </div>
-                    <div className={`px-3 py-1 rounded-full text-sm font-medium ${statusInfo.bgColor} ${statusInfo.color} ${statusInfo.borderColor} border`}>
+        <div className="flex items-center -space-x-3">
+            {visibleItems.map((item, index) => (
+                <div
+                    key={item.id}
+                    className="relative w-14 h-14 rounded-lg overflow-hidden bg-gray-100 border-2 border-white shadow-sm"
+                    style={{ zIndex: maxVisible - index }}
+                >
+                    {item.image1 ? (
+                        <Image
+                            src={item.image1}
+                            alt={item.name}
+                            fill
+                            className="object-cover"
+                        />
+                    ) : (
+                        <div className="w-full h-full flex items-center justify-center text-gray-400">
+                            <Package className="w-6 h-6" />
+                        </div>
+                    )}
+                </div>
+            ))}
+            {remainingCount > 0 && (
+                <div
+                    className="relative w-14 h-14 rounded-lg bg-gray-100 border-2 border-white shadow-sm flex items-center justify-center"
+                    style={{ zIndex: 0 }}
+                >
+                    <span className="text-sm font-semibold text-gray-600">
+                        +{remainingCount}
+                    </span>
+                </div>
+            )}
+        </div>
+    );
+}
+
+interface OrderCardProps {
+    order: Order;
+    onReorder: () => void;
+}
+
+function OrderCard({ order, onReorder }: OrderCardProps) {
+    const statusInfo = OrderService.getOrderStatusInfo(order.status);
+
+    return (
+        <div className="flex items-center justify-between py-4 gap-4">
+            <div className="flex items-center gap-4">
+                <ProductImages items={order.orderItems} />
+
+                <div className="flex flex-col">
+                    <span className="font-semibold text-sm uppercase">
+                        Pedido N° {order.orderNumber}
+                    </span>
+                    <span className="font-bold text-base">
+                        ${order.totalPrice.toLocaleString('es-CO')}
+                    </span>
+                </div>
+            </div>
+
+            <div className="flex items-center">
+                {statusInfo.isButton ? (
+                    <button
+                        onClick={onReorder}
+                        className={`px-4 py-2 rounded-full text-xs font-bold uppercase ${statusInfo.bgColor} ${statusInfo.color} border ${statusInfo.borderColor} transition-opacity hover:opacity-90`}
+                    >
                         {statusInfo.label}
-                    </div>
-                </div>
-
-                <div className="space-y-3 mb-4">
-                    <div className="flex items-center gap-2 text-sm text-gray-600">
-                        <User className="w-4 h-4" />
-                        {/* <span>{order.customerInfo.name}</span> */}
-                    </div>
-
-
-
-                </div>
-
-                <div className="border-t pt-4">
-                    <div className="flex items-center justify-between mb-3">
-                        <span className="text-sm text-gray-600">
-                            {order.orderItems.length} {order.orderItems.length === 1 ? 'producto' : 'productos'}
-                        </span>
-                        <span className="font-semibold text-lg">
-                            ${order.totalPrice.toLocaleString('es-CO')}
-                        </span>
-                    </div>
-
-                    <div className="flex gap-2">
-                        <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={onView}
-                            className="flex-1"
-                        >
-                            Ver Detalles
-                        </Button>
-
-                        {canCancel && (
-                            <Button
-                                variant="destructive"
-                                size="sm"
-                                onClick={onCancel}
-                                className="flex items-center gap-1"
-                            >
-                                <X className="w-4 h-4" />
-                                Cancelar
-                            </Button>
-                        )}
-                    </div>
-                </div>
-            </CardContent>
-        </Card>
+                    </button>
+                ) : (
+                    <span
+                        className={`px-4 py-2 rounded-full text-xs font-bold uppercase ${statusInfo.bgColor} ${statusInfo.color} border ${statusInfo.borderColor}`}
+                    >
+                        {statusInfo.label}
+                    </span>
+                )}
+            </div>
+        </div>
     );
 }

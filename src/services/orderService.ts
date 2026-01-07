@@ -69,46 +69,53 @@ export class OrderService {
   static getOrderStatusInfo(status: OrderStatus) {
     const statusMap = {
       pending: {
-        label: 'Pendiente',
-        color: 'text-yellow-600',
-        bgColor: 'bg-yellow-50',
-        borderColor: 'border-yellow-200'
+        label: 'CREADO',
+        color: 'text-neutral-800',
+        bgColor: 'bg-[#c4d600]',
+        borderColor: 'border-[#c4d600]',
+        isButton: false
       },
       confirmed: {
-        label: 'Confirmado',
-        color: 'text-blue-600',
-        bgColor: 'bg-blue-50',
-        borderColor: 'border-blue-200'
+        label: 'CREADO',
+        color: 'text-neutral-800',
+        bgColor: 'bg-[#c4d600]',
+        borderColor: 'border-[#c4d600]',
+        isButton: false
       },
       preparing: {
-        label: 'En preparación',
-        color: 'text-orange-600',
-        bgColor: 'bg-orange-50',
-        borderColor: 'border-orange-200'
+        label: 'EN PREPARACIÓN',
+        color: 'text-[#c4a600]',
+        bgColor: 'bg-white',
+        borderColor: 'border-[#c4a600]',
+        isButton: false
       },
       ready: {
-        label: 'Listo para entrega',
-        color: 'text-green-600',
-        bgColor: 'bg-green-50',
-        borderColor: 'border-green-200'
+        label: 'EN CAMINO',
+        color: 'text-[#c4a600]',
+        bgColor: 'bg-white',
+        borderColor: 'border-[#c4a600]',
+        isButton: false
       },
       delivering: {
-        label: 'En reparto',
-        color: 'text-purple-600',
-        bgColor: 'bg-purple-50',
-        borderColor: 'border-purple-200'
+        label: 'EN CAMINO',
+        color: 'text-[#c4a600]',
+        bgColor: 'bg-white',
+        borderColor: 'border-[#c4a600]',
+        isButton: false
       },
       delivered: {
-        label: 'Entregado',
-        color: 'text-green-700',
-        bgColor: 'bg-green-100',
-        borderColor: 'border-green-300'
+        label: 'COMPRAR DE NUEVO',
+        color: 'text-white',
+        bgColor: 'bg-[#e73533]',
+        borderColor: 'border-[#e73533]',
+        isButton: true
       },
       cancelled: {
-        label: 'Cancelado',
-        color: 'text-red-600',
-        bgColor: 'bg-red-50',
-        borderColor: 'border-red-200'
+        label: 'CANCELADO',
+        color: 'text-neutral-600',
+        bgColor: 'bg-neutral-200',
+        borderColor: 'border-neutral-200',
+        isButton: false
       }
     };
 
