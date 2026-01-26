@@ -15,19 +15,19 @@ export const useAddressSubmit = (
   const [error, setError] = useState<string | null>(null);
 
 
-  const submitAddress = async (locationData: object, token: string | null = null) : Promise<{location: Location , address: Address, kitchen: Kitchen, delivery: Delivery}> => {
+  const submitAddress = async (locationData: object, token: string | null = null): Promise<{ location: Location, address: Address, kitchen: Kitchen, delivery: Delivery }> => {
 
 
     setIsSubmitting(true);
     setError(null);
 
-    try { 
-            
-            const { body: location } = await LocationService.addLocation({ token, location: locationData });
+    try {
 
-            const { delivery, kitchen } = await AddressService.createDelivery(location.id);
-      
-      const address : Address = {
+      const { body: location } = await LocationService.addLocation({ token, location: locationData });
+
+      const { delivery, kitchen } = await AddressService.createDelivery(location.id);
+
+      const address: Address = {
         ...location,
         fullAddress: location.address,
         deliveryPrice: delivery.price,
@@ -35,7 +35,7 @@ export const useAddressSubmit = (
         // kitchen: kitchen
       };
 
-      const data = { location, address, kitchen,  delivery };
+      const data = { location, address, kitchen, delivery };
 
       onSuccess(data);
       return data;

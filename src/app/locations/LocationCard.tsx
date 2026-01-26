@@ -1,62 +1,69 @@
 "use client";
 
 import { Location } from "@/types/locations";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { MapPin, Pencil, Trash2 } from "lucide-react";
+import { Pencil, Trash2 } from "lucide-react";
 
 interface LocationCardProps {
     location: Location;
     onEdit: (location: Location) => void;
     onDelete: (id: string) => void;
+    onSetFavorite: (id: string) => void;
 }
 
 export const LocationCard: React.FC<LocationCardProps> = ({
     location,
     onEdit,
     onDelete,
+    onSetFavorite,
 }) => {
     return (
-        <Card className="p-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-sm">
-            <div className="flex items-start gap-3">
-                <div className="mt-1">
-                    <MapPin className="w-5 h-5 text-primary-red" />
-                </div>
-                <div>
-                    <h3 className="font-semibold text-neutral-black-80 flex items-center gap-2">
-                        {location.name}
-                        <span className="text-xs px-2 py-0.5 rounded-full bg-neutral-black-10 text-neutral-black-60">
-                            {location.propertyType || "sin tipo"}
-                        </span>
-                    </h3>
-                    <p className="text-sm text-neutral-black-70 mt-1">{location.address}</p>
-                    {location.floor && (
-                        <p className="text-xs text-neutral-black-60 mt-1">
-                            Detalle: {location.floor}
-                        </p>
-                    )}
-                    {/* Si en el futuro Location incluye precio de domicilio u otros datos, se pueden mostrar aquí */}
-                </div>
+        <div className="flex items-start justify-between py-4 gap-4 border-b border-gray-200 last:border-b-0">
+            <div className="flex-1">
+                <h3 className="font-semibold text-neutral-800 text-base">
+                    {location.name}
+                </h3>
+                <p className="text-sm text-neutral-600 mt-1">
+                    {location.city}{location.state ? `, ${location.state}` : ''}
+                </p>
+                <p className="text-sm text-neutral-600">
+                    {location.address}
+                </p>
+                {location.floor && (
+                    <p className="text-sm text-neutral-600">
+                        {location.floor}
+                    </p>
+                )}
+
+                {location.favorite ? (
+                    <span className="inline-block mt-2 px-3 py-1 text-xs font-semibold text-white bg-[#c4d600] rounded-full">
+                        Principal
+                    </span>
+                ) : (
+                    <button
+                        onClick={() => onSetFavorite(location.id)}
+                        className="inline-block mt-2 px-3 py-1 text-xs font-medium text-neutral-500 bg-neutral-100 rounded-full hover:bg-neutral-200 transition-colors"
+                    >
+                        Marcar como principal
+                    </button>
+                )}
             </div>
 
-            <div className="flex items-center gap-2 self-end md:self-auto">
-                <Button
-                    variant="outline"
-                    size="icon"
+            <div className="flex items-center gap-3">
+                <button
                     onClick={() => onEdit(location)}
-                    className="w-9 h-9"
+                    className="p-2 text-neutral-400 hover:text-neutral-600 transition-colors"
+                    aria-label="Editar dirección"
                 >
-                    <Pencil className="w-4 h-4" />
-                </Button>
-                <Button
-                    variant="outline"
-                    size="icon"
+                    <Pencil className="w-5 h-5" />
+                </button>
+                <button
                     onClick={() => onDelete(location.id)}
-                    className="w-9 h-9 border-red-300 text-red-600 hover:bg-red-50"
+                    className="p-2 text-red-400 hover:text-red-600 transition-colors"
+                    aria-label="Eliminar dirección"
                 >
-                    <Trash2 className="w-4 h-4" />
-                </Button>
+                    <Trash2 className="w-5 h-5" />
+                </button>
             </div>
-        </Card>
+        </div>
     );
 };
