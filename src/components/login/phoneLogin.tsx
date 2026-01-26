@@ -131,82 +131,82 @@ export const PhoneLogin = ({ onClose, onSuccess, redirectTo = "/profile" }: Phon
     };
 
     return (
-        <div className="flex flex-col w-full gap-4">
-            {/* Mensaje de error */}
-            {error && <div className="text-red-600 text-sm">{error.message}</div>}
+      <div className="flex flex-col w-full gap-4">
+        {/* Mensaje de error */}
+        {error && <div className="text-red-600 text-sm">{error.message}</div>}
 
-            {/* Campo de teléfono */}
-            <div
-                className={`w-full pl-6 pr-0 py-0 flex h-12 items-center justify-center relative rounded-[30px] border-[1.5px] border-solid border-[#cccccc] ${step === "code" ? "opacity-60 pointer-events-none" : ""
+        {/* Campo de teléfono */}
+        <div
+          className={`w-full pl-6 pr-0 py-0 flex h-12 items-center justify-center relative rounded-[30px] border-[1.5px] border-solid border-[#cccccc] ${step === "code" ? "opacity-60 pointer-events-none" : ""
                     }`}
             >
-                <div className="text-sm relative w-fit font-bold text-neutrosblack-80 tracking-[0] leading-[18px] whitespace-nowrap">
-                    +57
-                </div>
-                <div className="bg-[#cccccc] ml-6 w-[1px] h-full rotate-180" />
-                <Input
-                    inputMode="tel"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                    placeholder="322  55  67  23"
-                    className="border-none shadow-none w-full"
-                    disabled={step === "code"}
+          <div className="text-sm relative w-fit font-bold text-neutrosblack-80 tracking-[0] leading-[18px] whitespace-nowrap">
+            +57
+          </div>
+          <div className="bg-[#cccccc] ml-6 w-[1px] h-full rotate-180" />
+          <Input
+            inputMode="tel"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+            placeholder="322  55  67  23"
+            className="border-none shadow-none w-full"
+            disabled={step === "code"}
                 />
-            </div>
+        </div>
 
-            {/* Campo de código */}
-            <Input
-                value={code}
-                onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))}
-                maxLength={6}
-                disabled={step !== "code"}
-                className="gap-4 px-5 py-0 self-stretch w-full flex h-12 items-center justify-center relative rounded-[30px] border-[1.5px] border-solid border-[#cccccc] tracking-[0.8em] space-x-3 bg-transparent text-neutral-black-50! font-normal! leading-[18px] text-center text-[20px]!"
-                placeholder="000000"
-                style={{ fontFamily: "Montserrat, Helvetica" }}
+        {/* Campo de código */}
+        <Input
+          value={code}
+          onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))}
+          maxLength={6}
+          disabled={step !== "code"}
+          className="gap-4 px-5 py-0 self-stretch w-full flex h-12 items-center justify-center relative rounded-[30px] border-[1.5px] border-solid border-[#cccccc] tracking-[0.8em] space-x-3 bg-transparent text-neutral-black-50! font-normal! leading-[18px] text-center text-[20px]!"
+          placeholder="000000"
+          style={{ fontFamily: "Montserrat, Helvetica" }}
             />
 
-            {/* Temporizador */}
-            <div className="flex justify-between px-5">
-                <p className="body-font">Código válido por</p>
-                <span className="body-font font-bold">
-                    {step === "code" ? formatMMSS(timeLeft) : "15:00"}
-                </span>
-            </div>
-
-            {/* Botones de acción */}
-            {step === "phone" && (
-                <Button
-                    onClick={handleSendCode}
-                    disabled={sending || !phone || phone.length < 10}
-                    className="text-white rounded-[30px] mb-2 flex items-center gap-2 text-[16px] w-full h-[48px]"
-                >
-                    {sending ? "Enviando..." : "ENVIAR CÓDIGO"}
-                </Button>
-            )}
-
-            {step === "code" && (
-                <>
-                    <Button
-                        onClick={handleVerifyCode}
-                        disabled={verifying || code.length < 6}
-                        className="text-white rounded-[30px] mb-2 flex items-center gap-2 text-[16px] w-full h-[48px]"
-                    >
-                        {verifying ? "Verificando..." : "VERIFICAR"}
-                    </Button>
-
-                    <button
-                        type="button"
-                        onClick={handleResend}
-                        disabled={sending || timeLeft > 14 * 60} // No permitir reenvío hasta después de 1 minuto
-                        className="text-sm underline self-center text-neutral-600"
-                    >
-                        ¿No recibiste el código? Reenviar
-                    </button>
-                </>
-            )}
-
-            {/* Contenedor para el recaptcha (hidden) */}
-            <div id="recaptcha-container" className="hidden" />
+        {/* Temporizador */}
+        <div className="flex justify-between px-5">
+          <p className="body-font">Código válido por</p>
+          <span className="body-font font-bold">
+            {step === "code" ? formatMMSS(timeLeft) : "15:00"}
+          </span>
         </div>
+
+        {/* Botones de acción */}
+        {step === "phone" && (
+        <Button
+          onClick={handleSendCode}
+          disabled={sending || !phone || phone.length < 10}
+          className="text-white rounded-[30px] mb-2 flex items-center gap-2 text-[16px] w-full h-[48px]"
+                >
+          {sending ? "Enviando..." : "ENVIAR CÓDIGO"}
+        </Button>
+            )}
+
+        {step === "code" && (
+        <>
+          <Button
+            onClick={handleVerifyCode}
+            disabled={verifying || code.length < 6}
+            className="text-white rounded-[30px] mb-2 flex items-center gap-2 text-[16px] w-full h-[48px]"
+                    >
+            {verifying ? "Verificando..." : "VERIFICAR"}
+          </Button>
+
+          <button
+            type="button"
+            onClick={handleResend}
+            disabled={sending || timeLeft > 14 * 60} // No permitir reenvío hasta después de 1 minuto
+            className="text-sm underline self-center text-neutral-600"
+                    >
+            ¿No recibiste el código? Reenviar
+          </button>
+        </>
+            )}
+
+        {/* Contenedor para el recaptcha (hidden) */}
+        <div id="recaptcha-container" className="hidden" />
+      </div>
     );
 };

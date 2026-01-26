@@ -28,28 +28,28 @@ export function CartModals() {
 
 
     return (
-        <>
-            {selectedCartItem && (
-                <CustomizationModalCart
-                    isOpen={isModalComplementsOpen}
-                    onClose={handleCloseComplementsModal}
-                    cartItem={selectedCartItem}
+      <>
+        {selectedCartItem && (
+        <CustomizationModalCart
+          isOpen={isModalComplementsOpen}
+          onClose={handleCloseComplementsModal}
+          cartItem={selectedCartItem}
                 />
             )}
 
-            <ConfirmDeleteModal
-                isOpen={isDeleteModalOpen}
-                onClose={handleCloseDeleteModal}
-                onConfirm={handleConfirmDelete}
-                productName={itemToDelete?.name ?? ""}
+        <ConfirmDeleteModal
+          isOpen={isDeleteModalOpen}
+          onClose={handleCloseDeleteModal}
+          onConfirm={handleConfirmDelete}
+          productName={itemToDelete?.name ?? ""}
             />
 
-            <StoreClosedModal
-                isOpen={isStoreClosedModalOpen}
-                onClose={handleCloseStoreModal}
-                message={storeStatus?.message ?? ""}
-                opensAt={storeStatus?.opensAt ?? undefined}
+        <StoreClosedModal
+          isOpen={isStoreClosedModalOpen}
+          onClose={handleCloseStoreModal}
+          message={storeStatus?.message ?? ""}
+          opensAt={storeStatus?.opensAt ?? undefined}
             />
-        </>
+      </>
     );
 }

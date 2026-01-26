@@ -299,124 +299,124 @@ export const PhoneVerificationModal: React.FC<PhoneVerificationModalProps> = ({
             : "Inicia sesión o regístrate con tu número de celular.";
 
     return (
-        <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent onOpenChange={onOpenChange} className="sm:max-w-md">
-                <DialogHeader className="px-6 pt-6">
-                    <DialogTitle className="text-center text-xl font-semibold">
-                        {title}
-                    </DialogTitle>
-                    <DialogDescription className="text-center text-neutral-black-60">
-                        {description}
-                    </DialogDescription>
-                </DialogHeader>
+      <Dialog open={open} onOpenChange={onOpenChange}>
+        <DialogContent onOpenChange={onOpenChange} className="sm:max-w-md">
+          <DialogHeader className="px-6 pt-6">
+            <DialogTitle className="text-center text-xl font-semibold">
+              {title}
+            </DialogTitle>
+            <DialogDescription className="text-center text-neutral-black-60">
+              {description}
+            </DialogDescription>
+          </DialogHeader>
 
-                <div className="flex flex-col w-full gap-4 px-6 pb-6">
-                    {/* Mensaje de error */}
-                    {(errorMsg || error) && (
-                        <div className="text-red-600 text-sm text-center bg-red-50 p-3 rounded-lg">
-                            {errorMsg || error?.message}
-                        </div>
+          <div className="flex flex-col w-full gap-4 px-6 pb-6">
+            {/* Mensaje de error */}
+            {(errorMsg || error) && (
+            <div className="text-red-600 text-sm text-center bg-red-50 p-3 rounded-lg">
+              {errorMsg || error?.message}
+            </div>
                     )}
 
-                    {/* Mensaje de éxito */}
-                    {successMsg && (
-                        <div className="text-green-600 text-sm text-center bg-green-50 p-3 rounded-lg">
-                            {successMsg}
-                        </div>
+            {/* Mensaje de éxito */}
+            {successMsg && (
+            <div className="text-green-600 text-sm text-center bg-green-50 p-3 rounded-lg">
+              {successMsg}
+            </div>
                     )}
 
-                    {/* Mostrar teléfono actual si está en modo cambio */}
-                    {mode === "change" && user?.phoneNumber && (
-                        <div className="bg-gray-50 p-3 rounded-lg">
-                            <p className="text-sm text-neutral-black-60">Teléfono actual:</p>
-                            <p className="font-medium">{user.phoneNumber}</p>
-                            <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={handleUnlinkPhone}
-                                disabled={unlinking}
-                                className="mt-2 text-red-600 border-red-200 hover:bg-red-50"
+            {/* Mostrar teléfono actual si está en modo cambio */}
+            {mode === "change" && user?.phoneNumber && (
+            <div className="bg-gray-50 p-3 rounded-lg">
+              <p className="text-sm text-neutral-black-60">Teléfono actual:</p>
+              <p className="font-medium">{user.phoneNumber}</p>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleUnlinkPhone}
+                disabled={unlinking}
+                className="mt-2 text-red-600 border-red-200 hover:bg-red-50"
                             >
-                                {unlinking ? "Desvinculando..." : "Desvincular teléfono"}
-                            </Button>
-                        </div>
+                {unlinking ? "Desvinculando..." : "Desvincular teléfono"}
+              </Button>
+            </div>
                     )}
 
-                    {/* Campo de teléfono */}
-                    <div
-                        className={`w-full pl-6 pr-0 py-0 flex h-12 items-center justify-center relative rounded-[30px] border-[1.5px] border-solid border-[#cccccc] ${
+            {/* Campo de teléfono */}
+            <div
+              className={`w-full pl-6 pr-0 py-0 flex h-12 items-center justify-center relative rounded-[30px] border-[1.5px] border-solid border-[#cccccc] ${
                             step === "code" ? "opacity-60 pointer-events-none" : ""
                         }`}
                     >
-                        <div className="text-sm relative w-fit font-bold text-neutrosblack-80 tracking-[0] leading-[18px] whitespace-nowrap">
-                            +57
-                        </div>
-                        <div className="bg-[#cccccc] ml-6 w-[1px] h-full rotate-180" />
-                        <Input
-                            inputMode="tel"
-                            value={phone}
-                            onChange={(e) => setPhone(e.target.value.replace(/\D/g, ""))}
-                            placeholder="000 000 00 00"
-                            className="border-none shadow-none w-full"
-                            disabled={step === "code"}
+              <div className="text-sm relative w-fit font-bold text-neutrosblack-80 tracking-[0] leading-[18px] whitespace-nowrap">
+                +57
+              </div>
+              <div className="bg-[#cccccc] ml-6 w-[1px] h-full rotate-180" />
+              <Input
+                inputMode="tel"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value.replace(/\D/g, ""))}
+                placeholder="000 000 00 00"
+                className="border-none shadow-none w-full"
+                disabled={step === "code"}
                         />
-                    </div>
+            </div>
 
-                    {/* Campo de código */}
-                    <Input
-                        value={code}
-                        onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))}
-                        maxLength={6}
-                        disabled={step !== "code"}
-                        className="gap-4 px-5 py-0 self-stretch w-full flex h-12 items-center justify-center relative rounded-[30px] border-[1.5px] border-solid border-[#cccccc] tracking-[0.5em] bg-transparent text-neutral-black-80 font-normal leading-[18px] text-center text-xl disabled:opacity-50"
-                        placeholder="0 0 0 0 0 0"
+            {/* Campo de código */}
+            <Input
+              value={code}
+              onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))}
+              maxLength={6}
+              disabled={step !== "code"}
+              className="gap-4 px-5 py-0 self-stretch w-full flex h-12 items-center justify-center relative rounded-[30px] border-[1.5px] border-solid border-[#cccccc] tracking-[0.5em] bg-transparent text-neutral-black-80 font-normal leading-[18px] text-center text-xl disabled:opacity-50"
+              placeholder="0 0 0 0 0 0"
                     />
 
-                    {/* Temporizador */}
-                    <div className="flex justify-between px-5">
-                        <p className="text-sm text-neutral-black-60">Código válido por</p>
-                        <span className="text-sm font-bold">
-                            {step === "code" ? formatMMSS(timeLeft) : "15:00"}
-                        </span>
-                    </div>
+            {/* Temporizador */}
+            <div className="flex justify-between px-5">
+              <p className="text-sm text-neutral-black-60">Código válido por</p>
+              <span className="text-sm font-bold">
+                {step === "code" ? formatMMSS(timeLeft) : "15:00"}
+              </span>
+            </div>
 
-                    {/* Botones de acción */}
-                    {step === "phone" && (
-                        <Button
-                            onClick={handleSendCode}
-                            disabled={sending || !phone || phone.length < 10}
-                            className="text-white rounded-[30px] mb-2 flex items-center gap-2 text-[16px] w-full h-[48px]"
+            {/* Botones de acción */}
+            {step === "phone" && (
+            <Button
+              onClick={handleSendCode}
+              disabled={sending || !phone || phone.length < 10}
+              className="text-white rounded-[30px] mb-2 flex items-center gap-2 text-[16px] w-full h-[48px]"
                         >
-                            {sending ? "Enviando..." : "ENVIAR CÓDIGO"}
-                        </Button>
+              {sending ? "Enviando..." : "ENVIAR CÓDIGO"}
+            </Button>
                     )}
 
-                    {step === "code" && (
-                        <>
-                            <Button
-                                onClick={handleVerifyAndLink}
-                                disabled={verifying || code.length < 6 || timeLeft === 0}
-                                className="text-white rounded-[30px] mb-2 flex items-center gap-2 text-[16px] w-full h-[48px]"
+            {step === "code" && (
+            <>
+              <Button
+                onClick={handleVerifyAndLink}
+                disabled={verifying || code.length < 6 || timeLeft === 0}
+                className="text-white rounded-[30px] mb-2 flex items-center gap-2 text-[16px] w-full h-[48px]"
                             >
-                                {verifying ? "Verificando..." : "VERIFICAR"}
-                            </Button>
+                {verifying ? "Verificando..." : "VERIFICAR"}
+              </Button>
 
-                            <button
-                                type="button"
-                                onClick={handleResend}
-                                disabled={sending}
-                                className="text-sm underline self-center text-neutral-600 hover:text-neutral-800"
+              <button
+                type="button"
+                onClick={handleResend}
+                disabled={sending}
+                className="text-sm underline self-center text-neutral-600 hover:text-neutral-800"
                             >
-                                ¿No recibiste el código? Reenviar
-                            </button>
-                        </>
+                ¿No recibiste el código? Reenviar
+              </button>
+            </>
                     )}
 
-                    {/* Contenedor para el recaptcha (hidden) */}
-                    <div id={recaptchaContainerId} />
-                </div>
-            </DialogContent>
-        </Dialog>
+            {/* Contenedor para el recaptcha (hidden) */}
+            <div id={recaptchaContainerId} />
+          </div>
+        </DialogContent>
+      </Dialog>
     );
 };
 

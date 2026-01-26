@@ -118,13 +118,13 @@ export const ModalAddress = ({
 
 
     return (
-        <Dialog open={isOpen} onOpenChange={onClose}>
-            <DialogContent
-                footer={
-                    <ActionsButtons onClose={onClose} isSubmitting={isSubmitting} isFormValid={isFormValid} handleConfirm={handleConfirm} />
+      <Dialog open={isOpen} onOpenChange={onClose}>
+        <DialogContent
+          footer={
+            <ActionsButtons onClose={onClose} isSubmitting={isSubmitting} isFormValid={isFormValid} handleConfirm={handleConfirm} />
                 }
-                aria-describedby="seleccionar direccion"
-                onInteractOutside={(event) => {
+          aria-describedby="seleccionar direccion"
+          onInteractOutside={(event) => {
                     if (
                         event.target instanceof HTMLElement &&
                         event.target.closest(".pac-container")
@@ -132,38 +132,38 @@ export const ModalAddress = ({
                         event.preventDefault();
                     }
                 }}
-                className="flex-col flex p-0 bg-background h-auto rounded-2xl lg:w-[900px] lg:h-[680px] z-600"
+          className="flex-col flex p-0 bg-background h-auto rounded-2xl lg:w-[900px] lg:h-[680px] z-600"
             >
-                <DialogHeader className="lg:px-[32px]!">
-                    <DialogTitle className="mb-4 pt-[24px] pl-[20px] lg:pt-[32px] font-bold text-[18px]! md:text-[20px]! leading-[20px]! md:leading-[22px]! text-neutral-black-80 text-center lg:text-left lg:pl-0!">
-                        NUEVA DIRECCIÓN
-                    </DialogTitle>
-                </DialogHeader>
+          <DialogHeader className="lg:px-[32px]!">
+            <DialogTitle className="mb-4 pt-[24px] pl-[20px] lg:pt-[32px] font-bold text-[18px]! md:text-[20px]! leading-[20px]! md:leading-[22px]! text-neutral-black-80 text-center lg:text-left lg:pl-0!">
+              NUEVA DIRECCIÓN
+            </DialogTitle>
+          </DialogHeader>
 
-                {error && (
-                    <div className="mx-[20px] lg:mx-[32px] mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
-                        {error}
-                    </div>
+          {error && (
+            <div className="mx-[20px] lg:mx-[32px] mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+              {error}
+            </div>
                 )}
 
-                {isSubmitting && (
-                    <div className="absolute inset-0 bg-black/50 flex items-center justify-center z-50 rounded-2xl">
-                        <Loader2 className="animate-spin text-primary-red" size={70} />
-                    </div>
+          {isSubmitting && (
+            <div className="absolute inset-0 bg-black/50 flex items-center justify-center z-50 rounded-2xl">
+              <Loader2 className="animate-spin text-primary-red" size={70} />
+            </div>
                 )}
 
 
-                <CreateAddressInputSection
-                    isLoaded={isLoaded}
-                    onLoad={onLoad}
-                    onPlaceChanged={onPlaceChanged}
-                    formState={formState}
-                    updateField={updateField}
+          <CreateAddressInputSection
+            isLoaded={isLoaded}
+            onLoad={onLoad}
+            onPlaceChanged={onPlaceChanged}
+            formState={formState}
+            updateField={updateField}
                 />
 
 
 
-            </DialogContent>
-        </Dialog>
+        </DialogContent>
+      </Dialog>
     );
 };

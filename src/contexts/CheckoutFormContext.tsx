@@ -96,14 +96,14 @@ export const CheckoutFormProvider = ({ children }: { children: React.ReactNode }
 
 
     return (
-        <CheckoutFormContext.Provider value={{
+      <CheckoutFormContext.Provider value={{
             formData, setFormData,
             addressClient, setAddressClient,
             listLocationsClient, setListLocationsClient,
             location, setLocation
         }}>
-            {children}
-        </CheckoutFormContext.Provider>
+        {children}
+      </CheckoutFormContext.Provider>
     );
 };
 

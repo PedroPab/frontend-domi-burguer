@@ -15,11 +15,11 @@ const ConfettiComponent: React.FC<ConfettiComponentProps> = ({
 
 
     return (
-        <Confetti
-            width={width}
-            height={height}
-            recycle={false}
-            gravity={0.1}
+      <Confetti
+        width={width}
+        height={height}
+        recycle={false}
+        gravity={0.1}
         // numberOfPieces={numberOfPieces}
         // style={{
         //     position: 'fixed',

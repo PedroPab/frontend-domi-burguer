@@ -19,7 +19,7 @@ export const useOrders = () => {
     try {
       setLoading(true);
       setError(null);
-      
+
       const token = await user.getIdToken();
       const response = await OrderService.getUserOrders(token);
       setOrders(response.body || []);
@@ -38,14 +38,14 @@ export const useOrders = () => {
     try {
       const token = await user.getIdToken();
       const response = await OrderService.cancelOrder(orderId, token);
-      
+
       // Update the order in the local state
-      setOrders(prev => 
-        prev.map(order => 
+      setOrders(prev =>
+        prev.map(order =>
           order.id === orderId ? response.body : order
         )
       );
-      
+
       return response.body;
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Error al cancelar el pedido';

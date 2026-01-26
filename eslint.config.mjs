@@ -20,6 +20,12 @@ const eslintConfig = [
       "next-env.d.ts",
     ],
   },
+  {
+    rules: {
+      "react/jsx-indent": ["error", 2],
+      "react/jsx-indent-props": ["error", 2],
+    },
+  },
 ];
 
 export default eslintConfig;

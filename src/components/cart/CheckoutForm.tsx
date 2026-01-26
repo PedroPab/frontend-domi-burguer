@@ -17,23 +17,23 @@ export function CheckoutForm() {
     console.log("Rendering CheckoutForm with formData:", formData);
 
     return (
-        <div className="flex flex-col gap-14 pb-6 w-full lg:mt-4 max-w-[500px]">
-            <div className="flex flex-col gap-6 w-full">
-                <FormHeader error={error} />
+      <div className="flex flex-col gap-14 pb-6 w-full lg:mt-4 max-w-[500px]">
+        <div className="flex flex-col gap-6 w-full">
+          <FormHeader error={error} />
 
-                <UserInfoSection
-                    formData={formData}
-                    handleChange={handleChange}
+          <UserInfoSection
+            formData={formData}
+            handleChange={handleChange}
                 />
 
-                <AddressSection />
+          <AddressSection />
 
-                <PaymentMethodsSection
-                    paymentMethods={paymentMethods}
-                    selectedMethod={formData.paymentMethod}
-                    onChange={handleChange}
+          <PaymentMethodsSection
+            paymentMethods={paymentMethods}
+            selectedMethod={formData.paymentMethod}
+            onChange={handleChange}
                 />
-            </div>
         </div>
+      </div>
     );
 }

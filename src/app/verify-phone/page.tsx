@@ -41,32 +41,32 @@ function VerifyPhoneContent() {
 
     if (loading) {
         return (
-            <div className="min-h-screen flex items-center justify-center bg-gray-50">
-                <Loader2 className="animate-spin text-primary-red" size={70} />
-            </div>
+          <div className="min-h-screen flex items-center justify-center bg-gray-50">
+            <Loader2 className="animate-spin text-primary-red" size={70} />
+          </div>
         );
     }
 
     return (
-        <div className="min-h-screen bg-gray-50">
-            <PhoneVerificationModal
-                open={modalOpen}
-                onOpenChange={handleOpenChange}
-                mode="link"
-                onSuccess={handleSuccess}
+      <div className="min-h-screen bg-gray-50">
+        <PhoneVerificationModal
+          open={modalOpen}
+          onOpenChange={handleOpenChange}
+          mode="link"
+          onSuccess={handleSuccess}
             />
-        </div>
+      </div>
     );
 }
 
 export default function VerifyPhonePage() {
     return (
-        <Suspense fallback={
-            <div className="min-h-screen flex items-center justify-center bg-gray-50">
-                <Loader2 className="animate-spin text-primary-red" size={70} />
-            </div>
+      <Suspense fallback={
+        <div className="min-h-screen flex items-center justify-center bg-gray-50">
+          <Loader2 className="animate-spin text-primary-red" size={70} />
+        </div>
         }>
-            <VerifyPhoneContent />
-        </Suspense>
+        <VerifyPhoneContent />
+      </Suspense>
     );
 }
