@@ -1,48 +1,38 @@
 
 "use client";
 
-import React from "react";
-import { CalendarIcon, PencilIcon, Plus } from "lucide-react";
+import React, { useEffect } from "react";
+import { CalendarIcon, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { SpikesIcon } from "@/components/ui/icons";
-import { QuantitySelector } from "@/components/ui/quantitySelector";
 import Image from "next/image";
 import { Separator } from "@/components/ui/separator";
-import { CartItem } from "@/store/cartStore";
-import { Complements } from "@/components/ui/complements";
+import { CartItem, useCartStore } from "@/store/cartStore";
 import Tooltip from "@/components/ui/tooltip";
 import Link from "next/link";
+import { useCartActions } from "@/hooks/cart/useCartActions";
+import { useCartSubmit } from "@/hooks/cart/useCartSubmit";
+import { useComplementsModal } from "@/hooks/cart/useComplementsModal";
+import { CartItemCard } from "@/components/cart/CartItemCard";
 
-interface CartSummaryProps {
-    items: CartItem[];
-    formatCurrency: (value: number) => string;
-    isMounted: boolean;
-    getSubtotal: () => number;
-    getDeliveryFee: () => number;
-    getTotal: () => number;
-    handleEditComplements: (item: CartItem) => void;
-    removeComplement: (itemId: string, complementId: number) => void;
-    handleDecrease: (id: string, quantity: number) => void;
-    handleIncrease: (id: string, quantity: number) => void;
-    addItem: (item: CartItem) => void;
-    isSubmitting: boolean;
-}
 
-export const CartSummary: React.FC<CartSummaryProps> = ({
-    items,
-    formatCurrency,
-    isMounted,
-    getSubtotal,
-    getDeliveryFee,
-    getTotal,
-    handleEditComplements,
-    removeComplement,
-    handleDecrease,
-    handleIncrease,
-    addItem,
-    isSubmitting,
+export const CartSummary = ({
 }) => {
+    // Utils
+    const formatCurrency = (value: number): string => {
+        if (isNaN(value)) return "0";
+        return value.toLocaleString("es-CO");
+    };
+
+    // Context & Store
+    const { getSubtotal, getTotal, getDeliveryFee, removeComplement, addItem } = useCartStore();
+    const { items, handleDecrease, handleIncrease, } = useCartActions();
+
+    const { handleEditComplements } = useComplementsModal();
+    const { isSubmitting } = useCartSubmit();
+
+
     return (
         <div className="flex flex-col gap-8 max-w-[500px] justify-center w-full h-full">
             <Card className="flex-col shadow-none bg-transparent! rounded-2xl flex h-full w-full border-0">
@@ -75,78 +65,14 @@ export const CartSummary: React.FC<CartSummaryProps> = ({
                         <div className="flex flex-col items-start gap-8 w-full">
                             <div className="flex flex-col items-start gap-4 w-full">
                                 {items.map((item) => (
-                                    <Card
+                                    <CartItemCard
                                         key={item.id}
-                                        className="flex w-full xl:h-28 items-start gap-4 pl-2 pr-3 xl:pr-4 py-2 bg-[#FFFFFF] rounded-[12px] overflow-hidden border-0"
-                                    >
-                                        <CardContent className="p-0 flex w-full gap-4 items-center justify-start">
-                                            <div className="w-24 h-24 min-w-24 bg-accent-yellow-40 rounded-[7.66px] relative">
-                                                <Image
-                                                    src={item.image1}
-                                                    alt="Burger"
-                                                    width={67}
-                                                    height={105}
-                                                    className={
-                                                        item.name.toLowerCase().includes("salsa")
-                                                            ? "absolute top-[5px] left-[3px] w-[118px] h-[85px] object-cover overflow-visible"
-                                                            : `object-cover absolute ${item.image2
-                                                                ? "left-[5px] top-[-5px]"
-                                                                : "top-[-5px] left-[15px]"
-                                                            }`
-                                                    }
-                                                />
-
-                                                {item.image2 && (
-                                                    <Image
-                                                        src={item.image2}
-                                                        alt="Domiburger papitas"
-                                                        width={57}
-                                                        height={84}
-                                                        className="object-cover absolute top-5 left-[41px]"
-                                                    />
-                                                )}
-                                            </div>
-
-                                            <div className="justify-center w-full max-w-[316px] gap-2 xl:gap-3 pt-1 pb-0 px-0 flex-1 grow flex flex-col items-start self-stretch">
-                                                <div className="flex gap-3 self-stretch w-full rounded-[80.62px] flex-col items-start">
-                                                    <div className="gap-3 self-stretch w-full flex items-center">
-                                                        <div className="flex-1 font-h4">{item.name}</div>
-                                                        {item.name.includes("SALSA DE AJO") ? null : (
-                                                            <PencilIcon
-                                                                className="w-4 h-4 cursor-pointer hover:text-neutral-black-60 transition-colors"
-                                                                onClick={() => handleEditComplements(item)}
-                                                            />
-                                                        )}
-                                                    </div>
-                                                </div>
-
-                                                <Complements
-                                                    complements={item.complements}
-                                                    onRemove={(complementId) =>
-                                                        removeComplement(item.id, complementId)
-                                                    }
-                                                />
-
-                                                <div className="flex h-8 items-center justify-between w-full rounded-[50px]">
-                                                    <h4 className="">
-                                                        ${item.price.toLocaleString("es-CO")} X{" "}
-                                                        {item.quantity}
-                                                    </h4>
-
-                                                    <QuantitySelector
-                                                        size="sm"
-                                                        value={item.quantity}
-                                                        onDecrease={() =>
-                                                            handleDecrease(item.id, item.quantity)
-                                                        }
-                                                        onIncrease={() =>
-                                                            handleIncrease(item.id, item.quantity)
-                                                        }
-                                                    />
-                                                </div>
-                                            </div>
-                                        </CardContent>
-                                    </Card>
+                                        item={item}
+                                        onEditComplements={handleEditComplements}
+                                        onRemoveComplement={removeComplement}
+                                        onDecrease={handleDecrease}
+                                        onIncrease={handleIncrease}
+                                    />
                                 ))}
 
                                 {items.length === 0 && (
@@ -235,7 +161,7 @@ export const CartSummary: React.FC<CartSummaryProps> = ({
                                         <p className="flex-1 mt-[-0.93px] body-font">Subtotal</p>
 
                                         <p className="w-fit mt-[-0.93px] body-font">
-                                            ${isMounted ? formatCurrency(getSubtotal()) : "0"}
+                                            ${formatCurrency(getSubtotal())}
                                         </p>
                                     </div>
 
@@ -245,7 +171,7 @@ export const CartSummary: React.FC<CartSummaryProps> = ({
                                         </div>
 
                                         <p className="w-fit body-font font-bold">
-                                            ${isMounted ? formatCurrency(getDeliveryFee()) : "0"}
+                                            $t{formatCurrency(getDeliveryFee())}
                                         </p>
                                     </div>
 
@@ -255,7 +181,7 @@ export const CartSummary: React.FC<CartSummaryProps> = ({
                                         <p className="flex-1 body-font font-bold">Total</p>
 
                                         <h2 className="w-fit mt-[-0.93px]">
-                                            ${isMounted ? formatCurrency(getTotal()) : "0"}
+                                            ${formatCurrency(getTotal())}
                                         </h2>
                                     </div>
                                 </div>

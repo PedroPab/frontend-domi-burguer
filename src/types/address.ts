@@ -1,3 +1,5 @@
+import { Kitchen } from "./kitchens";
+
 export type PropertyType = 'house' | 'building' | 'urbanization' | 'office';
 
 export interface Coordinates {
@@ -15,9 +17,9 @@ export interface Address {
   country: string;
   coordinates: Coordinates;
   comment?: string;
-  propertyType: PropertyType | '';
+  propertyType: PropertyType;
   deliveryPrice?: number;
-  kitchen?: string;
+  kitchen?: Kitchen ;
   fullAddress: string;
 }
 
@@ -32,9 +34,9 @@ export const createEmptyAddress = (): Address => ({
     lng: 0,
     lat: 0,
   },
-  propertyType: "",
+  propertyType: "house",
   deliveryPrice: 0,
   fullAddress: "",
-  kitchen: "",
+  kitchen: undefined,
   distance: 0,
 });

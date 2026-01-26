@@ -73,6 +73,7 @@ export const KitchenModal = ({ isOpen, onClose }: KitchenModalProps) => {
           const locationResponse = await LocationService.getLocationId(kitchen.locationId);
           // ponemos las coordenadas
           if (locationResponse && locationResponse.body) {
+            console.log('locationResponse.body', locationResponse.body);
             kitchen.location = locationResponse.body;
           }
           listKitchens.push(kitchen);
