@@ -15,5 +15,14 @@ export interface Kitchen {
   openingHours: string;
   createdAt: FirebaseTimestamp;
   updatedAt: FirebaseTimestamp;
-  location: Location;
+  // location?: Location;
+  coordinates: {
+    lat: number | null;
+    lng: number | null;
+  };
+  address: string;
+  dailyOrders: number;
+  location?: Location;
 }
+
+// id, name, locationId, address, coordinates, status, dailyOrders, phone, openingHours, createdAt, updatedAt

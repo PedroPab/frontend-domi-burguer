@@ -2,6 +2,7 @@
 
 import { UserIcon } from "lucide-react";
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
   LogoDesktop,
@@ -11,14 +12,17 @@ import {
 } from "./ui/icons";
 import Link from "next/link";
 import { LogInModal } from "./login/logInModal";
-import { KitchenModal } from "./kitchen/kitchenModal";
 import { useCartStore } from "@/store/cartStore";
 import { WorkingOnModal } from "./ui/workingOnModal";
+import { useAuth } from "@/contexts/AuthContext";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export const Navbar = () => {
   const [isAcountModalOpen, setIsAcountModalOpen] = useState(false);
   const [isKitchenModalOpen, setIsKitchenModalOpen] = useState(false);
   const { items } = useCartStore();
+  const { user } = useAuth();
+  const router = useRouter();
   const itemsCount = items.map((item) => item.quantity).reduce((a, b) => a + b, 0);
   return (
     <>
@@ -29,14 +33,27 @@ export const Navbar = () => {
         <div className="max-w-[828px] md:h-[80px] h-[62px] gap-2 py-0 mt-[20px] mb-[10px] rounded-[60px] border border-solid border-[#e6e6e6] flex items-center justify-between w-full mx-auto px-4! sm:px-6 lg:px-8 bg-[#ffffff]">
           <div className="flex w-[300px] h-14 px-0 py-3 rounded-[50px] overflow-hidden items-center">
             <Button
-              onClick={() => setIsAcountModalOpen(true)}
+              onClick={() => {
+                if (user) {
+                  router.push("/profile");
+                } else {
+                  setIsAcountModalOpen(true);
+                }
+              }}
               variant="ghost"
               className={`inline-flex h-10 lg:h-12 justify-center px-[10px] lg:px-5 lg:py-2  mt-[-8.00px] mb-[-8.00px] rounded-[30px] items-center bg-transparent outline-none border-none focus:outline-0! focus:ring-0! focus:bg-accent-yellow-20 ${isAcountModalOpen ? "bg-accent-yellow-20" : ""
                 }`}
             >
-              <UserIcon className="w-5 h-5 md:w-6 md:h-6" />
+              {user && user.photoURL ? (
+                <Avatar className="w-7 h-7 md:w-8 md:h-8 mr-1">
+                  <AvatarImage src={user.photoURL} alt={user.displayName || "Usuario"} />
+                  <AvatarFallback>{user.displayName?.charAt(0) || "U"}</AvatarFallback>
+                </Avatar>
+              ) : (
+                <UserIcon className="w-5 h-5 md:w-6 md:h-6" />
+              )}
               <span className="text-neutrosblack-80 font-label hidden md:block">
-                CUENTA
+                {user ? user.displayName?.split(" ")[0] || "CUENTA" : "CUENTA"}
               </span>
             </Button>
             <Button
@@ -105,14 +122,14 @@ export const Navbar = () => {
         </div>
       </nav>
       <div>
-        {/* <LogInModal
-          isOpen={isAcountModalOpen}
-          onClose={() => setIsAcountModalOpen(false)}
-        /> */}
-        <WorkingOnModal
+        <LogInModal
           isOpen={isAcountModalOpen}
           onClose={() => setIsAcountModalOpen(false)}
         />
+        {/* <WorkingOnModal
+          isOpen={isAcountModalOpen}
+          onClose={() => setIsAcountModalOpen(false)}
+        /> */}
       </div>
       <div>
         {/* <KitchenModal

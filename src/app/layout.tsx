@@ -4,6 +4,7 @@ import { Footer } from "@/components/footer";
 import { Navbar } from "@/components/navbar";
 import { HeroUIProvider } from "@heroui/system";
 import { ToastProvider } from "@heroui/toast";
+import { AuthProvider } from "@/contexts/AuthContext";
 import { Metadata } from "next";
 import { metadataConfig } from "./metadata";
 
@@ -29,18 +30,20 @@ export default function RootLayout({
       <body
         className={montserrat.variable}
       >
-        <Navbar />
-        <HeroUIProvider>
-          <ToastProvider
-            placement="top-right"
-            toastOffset={100}
-            maxVisibleToasts={10}
-          />
-          <div className="container mx-auto overflow-x-hidden px-5 sm:px-10 md:px-10 lg:px-10 xl:px-16  max-w-[1440px] h-auto">
-            {children}
-          </div>
-        </HeroUIProvider>
-        <Footer />
+        <AuthProvider>
+          <Navbar />
+          <HeroUIProvider>
+            <ToastProvider
+              placement="top-right"
+              toastOffset={100}
+              maxVisibleToasts={10}
+            />
+            <div className="container mx-auto overflow-x-hidden px-5 sm:px-10 md:px-10 lg:px-10 xl:px-16  max-w-[1440px] h-auto">
+              {children}
+            </div>
+          </HeroUIProvider>
+          <Footer />
+        </AuthProvider>
       </body>
     </html>
   );

@@ -1,4 +1,6 @@
-import { Address, Coordinates, PropertyType } from '@/types/address';
+import { Address, Coordinates } from '@/types/address';
+import { Kitchen } from '@/types/kitchens';
+import { Delivery } from '@/types/orders';
 
 interface AddressFormData {
   address: string;
@@ -38,7 +40,7 @@ export class AddressService {
     }
   }
   
-  static async createDelivery(addressId: string) {
+  static async createDelivery(addressId: string): Promise<{ delivery: Delivery; kitchen: Kitchen }> {
     try {
       const response = await fetch(`${this.API_URL}api/v2/kitchens/selectKitchen/location?locationId=${addressId}`, {
         method: 'GET',
@@ -51,7 +53,11 @@ export class AddressService {
         throw new Error(`Error al crear el precio del domicilio: ${response.statusText}`);
       }
 
-      return await response.json();
+      const data =  await response.json();
+      const delivery =  data.body.delivery as Delivery
+      const kitchen = data.body.kitchen as Kitchen
+      console.log('Respuesta de createDelivery:', {delivery, kitchen});
+      return {  delivery, kitchen  };
     } catch (error) {
       console.error('Error en createDeliveryPrice:', error);
       throw error;

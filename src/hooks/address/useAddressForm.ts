@@ -3,6 +3,7 @@ import { useState } from 'react';
 export type PropertyType = 'house' | 'building' | 'urbanization' | 'office';
 
 export interface AddressFormState {
+  name: string;
   address: string;
   floor: string;
   comment: string;
@@ -13,6 +14,7 @@ export interface AddressFormState {
 
 export const useAddressForm = (initialState?: Partial<AddressFormState>) => {
   const [formState, setFormState] = useState<AddressFormState>({
+    name: initialState?.name || '',
     address: initialState?.address || '',
     floor: initialState?.floor || '',
     comment: initialState?.comment || '',
@@ -30,12 +32,13 @@ export const useAddressForm = (initialState?: Partial<AddressFormState>) => {
 
   const resetForm = () => {
     setFormState({
+      name: '',
       address: '',
       floor: '',
       comment: '',
       addressName: '',
       coordinates: null,
-      selectedType: '',
+      selectedType: 'house',
     });
   };
 

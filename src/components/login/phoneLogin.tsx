@@ -1,0 +1,212 @@
+"use client";
+
+import React, { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { Input } from "../ui/input";
+import { ConfirmationResult } from "firebase/auth";
+import { useAuth } from "@/contexts/AuthContext";
+
+interface PhoneLoginProps {
+    onClose: () => void;
+    onSuccess?: (phoneNumber: string) => void;
+    redirectTo?: string;
+}
+
+/**
+ * Componente de inicio de sesión con teléfono
+ */
+export const PhoneLogin = ({ onClose, onSuccess, redirectTo = "/profile" }: PhoneLoginProps) => {
+    const router = useRouter();
+    const { phoneSignIn, error, clearError } = useAuth();
+
+    // Estado del formulario
+    const [phone, setPhone] = useState("");
+    const [code, setCode] = useState("");
+    const [step, setStep] = useState<"phone" | "code">("phone");
+
+    // Estado de procesamiento
+    const [sending, setSending] = useState(false);
+    const [verifying, setVerifying] = useState(false);
+
+    // Temporizador
+    const [timeLeft, setTimeLeft] = useState(0);
+    const timerRef = useRef<NodeJS.Timeout | null>(null);
+
+    // Mantener la referencia al resultado de confirmación
+    const [confirmationResult, setConfirmationResult] = useState<ConfirmationResult | null>(null);
+
+    // Efecto para el temporizador
+    useEffect(() => {
+        if (step === "code") {
+            setTimeLeft(15 * 60); // 15 minutos en segundos
+            if (timerRef.current) clearInterval(timerRef.current);
+
+            timerRef.current = setInterval(() => {
+                setTimeLeft((s) => {
+                    if (s <= 1) {
+                        if (timerRef.current) clearInterval(timerRef.current);
+                        return 0;
+                    }
+                    return s - 1;
+                });
+            }, 1000);
+        }
+
+        return () => {
+            if (timerRef.current) clearInterval(timerRef.current);
+        };
+    }, [step]);
+
+    // Formatear tiempo como MM:SS
+    const formatMMSS = (total: number) => {
+        const m = Math.floor(total / 60).toString().padStart(2, "0");
+        const s = (total % 60).toString().padStart(2, "0");
+        return `${m}:${s}`;
+    };
+
+    // Normalizar número de teléfono
+    const normalizePhone = (phone: string): string => {
+        const cleaned = phone.replace(/\D/g, "");
+        return "+57" + cleaned;
+    };
+
+    // Enviar código de verificación
+    const handleSendCode = async () => {
+        try {
+            clearError();
+            setSending(true);
+
+            const normalized = normalizePhone(phone);
+            if (normalized.length < 12) {
+                throw new Error("Ingresa un número de teléfono válido.");
+            }
+
+            const result = await phoneSignIn.sendVerificationCode(
+                normalized,
+                "recaptcha-container"
+            );
+
+            setConfirmationResult(result);
+            setStep("code");
+        } catch (error) {
+            console.error("Error al enviar código:", error);
+        } finally {
+            setSending(false);
+        }
+    };
+
+    // Verificar código
+    const handleVerifyCode = async () => {
+        if (!confirmationResult) return;
+
+        try {
+            clearError();
+            setVerifying(true);
+
+            if (code.length !== 6) {
+                throw new Error("El código debe tener 6 dígitos.");
+            }
+
+            await phoneSignIn.verifyCode(confirmationResult, code);
+
+            // Si hay un callback de éxito, llamarlo
+            if (onSuccess) onSuccess(normalizePhone(phone));
+
+            // Cerrar el modal y redirigir
+            onClose();
+            if (redirectTo) router.push(redirectTo);
+        } catch (error) {
+            console.error("Error al verificar código:", error);
+        } finally {
+            setVerifying(false);
+        }
+    };
+
+    // Reenviar código
+    const handleResend = async () => {
+        setCode("");
+        setStep("phone");
+        await handleSendCode();
+    };
+
+    return (
+        <div className="flex flex-col w-full gap-4">
+            {/* Mensaje de error */}
+            {error && <div className="text-red-600 text-sm">{error.message}</div>}
+
+            {/* Campo de teléfono */}
+            <div
+                className={`w-full pl-6 pr-0 py-0 flex h-12 items-center justify-center relative rounded-[30px] border-[1.5px] border-solid border-[#cccccc] ${step === "code" ? "opacity-60 pointer-events-none" : ""
+                    }`}
+            >
+                <div className="text-sm relative w-fit font-bold text-neutrosblack-80 tracking-[0] leading-[18px] whitespace-nowrap">
+                    +57
+                </div>
+                <div className="bg-[#cccccc] ml-6 w-[1px] h-full rotate-180" />
+                <Input
+                    inputMode="tel"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    placeholder="322  55  67  23"
+                    className="border-none shadow-none w-full"
+                    disabled={step === "code"}
+                />
+            </div>
+
+            {/* Campo de código */}
+            <Input
+                value={code}
+                onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))}
+                maxLength={6}
+                disabled={step !== "code"}
+                className="gap-4 px-5 py-0 self-stretch w-full flex h-12 items-center justify-center relative rounded-[30px] border-[1.5px] border-solid border-[#cccccc] tracking-[0.8em] space-x-3 bg-transparent text-neutral-black-50! font-normal! leading-[18px] text-center text-[20px]!"
+                placeholder="000000"
+                style={{ fontFamily: "Montserrat, Helvetica" }}
+            />
+
+            {/* Temporizador */}
+            <div className="flex justify-between px-5">
+                <p className="body-font">Código válido por</p>
+                <span className="body-font font-bold">
+                    {step === "code" ? formatMMSS(timeLeft) : "15:00"}
+                </span>
+            </div>
+
+            {/* Botones de acción */}
+            {step === "phone" && (
+                <Button
+                    onClick={handleSendCode}
+                    disabled={sending || !phone || phone.length < 10}
+                    className="text-white rounded-[30px] mb-2 flex items-center gap-2 text-[16px] w-full h-[48px]"
+                >
+                    {sending ? "Enviando..." : "ENVIAR CÓDIGO"}
+                </Button>
+            )}
+
+            {step === "code" && (
+                <>
+                    <Button
+                        onClick={handleVerifyCode}
+                        disabled={verifying || code.length < 6}
+                        className="text-white rounded-[30px] mb-2 flex items-center gap-2 text-[16px] w-full h-[48px]"
+                    >
+                        {verifying ? "Verificando..." : "VERIFICAR"}
+                    </Button>
+
+                    <button
+                        type="button"
+                        onClick={handleResend}
+                        disabled={sending || timeLeft > 14 * 60} // No permitir reenvío hasta después de 1 minuto
+                        className="text-sm underline self-center text-neutral-600"
+                    >
+                        ¿No recibiste el código? Reenviar
+                    </button>
+                </>
+            )}
+
+            {/* Contenedor para el recaptcha (hidden) */}
+            <div id="recaptcha-container" className="hidden" />
+        </div>
+    );
+};

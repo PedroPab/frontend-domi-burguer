@@ -1,62 +1,53 @@
 import { useState } from 'react';
 import { AddressService } from '@/services/addressService';
-import { AddressFormState } from './useAddressForm';
+// import { AddressFormState } from './useAddressForm';
 import { Address } from '@/types/address';
+import { LocationService } from '@/services/locationService';
+import { Kitchen } from '@/types/kitchens';
+import { Delivery } from '@/types/orders';
+import { Location } from '@/types/locations';
 
 export const useAddressSubmit = (
-  onSuccess?: (address: Address) => void,
-  onError?: (error: Error) => void
+  onSuccess: (data: { location: Location; address: Address; kitchen: Kitchen; delivery: Delivery }) => void,
+  onError: (error: Error) => void
 ) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const submitAddress = async (formState: AddressFormState) => {
-    if (!formState.coordinates) {
-      setError('Las coordenadas son requeridas');
-      return;
-    }
+
+  const submitAddress = async (locationData: object, token: string | null = null): Promise<{ location: Location, address: Address, kitchen: Kitchen, delivery: Delivery }> => {
+
 
     setIsSubmitting(true);
     setError(null);
 
     try {
-      const { street, city, country } = AddressService.parseAddress(formState.address);
 
-      const formData = {
-        address: formState.address,
-        floor: formState.floor,
-        comment: formState.comment || 'sin comentarios',
-        city,
-        country,
-        propertyType: formState.selectedType,
-        coordinates: formState.coordinates,
+      const { body: location } = await LocationService.addLocation({ token, location: locationData });
+
+      const { delivery, kitchen } = await AddressService.createDelivery(location.id);
+
+      const address: Address = {
+        ...location,
+        fullAddress: location.address,
+        deliveryPrice: delivery.price,
+        distance: delivery.distance,
+        // kitchen: kitchen
       };
 
-      const response = await AddressService.createAddress(formData);
-      const responseDelivery = await AddressService.createDelivery(response.body.id || '');
-      console.log('responseDelivery', responseDelivery);
-      const addressData = {
-        ...response.body,
-        address: street,
-        fullAddress: formState.address,
-        name: formState.addressName,
-        deliveryPrice: responseDelivery?.body?.delivery?.price || null  ,
-        kitchen: responseDelivery?.body?.kitchen?.name || 'sin cocina asignada',
-        distance: responseDelivery?.body?.delivery?.distance || null,
-      };
+      const data = { location, address, kitchen, delivery };
 
-      localStorage.setItem('userAddress', JSON.stringify(addressData));
-      onSuccess?.(addressData);
-      return addressData;
+      onSuccess(data);
+      return data;
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Error al crear la dirección';
       setError(errorMessage);
-      onError?.(err instanceof Error ? err : new Error(errorMessage));
+      onError(err instanceof Error ? err : new Error(errorMessage));
       throw err;
     } finally {
       setIsSubmitting(false);
     }
-  };
+  }
 
   return {
     submitAddress,
