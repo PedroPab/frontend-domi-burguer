@@ -1,12 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import { PhoneVerificationModal } from "@/components/phone/PhoneVerificationModal";
 import { Loader2 } from "lucide-react";
 
-export default function VerifyPhonePage() {
+function VerifyPhoneContent() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const redirectTo = searchParams.get("redirect") || "/cart";
@@ -56,5 +56,17 @@ export default function VerifyPhonePage() {
                 onSuccess={handleSuccess}
             />
         </div>
+    );
+}
+
+export default function VerifyPhonePage() {
+    return (
+        <Suspense fallback={
+            <div className="min-h-screen flex items-center justify-center bg-gray-50">
+                <Loader2 className="animate-spin text-primary-red" size={70} />
+            </div>
+        }>
+            <VerifyPhoneContent />
+        </Suspense>
     );
 }
