@@ -27,6 +27,7 @@ export default function MenuSection() {
     handleRemoveComplement,
     resetCurrentProduct,
   } = useMenu();
+  console.log("RERENDER MENU SECTION", products, currentProduct);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<string>("");

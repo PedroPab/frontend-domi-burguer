@@ -203,8 +203,8 @@ const gaseosasData: Complement[] = [
 
 
 export {
-     favoritosData,
-     otrosData,
-     gaseosasData,
-     iconMap
+  favoritosData,
+  otrosData,
+  gaseosasData,
+  iconMap
 };

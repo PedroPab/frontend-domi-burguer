@@ -34,32 +34,33 @@ const handleAddableComplement = (
   const complementsToAdd: Complement[] = [];
   const complementsToRemove: number[] = [];
 
-  const isComboEspecial = productId === 1;
+  //esta harcodeada para el combo especial que permite  que ya tiene papas incluidas, pero da mas problemas
+  // const isComboEspecial = productId === 1;
 
-  if (isComboEspecial) {
-    if (action === 'minus' && newQuantity < 1) {
-      return { complementsToAdd, complementsToRemove };
-    }
+  // if (isComboEspecial) {
+  //   if (action === 'minus' && newQuantity < 1) {
+  //     return { complementsToAdd, complementsToRemove };
+  //   }
 
-    if (action === 'plus' && newQuantity > 1 && ingredient.additionId) {
-      const existing = currentComplements.find(c => c.id === ingredient.additionId);
-      if (!existing) {
-        const { additionId, minusId, ...rest } = ingredient;
-        complementsToAdd.push({
-          ...rest,
-          id: ingredient.additionId,
-          minusComplement: false,
-          quantity: 1,
-        });
-      }
-    }
+  //   if (action === 'plus' && newQuantity > 1 && ingredient.additionId) {
+  //     const existing = currentComplements.find(c => c.id === ingredient.additionId);
+  //     if (!existing) {
+  //       const { additionId, minusId, ...rest } = ingredient;
+  //       complementsToAdd.push({
+  //         ...rest,
+  //         id: ingredient.additionId,
+  //         minusComplement: false,
+  //         quantity: 1,
+  //       });
+  //     }
+  //   }
 
-    if (action === 'minus' && newQuantity === 1 && ingredient.additionId) {
-      complementsToRemove.push(ingredient.additionId);
-    }
+  //   if (action === 'minus' && newQuantity === 1 && ingredient.additionId) {
+  //     complementsToRemove.push(ingredient.additionId);
+  //   }
 
-    return { complementsToAdd, complementsToRemove };
-  }
+  //   return { complementsToAdd, complementsToRemove };
+  // }
 
   if (action === 'minus' && newQuantity < 0) {
     return { complementsToAdd, complementsToRemove };
@@ -101,7 +102,7 @@ const handleSpecialComplement = (
     if (newQuantity === 1 && ingredient.minusId) {
       complementsToRemove.push(ingredient.minusId);
     }
-    
+
     if (newQuantity === 2 && ingredient.additionId) {
       const { additionId, minusId, ...rest } = ingredient;
       complementsToAdd.push({
@@ -112,7 +113,7 @@ const handleSpecialComplement = (
       });
     }
   }
-  
+
   if (action === 'minus') {
     if (newQuantity === 0 && ingredient.minusId) {
       const hasVegetariano = currentComplements.some(c => c.id === ingredient.minusId);
@@ -127,7 +128,7 @@ const handleSpecialComplement = (
         });
       }
     }
-    
+
     if (newQuantity === 1 && ingredient.additionId) {
       complementsToRemove.push(ingredient.additionId);
     }
@@ -270,7 +271,7 @@ export function useMenu() {
         if (index !== actualProduct) return product;
 
         let result;
-        
+
         if (ingredient.type === 'special') {
           result = handleSpecialComplement(ingredient, action, product.complements, newQuantity);
         } else if (ingredient.type === 'addable') {
@@ -317,15 +318,15 @@ export function useMenu() {
           }
         }
 
-        return { 
-          ...product, 
+        return {
+          ...product,
           complements: updatedComplements,
         };
       })
     );
   };
 
-  
+
   const handleRemoveComplement = (complementId: number) => {
     setProducts((prev) =>
       prev.map((product, index) => {
@@ -333,7 +334,7 @@ export function useMenu() {
 
         // Encontrar el complemento a eliminar
         const complementToRemove = product.complements.find(c => c.id === complementId);
-        
+
         if (!complementToRemove) return product;
 
         console.log("Eliminando complemento:", complementToRemove);
@@ -368,7 +369,7 @@ export function useMenu() {
    */
   const calculateProductPrice = (product: Product): number => {
     const basePrice = product.price;
-    
+
     // Sumar el precio de todos los complementos
     const complementsPrice = product.complements.reduce((total, complement) => {
       // Solo sumar si el complemento tiene precio y no es un "minus" (sin ingrediente)
@@ -410,7 +411,7 @@ export function useMenu() {
     handleChangeProduct,
     handleChangeComplement,
     handleRemoveComplement,
-    resetCurrentProduct, 
+    resetCurrentProduct,
     clearCurrentProductComplements,
     getCurrentProductComplements,
   };

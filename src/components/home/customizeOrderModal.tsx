@@ -35,6 +35,7 @@ export const CustomizationModalSection = ({
   const [favoritos, setFavoritos] = useState<Complement[]>(favoritosData);
   const [otros, setOtros] = useState<Complement[]>(otrosData);
   const [gaseosas, setGaseosas] = useState<Complement[]>(gaseosasData);
+  console.log("COMPLEMENTOS EN MODAL:", complements, gaseosas);
 
   // Estados de los acordeones
   const [isFavoritosOpen, setIsFavoritosOpen] = useState(true);
@@ -46,6 +47,7 @@ export const CustomizationModalSection = ({
     if (isOpen) {
       const syncIngredients = (ingredients: Complement[]) =>
         ingredients.map((ing) => {
+          console.log("SYNC INGREDIENT:", ing);
           if (ing.type === "special") {
             const hasVegetariano = complements.some((c) => c.id === ing.minusId);
             if (hasVegetariano) {
@@ -61,15 +63,16 @@ export const CustomizationModalSection = ({
           }
 
           if (ing.type === "addable") {
-            const isComboEspecial = productId === 1;
+            //esto esta harcodeado para el combo especial, pero no deberia estarlo , solo lo voy a comentar para acordarme. esto da mas problemas
+            // const isComboEspecial = productId === 1;
             const adicion = complements.find((c) => c.id === ing.additionId);
             const aditionQty = adicion ? adicion.quantity : 0;
 
-            if (isComboEspecial) {
-              return { ...ing, quantity: 1 + aditionQty };
-            } else {
-              return { ...ing, quantity: aditionQty };
-            }
+            // if (isComboEspecial) {
+            // return { ...ing, quantity: 1 + aditionQty };
+            // } else {
+            return { ...ing, quantity: aditionQty };
+            // }
           }
 
           if (ing.type === "removable") {
@@ -85,6 +88,7 @@ export const CustomizationModalSection = ({
 
       setFavoritos(syncIngredients(favoritosData));
       setOtros(syncIngredients(otrosData));
+      console.log("GASEOSAS SYNC:", syncIngredients(gaseosasData), gaseosasData);
       setGaseosas(syncIngredients(gaseosasData));
     }
   }, [complements, isOpen, productId]);
