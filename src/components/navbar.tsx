@@ -99,7 +99,7 @@ export const Navbar = () => {
               </Button>
             </Link>
             <Link
-              href={"/closed"}
+              href={"/cart"}
               tabIndex={-1}
               className="focus:outline-0! focus:ring-0! focus:bg-[#E10300] rounded-[30px]"
             >

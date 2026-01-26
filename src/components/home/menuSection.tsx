@@ -158,8 +158,9 @@ export default function MenuSection() {
             </p>
             <Button
               variant="ghost"
-              className={`px-4 py-2 w-[177px] h-[40px] bg-accent-yellow-20 hover:bg-accent-yellow-40 rounded-[30px] transition-all ${actualProduct === 2 ? "hidden" : ""
-                }`}
+              className={`px-4 py-2 w-[177px] h-[40px] bg-accent-yellow-20 hover:bg-accent-yellow-40 rounded-[30px] transition-all ${
+                actualProduct === 2 ? "hidden" : ""
+              }`}
               onClick={() => handleEditProduct()}
             >
               PERSONALIZAR <EditarIcon className="w-4 h-4" />
@@ -188,7 +189,7 @@ export default function MenuSection() {
           </div>
 
           <div className="flex flex-col sm:flex-row w-full max-w-[720px] items-center justify-center gap-3 sm:gap-6">
-            <Link href={"/closed"}>
+            <Link href={"/cart"}>
               <Button
                 onClick={() => {
                   handleAddToCart(currentProduct);
@@ -220,8 +221,9 @@ export default function MenuSection() {
       <section className="grid lg:gap-y-14 grid-cols-2 lg:grid-cols-3 items-center justify-center lg:gap-6 gap-2 gap-x-4 py-14 relative">
         {/* Cada tarjeta representa un producto (ejemplo producto 0) */}
         <div
-          className={`w-[160px] h-[160px] lg:w-[280px] lg:h-40 ${actualProduct === 0 ? "bg-accent-yellow-40" : "bg-accent-yellow-20"
-            } rounded-2xl border-0 overflow-visible`}
+          className={`w-[160px] h-[160px] lg:w-[280px] lg:h-40 ${
+            actualProduct === 0 ? "bg-accent-yellow-40" : "bg-accent-yellow-20"
+          } rounded-2xl border-0 overflow-visible`}
         >
           <div
             className={` flex relative flex-col items-center justify-center gap-[4.47px] overflow-visible p-0 h-full`}
@@ -241,8 +243,9 @@ export default function MenuSection() {
 
             <Button
               size="icon"
-              className={`absolute top-[5px] z-200 right-[5px] lg:top-[7px] lg:left-[232px] w-8 h-8 lg:w-10 lg:h-10 rounded-[30px] p-0 ${actualProduct === 0 ? "hidden" : ""
-                }`}
+              className={`absolute top-[5px] z-200 right-[5px] lg:top-[7px] lg:left-[232px] w-8 h-8 lg:w-10 lg:h-10 rounded-[30px] p-0 ${
+                actualProduct === 0 ? "hidden" : ""
+              }`}
               onClick={() => {
                 handleAddToCart(products[0]);
                 showFoodToast(products[0].name);
@@ -254,8 +257,9 @@ export default function MenuSection() {
           </div>
         </div>
         <div
-          className={`w-[160px] h-[160px] lg:w-[280px] lg:h-40 ${actualProduct === 1 ? "bg-accent-yellow-40" : "bg-accent-yellow-20"
-            } rounded-2xl border-0 overflow-visible`}
+          className={`w-[160px] h-[160px] lg:w-[280px] lg:h-40 ${
+            actualProduct === 1 ? "bg-accent-yellow-40" : "bg-accent-yellow-20"
+          } rounded-2xl border-0 overflow-visible`}
         >
           <div
             className={`${"relative gap-[4.47px]"} p-0 h-full`}
@@ -282,8 +286,9 @@ export default function MenuSection() {
 
             <Button
               size="icon"
-              className={`absolute z-200 top-[5px] right-[5px] lg:top-[7px] lg:left-[232px] w-8 h-8 lg:w-10 lg:h-10 rounded-[30px] p-0 ${actualProduct === 1 ? "hidden" : ""
-                }`}
+              className={`absolute z-200 top-[5px] right-[5px] lg:top-[7px] lg:left-[232px] w-8 h-8 lg:w-10 lg:h-10 rounded-[30px] p-0 ${
+                actualProduct === 1 ? "hidden" : ""
+              }`}
               onClick={() => {
                 handleAddToCart(products[1]);
                 showFoodToast(products[1].name);
@@ -295,8 +300,9 @@ export default function MenuSection() {
           </div>
         </div>
         <div
-          className={`w-[160px] h-[160px] lg:w-[280px] lg:h-40 ${actualProduct === 2 ? "bg-accent-yellow-40" : "bg-accent-yellow-20"
-            } rounded-2xl border-0 overflow-visible`}
+          className={`w-[160px] h-[160px] lg:w-[280px] lg:h-40 ${
+            actualProduct === 2 ? "bg-accent-yellow-40" : "bg-accent-yellow-20"
+          } rounded-2xl border-0 overflow-visible`}
           onClick={() => {
             handleChangeProduct(2);
             if (emblaApi) emblaApi.scrollTo(2);
@@ -314,8 +320,9 @@ export default function MenuSection() {
 
             <Button
               size="icon"
-              className={`absolute z-200 top-[5px] right-[5px] lg:top-[7px] lg:left-[232px] w-8 h-8 lg:w-10 lg:h-10 rounded-[30px] p-0 ${actualProduct === 2 ? "hidden" : ""
-                }`}
+              className={`absolute z-200 top-[5px] right-[5px] lg:top-[7px] lg:left-[232px] w-8 h-8 lg:w-10 lg:h-10 rounded-[30px] p-0 ${
+                actualProduct === 2 ? "hidden" : ""
+              }`}
               onClick={() => {
                 handleAddToCart(products[2]);
                 showFoodToast(products[2].name);
