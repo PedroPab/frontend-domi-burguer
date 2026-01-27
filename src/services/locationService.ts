@@ -1,9 +1,9 @@
-import { Location } from "@/types/locations"; 
+import { Location } from "@/types/locations";
 
 export class LocationService {
-    private static readonly API_URL = `${process.env.NEXT_PUBLIC_API_URL}`;
+  private static readonly API_URL = `${process.env.NEXT_PUBLIC_API_URL}`;
 
-  static async getLocationId(id: string) : Promise<{ body: Location}> {
+  static async getLocationId(id: string): Promise<{ body: Location }> {
     try {
       const response = await fetch(`${this.API_URL}api/v2/locations/${id}`);
       if (!response.ok) {
@@ -17,7 +17,7 @@ export class LocationService {
   }
 
   //add location 
-  static async addLocation({token, location}: {token: string | null, location: object}) : Promise<{ body: Location}> {
+  static async addLocation({ token, location }: { token: string | null, location: object }): Promise<{ body: Location }> {
     try {
       const headers: HeadersInit = {
         'Content-Type': 'application/json',
@@ -35,7 +35,7 @@ export class LocationService {
       };
 
 
-      const response = await fetch(url , options);
+      const response = await fetch(url, options);
       if (!response.ok) {
         throw new Error("Error fetching location");
       }
@@ -46,8 +46,8 @@ export class LocationService {
     }
   }
 
-  static async getUserLocations(token:string) : Promise<{ body: [Location]}> {
-       try {
+  static async getUserLocations(token: string): Promise<{ body: [Location] }> {
+    try {
       const response = await fetch(`${this.API_URL}api/v2/locations/me`, {
         method: 'GET',
         headers: {
@@ -65,6 +65,22 @@ export class LocationService {
       throw error;
     }
   }
+  static async deleteLocationProfile({ token, id }: { token: string, id: string }): Promise<void> {
+    try {
+      const response = await fetch(`${this.API_URL}api/v2/locations/me/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
-
+      if (!response.ok) {
+        throw new Error("Error deleting location");
+      }
+    } catch (error) {
+      console.error("Error deleting location:", error);
+      throw error;
+    }
+  }
 }

@@ -8,178 +8,170 @@ import { Loader2, Plus } from "lucide-react";
 import { ModalAddress } from "@/components/cart/modalAddress";
 import { LocationService } from "@/services/locationService";
 import { getIdToken } from "firebase/auth";
-import { LocationCard } from "./LocationCard";
 import { CheckoutFormProvider } from "@/contexts/CheckoutFormContext";
 import { Address } from "@/types/address";
+import { LocationList } from "./LocationList";
+import { ConfirmDeleteLocationModal } from "./ConfirmDeleteLocationModal";
 
 export default function LocationsPage() {
-    const { user, loading } = useAuth();
-    const router = useRouter();
+  const { user, loading } = useAuth();
+  const router = useRouter();
 
-    const [locations, setLocations] = useState<Location[]>([]);
-    const [isLoadingAddresses, setIsLoadingAddresses] = useState(true);
-    const [error, setError] = useState<string | null>(null);
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [addressToEdit, setAddressToEdit] = useState<Address | null>(null);
+  const [locations, setLocations] = useState<Location[]>([]);
+  const [isLoadingAddresses, setIsLoadingAddresses] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [addressToEdit, setAddressToEdit] = useState<Address | null>(null);
+  const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
 
-    useEffect(() => {
-        if (!loading && !user) {
-            router.push("/login");
-        }
-    }, [user, loading, router]);
-
-    useEffect(() => {
-        const fetchAddresses = async () => {
-            if (!user) return;
-            setIsLoadingAddresses(true);
-            setError(null);
-            try {
-                const token = await getIdToken(user);
-                const userAddresses = await LocationService.getUserLocations(token);
-                setLocations(userAddresses.body);
-            } catch (err) {
-                console.error("Error cargando direcciones del usuario", err);
-                setError("No se pudieron cargar tus direcciones");
-            } finally {
-                setIsLoadingAddresses(false);
-            }
-        };
-
-        if (user) {
-            fetchAddresses();
-        }
-    }, [user]);
-
-    const handleOpenCreate = () => {
-        setAddressToEdit(null);
-        setIsModalOpen(true);
-    };
-
-    const mapLocationToAddressLike = (location: Location): Address => {
-        return {
-            id: location.id,
-            name: location.name,
-            address: location.address,
-            fullAddress: location.address,
-            city: location.city,
-            country: location.country,
-            floor: location.floor,
-            comment: location.comment,
-            propertyType: location.propertyType || "",
-            coordinates: {
-                lat: location.coordinates.lat ?? 0,
-                lng: location.coordinates.lng ?? 0,
-            },
-            distance: 0,
-            deliveryPrice: 0,
-        };
-    };
-
-    const handleOpenEdit = (location: Location) => {
-        setAddressToEdit(mapLocationToAddressLike(location));
-        setIsModalOpen(true);
-    };
-
-    const handleCloseModal = async () => {
-        setIsModalOpen(false);
-        setAddressToEdit(null);
-        if (user) {
-            try {
-                const token = await getIdToken(user);
-                const userAddresses = await LocationService.getUserLocations(token);
-                setLocations(userAddresses.body);
-            } catch (err) {
-                console.error("Error recargando direcciones", err);
-            }
-        }
-    };
-
-    const handleDelete = async (addressId: string) => {
-        if (!confirm("¿Seguro que quieres eliminar esta dirección?")) return;
-        try {
-            // TODO: implementar eliminación vía LocationService cuando el backend lo soporte
-            setLocations((prev) => prev.filter((a) => a.id !== addressId));
-        } catch (err) {
-            console.error("Error eliminando dirección", err);
-            alert("No se pudo eliminar la dirección");
-        }
-    };
-
-    const handleSetFavorite = async (locationId: string) => {
-        try {
-            // Actualizar localmente mientras se implementa el backend
-            setLocations((prev) =>
-                prev.map((loc) => ({
-                    ...loc,
-                    favorite: loc.id === locationId,
-                }))
-            );
-            // TODO: implementar actualización vía LocationService cuando el backend lo soporte
-        } catch (err) {
-            console.error("Error marcando dirección como favorita", err);
-            alert("No se pudo marcar la dirección como principal");
-        }
-    };
-
-    if (loading || !user) {
-        return (
-          <div className="min-h-screen flex items-center justify-center bg-white">
-            <Loader2 className="animate-spin text-primary-red" size={70} />
-          </div>
-        );
+  useEffect(() => {
+    if (!loading && !user) {
+      router.push("/login");
     }
+  }, [user, loading, router]);
 
+  useEffect(() => {
+    const fetchAddresses = async () => {
+      if (!user) return;
+      setIsLoadingAddresses(true);
+      setError(null);
+      try {
+        const token = await getIdToken(user);
+        const userAddresses = await LocationService.getUserLocations(token);
+        setLocations(userAddresses.body);
+      } catch (err) {
+        console.error("Error cargando direcciones del usuario", err);
+        setError("No se pudieron cargar tus direcciones");
+      } finally {
+        setIsLoadingAddresses(false);
+      }
+    };
+
+    if (user) {
+      fetchAddresses();
+    }
+  }, [user]);
+
+  const handleOpenCreate = () => {
+    setAddressToEdit(null);
+    setIsModalOpen(true);
+  };
+
+  const mapLocationToAddressLike = (location: Location): Address => {
+    return {
+      id: location.id,
+      name: location.name,
+      address: location.address,
+      fullAddress: location.address,
+      city: location.city,
+      country: location.country,
+      floor: location.floor,
+      comment: location.comment,
+      propertyType: location.propertyType || "",
+      coordinates: {
+        lat: location.coordinates.lat ?? 0,
+        lng: location.coordinates.lng ?? 0,
+      },
+      distance: 0,
+      deliveryPrice: 0,
+    };
+  };
+
+  const handleOpenEdit = (location: Location) => {
+    setAddressToEdit(mapLocationToAddressLike(location));
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = async () => {
+    setIsModalOpen(false);
+    setAddressToEdit(null);
+    if (user) {
+      try {
+        const token = await getIdToken(user);
+        const userAddresses = await LocationService.getUserLocations(token);
+        setLocations(userAddresses.body);
+      } catch (err) {
+        console.error("Error recargando direcciones", err);
+      }
+    }
+  };
+
+  const handleDelete = (addressId: string) => {
+    setDeleteTargetId(addressId);
+  };
+
+  const confirmDelete = async () => {
+    if (!user || !deleteTargetId) return;
+    try {
+      const token = await getIdToken(user);
+      await LocationService.deleteLocationProfile({ token, id: deleteTargetId });
+      setLocations((prev) => prev.filter((a) => a.id !== deleteTargetId));
+    } catch (err) {
+      console.error("Error eliminando dirección", err);
+    } finally {
+      setDeleteTargetId(null);
+    }
+  };
+
+  const handleSetFavorite = async (locationId: string) => {
+    try {
+      setLocations((prev) =>
+        prev.map((loc) => ({
+          ...loc,
+          favorite: loc.id === locationId,
+        }))
+      );
+    } catch (err) {
+      console.error("Error marcando dirección como favorita", err);
+    }
+  };
+
+  if (loading || !user) {
     return (
-      <CheckoutFormProvider>
-        <div className="mt-[130px] min-h-screen bg-white py-8 px-4">
-          <div className="max-w-2xl mx-auto">
-            <h1 className="text-xl font-bold text-neutral-800 mb-6 uppercase">
-              Mis Direcciones
-            </h1>
-
-            {error && (
-            <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg text-sm">
-              {error}
-            </div>
-                    )}
-
-            {isLoadingAddresses ? (
-              <div className="flex justify-center py-10">
-                <Loader2 className="animate-spin text-primary-red" size={40} />
-              </div>
-                    ) : locations.length === 0 ? (
-                      <div className="py-10 text-center text-neutral-500">
-                        <p className="mb-4">Aún no tienes direcciones guardadas.</p>
-                      </div>
-                    ) : (
-                      <div className="mb-6">
-                        {locations.map((location) => (
-                          <LocationCard
-                            key={location.id}
-                            location={location}
-                            onEdit={handleOpenEdit}
-                            onDelete={handleDelete}
-                            onSetFavorite={handleSetFavorite}
-                                />
-                            ))}
-                      </div>
-                    )}
-
-            <button
-              onClick={handleOpenCreate}
-              className="w-full py-4 border-2 border-dashed border-[#e73533] rounded-lg flex items-center justify-center gap-2 text-neutral-800 font-medium hover:bg-red-50 transition-colors"
-                    >
-              <Plus className="w-5 h-5" />
-              AGREGAR DIRECCIÓN
-            </button>
-          </div>
-
-          <ModalAddress
-            isOpen={isModalOpen}
-            onClose={handleCloseModal}
-            addressToEdit={addressToEdit}
-                />
-        </div>
-      </CheckoutFormProvider>
+      <div className="min-h-screen flex items-center justify-center bg-white">
+        <Loader2 className="animate-spin text-primary-red" size={70} />
+      </div>
     );
+  }
+
+  return (
+    <CheckoutFormProvider>
+      <div className="mt-[130px] min-h-screen bg-white py-8 px-4">
+        <div className="max-w-2xl mx-auto">
+          <h1 className="text-xl font-bold text-neutral-800 mb-6 uppercase">
+            Mis Direcciones
+          </h1>
+
+          <LocationList
+            locations={locations}
+            isLoading={isLoadingAddresses}
+            error={error}
+            onEdit={handleOpenEdit}
+            onDelete={handleDelete}
+            onSetFavorite={handleSetFavorite}
+          />
+
+          <button
+            onClick={handleOpenCreate}
+            className="w-full py-4 border-2 border-dashed border-[#e73533] rounded-lg flex items-center justify-center gap-2 text-neutral-800 font-medium hover:bg-red-50 transition-colors"
+          >
+            <Plus className="w-5 h-5" />
+            AGREGAR DIRECCIÓN
+          </button>
+        </div>
+
+        <ModalAddress
+          isOpen={isModalOpen}
+          onClose={handleCloseModal}
+          addressToEdit={addressToEdit}
+        />
+
+        <ConfirmDeleteLocationModal
+          isOpen={!!deleteTargetId}
+          onClose={() => setDeleteTargetId(null)}
+          onConfirm={confirmDelete}
+        />
+      </div>
+    </CheckoutFormProvider>
+  );
 }
