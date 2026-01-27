@@ -17,17 +17,15 @@ function useFormCart() {
   const { clearCart } = useCartStore();
   const router = useRouter();
   const { submitOrder, isSubmitting } = useOrderSubmit(
-  (result) => {
+    (result) => {
       console.log("Order submitted successfully:", result);
-      //guardar la última orden en el almacenamiento local
-    // saveLastOrder();
 
       // Limpiar carrito y formulario
       clearCart();
       resetForm();
 
-      // Redirigir a la página de confirmación o mostrar mensaje de éxito
-      router.push("/thankyou");
+      // Redirigir a la página de confirmación con el ID de la orden
+      router.push(`/thankyou?orderId=${result.id}`);
     },
     (error) => {
       console.error("Error submitting order:", error);
@@ -126,7 +124,7 @@ function useFormCart() {
     address: Address;
     items: typeof items;
   }
-  const buildOrderPayload = ({formData, address , items} : BuildOrderPayloadParams): OrderPayload => {
+  const buildOrderPayload = ({ formData, address, items }: BuildOrderPayloadParams): OrderPayload => {
     return {
       name: formData.name,
       phone: formData.phone,
@@ -156,17 +154,17 @@ function useFormCart() {
 
     if (!validateForm()) {
       return;
-    } 
-    if(!address) {
+    }
+    if (!address) {
       setError("Debes agregar una dirección de entrega");
       return;
     }
-    
-     const orderPayload = buildOrderPayload({formData, address , items});
 
-     const token = await user?.getIdToken();
-     console.log(orderPayload, "Submitting order with token:");
-    await submitOrder({ orderPayload, token  });
+    const orderPayload = buildOrderPayload({ formData, address, items });
+
+    const token = await user?.getIdToken();
+    console.log(orderPayload, "Submitting order with token:");
+    await submitOrder({ orderPayload, token });
   };
 
   return {

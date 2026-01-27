@@ -1,12 +1,18 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import { Button } from "@/components/ui/button";
 import { FrenchFriesIcon, HamburgerIcon } from "@/components/ui/icons";
 import Image from "next/image";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 
 export default function Thankyou() {
+  const searchParams = useSearchParams();
+  const orderId = searchParams.get("orderId");
+
+  const orderLink = orderId ? `/orders/${orderId}` : "/orders";
+
   return (
     <main className="flex-1 flex flex-col w-full items-center ">
       <section className="grid grid-cols-1 xl:grid-cols-2 gap-0 max-w-[1440px] w-screen overflow-visible ">
@@ -53,7 +59,7 @@ export default function Thankyou() {
                 EXPLORAR
               </Button>
             </Link>
-            <Link href={"/info-order"}>
+            <Link href={orderLink}>
               <Button
                 variant="ghost"
                 className="bg-accent-yellow-40 hover:bg-accent-yellow-60 active:bg-accent-yellow-60 rounded-[30px] flex items-center gap-2 text-[16px] w-[165px] h-[48px]"

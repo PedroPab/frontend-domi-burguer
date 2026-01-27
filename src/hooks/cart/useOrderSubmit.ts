@@ -20,7 +20,6 @@ interface LastOrder {
 }
 
 interface OrderResult {
-  id: number;
   [key: string]: unknown;
 }
 
@@ -37,7 +36,7 @@ export const useOrderSubmit = (
 
   const API_URL = `${process.env.NEXT_PUBLIC_API_URL}`;
 
-  
+
   // const saveLastOrder = (): void => {
   //   const lastOrder: LastOrder = {
   //     name: formData.name,
@@ -55,7 +54,7 @@ export const useOrderSubmit = (
   //   localStorage.setItem("lastOrder", JSON.stringify(lastOrder));
   // };
 
-  const submitOrder = async ({token, orderPayload} : {token?: string, orderPayload?: OrderPayload}): Promise<OrderResult> => {
+  const submitOrder = async ({ token, orderPayload }: { token?: string, orderPayload?: OrderPayload }): Promise<OrderResult> => {
     setIsSubmitting(true);
     setError(null);
 
@@ -67,7 +66,7 @@ export const useOrderSubmit = (
           "Content-Type": "application/json",
         },
       };
-      
+
       let url = `${API_URL}api/v2/orders/public`
       const body = orderPayload
       if (token) {
@@ -91,7 +90,7 @@ export const useOrderSubmit = (
       }
 
       const result: OrderResult = await response.json();
-
+      const order = result.body;
       // Guardar última orden en localStorage
       // saveLastOrder();
 
@@ -100,12 +99,12 @@ export const useOrderSubmit = (
       // resetForm();
 
       // Callback de éxito
-      onSuccess(result);
+      onSuccess(order);
 
       // Redirigir a página de confirmación
       // router.push("/thankyou");
 
-      return result;
+      return order;
     } catch (err) {
       const errorMessage =
         err instanceof Error ? err.message : "Error al procesar la orden";
