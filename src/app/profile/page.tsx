@@ -16,6 +16,7 @@ import {
   Edit,
   Shield,
   ChevronRight,
+  Binary,
 } from "lucide-react";
 import { PhoneVerificationModal } from "@/components/phone/PhoneVerificationModal";
 
@@ -112,6 +113,7 @@ export default function ProfilePage() {
             {/* Avatar */}
             <div className="relative">
               {user.photoURL ? (
+                // eslint-disable-next-line @next/next/no-img-element
                 <img
                   src={user.photoURL}
                   alt="Foto de perfil"
@@ -290,6 +292,18 @@ export default function ProfilePage() {
               <div className="flex items-center gap-3">
                 <Calendar className="w-5 h-5 text-primary-red" />
                 <span className="font-medium text-neutral-black-80">Mis Pedidos</span>
+              </div>
+              <ChevronRight className="w-5 h-5 text-neutral-black-60" />
+            </button>
+
+            {/*Mis codigos */}
+            <button
+              onClick={() => router.push("/codes")}
+              className="w-full flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+            >
+              <div className="flex items-center gap-3">
+                <Binary className="w-5 h-5 text-primary-red" />
+                <span className="font-medium text-neutral-black-80">Mis Códigos</span>
               </div>
               <ChevronRight className="w-5 h-5 text-neutral-black-60" />
             </button>
