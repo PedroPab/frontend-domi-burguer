@@ -22,7 +22,7 @@ export const LocationCard: React.FC<LocationCardProps> = ({
   const staticMapUrl = `https://maps.googleapis.com/maps/api/staticmap?center=${lat},${lng}&zoom=15&size=400x150&scale=2&markers=color:red|${lat},${lng}&key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`;
 
   const hasActions = onSetFavorite || onDelete;
-
+  console.log('LocationCard props:', location);
   return (
     <div className="bg-gray-50 rounded-xl p-5 relative">
       <div className="flex gap-4">

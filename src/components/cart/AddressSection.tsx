@@ -7,6 +7,7 @@ import { ModalAddress } from "./modalAddress";
 import { ModalLocationsList } from "./ModalLocationsList";
 import { useAddressManagement } from "@/hooks/cart/useAddressManagement";
 import { useAuth } from "@/contexts/AuthContext";
+import { useSetFavoriteLocation } from "@/hooks/locations/useSetFavoriteLocation";
 
 
 
@@ -24,6 +25,7 @@ export function AddressSection() {
   const [isListModalOpen, setIsListModalOpen] = useState(false);
 
   const hasMultipleLocations = listLocationsClient && listLocationsClient.length > 0;
+  const { setFavorite } = useSetFavoriteLocation({ locations: listLocationsClient, setLocations: () => { } });
 
   return (
     <div className="flex flex-col gap-4 w-full">
@@ -61,7 +63,10 @@ export function AddressSection() {
           <LocationCard
             location={location}
             onDelete={() => setLocation(null)}
-            onSetFavorite={() => console.log('holi set favorite')}
+            onSetFavorite={() => {
+              setFavorite(location.id);
+              setLocation({ ...location, favorite: true });
+            }}
           />
           {addressClient?.deliveryPrice !== undefined && (
             <p className="text-sm text-neutral-600 mt-2">
