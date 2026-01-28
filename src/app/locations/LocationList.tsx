@@ -38,7 +38,7 @@ export function LocationList({
           <p className="mb-4">Aún no tienes direcciones guardadas.</p>
         </div>
       ) : (
-        <div className="mb-6">
+        <div className="mb-6 space-y-4">
           {locations.map((location) => (
             <LocationCard
               key={location.id}

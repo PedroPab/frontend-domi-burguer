@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import { Location } from "@/types/locations";
-import { Loader2, Plus } from "lucide-react";
+import { Loader2, Plus, ShieldCheck } from "lucide-react";
 import { ModalAddress } from "@/components/cart/modalAddress";
 import { LocationService } from "@/services/locationService";
 import { getIdToken } from "firebase/auth";
@@ -158,11 +158,16 @@ export default function LocationsPage() {
 
           <button
             onClick={handleOpenCreate}
-            className="w-full py-4 border-2 border-dashed border-[#e73533] rounded-lg flex items-center justify-center gap-2 text-neutral-800 font-medium hover:bg-red-50 transition-colors"
+            className="w-full py-4 bg-amber-50 rounded-full flex items-center justify-center gap-2 text-neutral-800 font-medium hover:bg-amber-100 transition-colors"
           >
             <Plus className="w-5 h-5" />
             AGREGAR DIRECCIÓN
           </button>
+
+          <div className="flex items-center gap-2 mt-6 text-neutral-400 text-sm">
+            <ShieldCheck className="w-5 h-5" />
+            <span>Guardaremos tu información de forma segura</span>
+          </div>
         </div>
 
         <ModalAddress
