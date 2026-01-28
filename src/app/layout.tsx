@@ -5,7 +5,7 @@ import { Navbar } from "@/components/navbar";
 import { HeroUIProvider } from "@heroui/system";
 import { ToastProvider } from "@heroui/toast";
 import { AuthProvider } from "@/contexts/AuthContext";
-import { Metadata } from "next";
+import { Metadata, Viewport } from "next";
 import { metadataConfig } from "./metadata";
 
 const montserrat = Montserrat({
@@ -16,6 +16,10 @@ const montserrat = Montserrat({
 });
 
 export const metadata: Metadata = metadataConfig
+
+export const viewport: Viewport = {
+  themeColor: '#e73533',
+}
 
 export default function RootLayout({
   children,

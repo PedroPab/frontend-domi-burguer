@@ -10,7 +10,6 @@ export const metadataConfig: Metadata = {
     applicationName: 'Domi Burguer',
     description:
         '¡Haz tu pedido de hamburguesas artesanales! Creamos nuestro propio sabor con ingredientes frescos y recetas familiares.',
-    themeColor: '#e73533',
     manifest: '/manifest.webmanifest', // Next servirá app/manifest.ts en esta URL
     icons: {
         icon: [
