@@ -6,9 +6,9 @@ import { Heart, Pencil, Trash2 } from "lucide-react";
 
 interface LocationCardProps {
   location: Location;
-  onEdit: (location: Location) => void;
-  onDelete: (id: string) => void;
-  onSetFavorite: (id: string) => void;
+  onEdit?: (location: Location) => void;
+  onDelete?: (id: string) => void;
+  onSetFavorite?: (id: string) => void;
 }
 
 export const LocationCard: React.FC<LocationCardProps> = ({
@@ -21,6 +21,8 @@ export const LocationCard: React.FC<LocationCardProps> = ({
   const googleMapsUrl = `https://www.google.com/maps?q=${lat},${lng}`;
   const staticMapUrl = `https://maps.googleapis.com/maps/api/staticmap?center=${lat},${lng}&zoom=15&size=400x150&scale=2&markers=color:red|${lat},${lng}&key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`;
 
+  const hasActions = onSetFavorite || onDelete;
+
   return (
     <div className="bg-gray-50 rounded-xl p-5 relative">
       <div className="flex gap-4">
@@ -31,13 +33,16 @@ export const LocationCard: React.FC<LocationCardProps> = ({
               <h3 className="font-semibold text-neutral-800 text-base">
                 {location.name}
               </h3>
-              {/* <button
-                onClick={() => onEdit(location)}
-                className="p-1 text-neutral-400 hover:text-neutral-600 transition-colors shrink-0 ml-2"
-                aria-label="Editar dirección"
-              >
-                <Pencil className="w-4 h-4" />
-              </button> */}
+              {onEdit && (
+                <button
+                  type="button"
+                  onClick={() => onEdit(location)}
+                  className="p-1 text-neutral-400 hover:text-neutral-600 transition-colors shrink-0 ml-2"
+                  aria-label="Editar dirección"
+                >
+                  <Pencil className="w-4 h-4" />
+                </button>
+              )}
             </div>
             <a
               href={googleMapsUrl}
@@ -64,27 +69,35 @@ export const LocationCard: React.FC<LocationCardProps> = ({
             )}
           </div>
 
-          <div className="flex items-center justify-between mt-3">
-            <button
-              onClick={() => onSetFavorite(location.id)}
-              className={`flex items-center gap-1.5 px-4 py-1.5 text-xs font-semibold rounded-full transition-colors ${location.favorite
-                ? "text-white bg-[#e73533]"
-                : "text-neutral-500 bg-neutral-200 hover:bg-neutral-300"
-                }`}
-              aria-label={location.favorite ? "Dirección favorita" : "Marcar como favorita"}
-            >
-              <Heart className="w-3.5 h-3.5" fill={location.favorite ? "currentColor" : "none"} />
-              Favorita
-            </button>
+          {hasActions && (
+            <div className="flex items-center justify-between mt-3">
+              {onSetFavorite ? (
+                <button
+                  type="button"
+                  onClick={() => onSetFavorite(location.id)}
+                  className={`flex items-center gap-1.5 px-4 py-1.5 text-xs font-semibold rounded-full transition-colors ${location.favorite
+                    ? "text-white bg-[#e73533]"
+                    : "text-neutral-500 bg-neutral-200 hover:bg-neutral-300"
+                    }`}
+                  aria-label={location.favorite ? "Dirección favorita" : "Marcar como favorita"}
+                >
+                  <Heart className="w-3.5 h-3.5" fill={location.favorite ? "currentColor" : "none"} />
+                  Favorita
+                </button>
+              ) : <div />}
 
-            <button
-              onClick={() => onDelete(location.id)}
-              className="p-1 text-red-400 hover:text-red-600 transition-colors"
-              aria-label="Eliminar dirección"
-            >
-              <Trash2 className="w-5 h-5" />
-            </button>
-          </div>
+              {onDelete && (
+                <button
+                  type="button"
+                  onClick={() => onDelete(location.id)}
+                  className="p-1 text-red-400 hover:text-red-600 transition-colors"
+                  aria-label="Quitar dirección"
+                >
+                  <Trash2 className="w-5 h-5" />
+                </button>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Columna derecha: mapa */}

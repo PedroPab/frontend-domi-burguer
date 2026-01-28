@@ -4,6 +4,7 @@ import { useCartStore, CartItem } from "@/store/cartStore";
 import { useCheckoutFormStore } from "@/store/checkoutFormStore";
 import { Address } from "@/types/address";
 import { OrderPayload } from "@/types/OrderPayload";
+import { getApiUrl } from "@/lib/apiConfig";
 
 interface LastOrder {
   name: string;
@@ -34,7 +35,7 @@ export const useOrderSubmit = (
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const API_URL = `${process.env.NEXT_PUBLIC_API_URL}`;
+  const API_URL = getApiUrl();
 
 
   // const saveLastOrder = (): void => {

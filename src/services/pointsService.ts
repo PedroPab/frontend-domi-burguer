@@ -1,7 +1,8 @@
 import { PointsSummary } from '@/types/points';
+import { getApiUrl } from '@/lib/apiConfig';
 
 export class PointsService {
-  private static readonly API_URL = `${process.env.NEXT_PUBLIC_API_URL}`;
+  private static get API_URL() { return getApiUrl(); }
 
   static async getUserPoints(token: string): Promise<{ body: PointsSummary }> {
     try {

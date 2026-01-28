@@ -1,7 +1,8 @@
 import { ReferralCode } from '@/types/codes';
+import { getApiUrl } from '@/lib/apiConfig';
 
 export class CodeService {
-  private static readonly API_URL = `${process.env.NEXT_PUBLIC_API_URL}`;
+  private static get API_URL() { return getApiUrl(); }
 
   static async getUserCodes(token: string): Promise<{ body: ReferralCode[] }> {
     try {

@@ -1,4 +1,5 @@
 import {  Kitchen } from '@/types/kitchens';
+import { getApiUrl } from '@/lib/apiConfig';
 
 
 interface KitchenResponse {
@@ -6,7 +7,7 @@ interface KitchenResponse {
 }
 
 export class AddressService {
-  private static readonly API_URL = `${process.env.NEXT_PUBLIC_API_URL}`;
+  private static get API_URL() { return getApiUrl(); }
 
   static async findKitchens(): Promise<KitchenResponse> {
     try {

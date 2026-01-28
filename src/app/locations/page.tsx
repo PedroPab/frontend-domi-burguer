@@ -13,6 +13,7 @@ import { Address } from "@/types/address";
 import { LocationList } from "./LocationList";
 import { ConfirmDeleteLocationModal } from "./ConfirmDeleteLocationModal";
 import { PageHeader } from "@/components/ui/pageHeader";
+import { useSetFavoriteLocation } from "@/hooks/locations/useSetFavoriteLocation";
 
 export default function LocationsPage() {
   const { user, loading } = useAuth();
@@ -24,6 +25,7 @@ export default function LocationsPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [addressToEdit, setAddressToEdit] = useState<Address | null>(null);
   const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
+  const { setFavorite } = useSetFavoriteLocation({ locations, setLocations });
 
   useEffect(() => {
     if (!loading && !user) {
@@ -114,23 +116,6 @@ export default function LocationsPage() {
     }
   };
 
-  const handleSetFavorite = async (locationId: string) => {
-    if (!user) return;
-    const previousLocations = [...locations];
-    try {
-      setLocations((prev) =>
-        prev.map((loc) => ({
-          ...loc,
-          favorite: loc.id === locationId,
-        }))
-      );
-      const token = await getIdToken(user);
-      await LocationService.setFavorite({ token, id: locationId });
-    } catch (err) {
-      console.error("Error marcando dirección como favorita", err);
-      setLocations(previousLocations);
-    }
-  };
 
   if (loading || !user) {
     return (
@@ -152,7 +137,7 @@ export default function LocationsPage() {
             error={error}
             onEdit={handleOpenEdit}
             onDelete={handleDelete}
-            onSetFavorite={handleSetFavorite}
+            onSetFavorite={setFavorite}
           />
 
           <button

@@ -87,6 +87,21 @@ export const CheckoutFormProvider = ({ children }: { children: React.ReactNode }
         setListLocationsClient(locations);
     }, [locations]);
 
+    // Auto-seleccionar la favorita o la más reciente
+    useEffect(() => {
+        if (listLocationsClient.length > 0 && !location) {
+            const favorite = listLocationsClient.find(loc => loc.favorite);
+            if (favorite) {
+                setLocation(favorite);
+            } else {
+                const sorted = [...listLocationsClient].sort(
+                    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+                );
+                setLocation(sorted[0]);
+            }
+        }
+    }, [listLocationsClient]);
+
     useEffect(() => {
         if (token) {
             fetchLocations();

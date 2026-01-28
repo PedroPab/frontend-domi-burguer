@@ -1,6 +1,7 @@
 import { Address, Coordinates } from '@/types/address';
 import { Kitchen } from '@/types/kitchens';
 import { Delivery } from '@/types/orders';
+import { getApiUrl } from '@/lib/apiConfig';
 
 interface AddressFormData {
   address: string;
@@ -17,7 +18,7 @@ interface AddressResponse {
 }
 
 export class AddressService {
-  private static readonly API_URL = `${process.env.NEXT_PUBLIC_API_URL}`;
+  private static get API_URL() { return getApiUrl(); }
 
   static async createAddress(data: AddressFormData): Promise<AddressResponse> {
     try {

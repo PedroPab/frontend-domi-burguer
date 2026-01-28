@@ -1,7 +1,8 @@
 import { Location } from "@/types/locations";
+import { getApiUrl } from "@/lib/apiConfig";
 
 export class LocationService {
-  private static readonly API_URL = `${process.env.NEXT_PUBLIC_API_URL}`;
+  private static get API_URL() { return getApiUrl(); }
 
   static async getLocationId(id: string): Promise<{ body: Location }> {
     try {
