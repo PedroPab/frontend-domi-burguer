@@ -65,6 +65,25 @@ export class LocationService {
       throw error;
     }
   }
+  static async setFavorite({ token, id }: { token: string; id: string }): Promise<{ body: Location }> {
+    try {
+      const response = await fetch(`${this.API_URL}api/v2/locations/${id}/favorite`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (!response.ok) {
+        throw new Error("Error setting favorite location");
+      }
+      return await response.json();
+    } catch (error) {
+      console.error("Error setting favorite location:", error);
+      throw error;
+    }
+  }
+
   static async deleteLocationProfile({ token, id }: { token: string, id: string }): Promise<void> {
     try {
       const response = await fetch(`${this.API_URL}api/v2/locations/me/${id}`, {

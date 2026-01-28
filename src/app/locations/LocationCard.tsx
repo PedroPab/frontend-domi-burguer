@@ -1,7 +1,7 @@
 "use client";
 
 import { Location } from "@/types/locations";
-import { Pencil, Trash2 } from "lucide-react";
+import { Heart, Trash2 } from "lucide-react";
 
 interface LocationCardProps {
   location: Location;
@@ -33,32 +33,19 @@ export const LocationCard: React.FC<LocationCardProps> = ({
             {location.floor}
           </p>
         )}
-
-        {location.favorite ? (
-          <span className="inline-block mt-2 px-3 py-1 text-xs font-semibold text-white bg-[#c4d600] rounded-full">
-            Principal
-          </span>
-        ) : (
-          <button
-            onClick={() => onSetFavorite(location.id)}
-            className="inline-block mt-2 px-3 py-1 text-xs font-medium text-neutral-500 bg-neutral-100 rounded-full hover:bg-neutral-200 transition-colors"
-          >
-            Marcar como principal
-          </button>
-        )}
       </div>
 
       <div className="flex items-center gap-3">
-        {/* <button
-          onClick={() => onEdit(location)}
-          className="p-2 text-neutral-400 hover:text-neutral-600 transition-colors"
-          aria-label="Editar dirección"
+        <button
+          onClick={() => onSetFavorite(location.id)}
+          className={`p-2 transition-colors ${location.favorite ? "text-red-500" : "text-neutral-300 hover:text-red-400"}`}
+          aria-label={location.favorite ? "Dirección favorita" : "Marcar como favorita"}
         >
-          <Pencil className="w-5 h-5" />
-        </button> */}
+          <Heart className="w-5 h-5" fill={location.favorite ? "currentColor" : "none"} />
+        </button>
         <button
           onClick={() => onDelete(location.id)}
-          className="p-2 text-red-400 hover:text-red-600 transition-colors"
+          className="p-2 text-neutral-400 hover:text-red-600 transition-colors"
           aria-label="Eliminar dirección"
         >
           <Trash2 className="w-5 h-5" />

@@ -114,6 +114,8 @@ export default function LocationsPage() {
   };
 
   const handleSetFavorite = async (locationId: string) => {
+    if (!user) return;
+    const previousLocations = [...locations];
     try {
       setLocations((prev) =>
         prev.map((loc) => ({
@@ -121,8 +123,11 @@ export default function LocationsPage() {
           favorite: loc.id === locationId,
         }))
       );
+      const token = await getIdToken(user);
+      await LocationService.setFavorite({ token, id: locationId });
     } catch (err) {
       console.error("Error marcando dirección como favorita", err);
+      setLocations(previousLocations);
     }
   };
 
