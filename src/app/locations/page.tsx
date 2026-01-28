@@ -12,6 +12,7 @@ import { CheckoutFormProvider } from "@/contexts/CheckoutFormContext";
 import { Address } from "@/types/address";
 import { LocationList } from "./LocationList";
 import { ConfirmDeleteLocationModal } from "./ConfirmDeleteLocationModal";
+import { PageHeader } from "@/components/ui/pageHeader";
 
 export default function LocationsPage() {
   const { user, loading } = useAuth();
@@ -143,9 +144,7 @@ export default function LocationsPage() {
     <CheckoutFormProvider>
       <div className="mt-[130px] min-h-screen bg-white py-8 px-4">
         <div className="max-w-2xl mx-auto">
-          <h1 className="text-xl font-bold text-neutral-800 mb-6 uppercase">
-            Mis Direcciones
-          </h1>
+          <PageHeader title="Mis Direcciones" />
 
           <LocationList
             locations={locations}
