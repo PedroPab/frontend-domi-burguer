@@ -205,7 +205,7 @@ export function useMenu() {
       name: "COMBO ESPECIAL",
       basePrice: 28900,
       price: 28900,
-      body: "Nuestra hamburguesa estrella, acompañada de papas rizadas, crocantes.",
+      body: "Nuestra hamburguesa, acompañada de papas rizadas crocantes y nuestra coquitas de Salsa de Ajo y salsa roja.",
       bigImage: "/comboEspecial.png",
       image1: "/burgerSmall.png",
       image2: "/papitasSmall.png",

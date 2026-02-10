@@ -3,9 +3,6 @@ import React, { useEffect } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
-import { Input } from "../ui/input";
-import { GoogleIcon } from "../ui/icons";
-import { Separator } from "../ui/separator";
 
 interface ModalProps {
   isOpen: boolean;
@@ -50,16 +47,35 @@ export const WorkingOnModal = ({ isOpen, onClose }: ModalProps) => {
       >
         <div className="flex mt-6 lg:mt-0 flex-col rounded-2xl px-[30px] lg:px-[140px] w-full justify-center gap-6 h-full ">
           <DialogTitle className=" font-bold text-[20px]! md:text-[24px]! leading-[22px]! md:leading-[26px]! text-neutral-black-80;">
-            ESTAMOS TRABAJANDO EN ESTA FUNCIÓN
+            PRÓXIMAMENTE
           </DialogTitle>
           <div className="flex flex-col gap-4">
             <p className="text-neutral-600">
-              Nuestro equipo está trabajando arduamente para implementarla y ofrecerte la mejor experiencia posible.
+              Próximamente podrás registrarte para que tus pedidos sean más fácil y elegir desde qué cocina quieres que salga tu pedido.
             </p>
             <p className="text-neutral-600">
-              Mientras tanto, te invitamos a explorar otras características de
-              nuestra aplicación. ¡Gracias por tu paciencia y comprensión!
+              Actualmente contamos con 2 sedes en el área metropolitana:
             </p>
+            <div className="text-neutral-600 space-y-2">
+              <a
+                href="https://maps.app.goo.gl/CmTjewV63uy2SdDb9"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block hover:text-primary-red transition-colors"
+              >
+                <strong>📍 Sede Norte:</strong><br />
+                Barrio Pedregal – Tv. 103A #74A-94 (Cerca de Comfama Pedregal)
+              </a>
+              <a
+                href="https://maps.app.goo.gl/8uqEf6W9qg5yp62AA"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block hover:text-primary-red transition-colors"
+              >
+                <strong>📍 Sede Sur:</strong><br />
+                Itagüí – Cl. 84A #52D-53 (Cerca del Parque Chimeneas)
+              </a>
+            </div>
           </div>
           {/* imagen de gato trabajando  */}
           <div className="flex justify-center">

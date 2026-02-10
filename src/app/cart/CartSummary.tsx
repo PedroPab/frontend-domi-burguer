@@ -99,7 +99,7 @@ export const CartSummary: React.FC<CartSummaryProps> = ({
                                                 {item.image2 && (
                                                     <Image
                                                         src={item.image2}
-                                                        alt="Domiburger papitas"
+                                                        alt="Domi Burger papitas"
                                                         width={57}
                                                         height={84}
                                                         className="object-cover absolute top-5 left-[41px]"
