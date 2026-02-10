@@ -212,14 +212,14 @@ export const ModalAddress = ({
                 </Autocomplete>
               )}
 
-              <Input
+              {/* <Input
                 className="shadow-none"
                 placeholder="Nombre de la ubicación (ej: Casa, Oficina)"
                 value={formState.addressName}
                 onChange={(e) => updateField("addressName", e.target.value)}
                 id="name"
                 name="name"
-              />
+              /> */}
 
               <div className="flex gap-2">
                 <Select
@@ -235,7 +235,8 @@ export const ModalAddress = ({
                     <SelectItem value="house">Casa</SelectItem>
                     <SelectItem value="building">Edificio</SelectItem>
                     <SelectItem value="urbanization">Urbanización</SelectItem>
-                    <SelectItem value="office">Oficina</SelectItem>
+                    {/* <SelectItem value="office">Oficina</SelectItem> */}
+                    {/* <SelectItem value="hotel">Hotel</SelectItem> */}
                   </SelectContent>
                 </Select>
 

@@ -9,7 +9,8 @@ import {
   TomateIcon,
   LogoProps,
   AjoIcon,
-  CebollaIcon
+  CebollaIcon,
+  CloseIcon,
 
 } from "@/components/ui/icons";
 import { Complement } from "@/types/products";
@@ -26,6 +27,7 @@ const iconMap: { [key: string]: React.FC<LogoProps> } = {
   TomateIcon,
   CupSoda,
   AjoIcon,
+  CloseIcon
 };
 
 
@@ -124,7 +126,7 @@ const otrosData: Complement[] = [
   },
   {
     id: 23,
-    name: "Sala de Ajo",
+    name: "Salsa de Ajo",
     price: null,
     icon: "AjoIcon",
     quantity: 1,
@@ -135,7 +137,7 @@ const otrosData: Complement[] = [
   },
   {
     id: 22,
-    name: "Sala Roja",
+    name: "Salsa Roja",
     price: null,
     icon: "SouceIcon",
     quantity: 1,
@@ -144,26 +146,7 @@ const otrosData: Complement[] = [
     minusId: 22,
     minusComplement: false,
   },
-  {
-    id: 71,
-    name: "1 oz Salsa de Ajo",
-    price: 2000,
-    icon: "AjoIcon",
-    quantity: 0,
-    type: "addable",
-    additionId: 3,
-    minusComplement: false,
-  },
-  {
-    id: 72,
-    name: "1 oz salsa roja",
-    price: 1500,
-    icon: "TomateIcon",
-    quantity: 0,
-    type: "addable",
-    additionId: 8,
-    minusComplement: false,
-  },
+
   {
     id: 73,
     name: "Sin vegetales",
@@ -201,10 +184,100 @@ const gaseosasData: Complement[] = [
   },
 ];
 
+const salsasData: Complement[] = [
+  {
+    id: 71,
+    name: "1 oz Salsa de Ajo",
+    price: 2000,
+    icon: "AjoIcon",
+    quantity: 0,
+    type: "addable",
+    additionId: 3,
+    minusComplement: false,
+  },
+  {
+    id: 72,
+    name: "1 oz salsa roja",
+    price: 1500,
+    icon: "TomateIcon",
+    quantity: 0,
+    type: "addable",
+    additionId: 8,
+    minusComplement: false,
+  },
+  //sin salsas
+  {
+    id: 15,
+    name: "Sin Salsas",
+    price: null,
+    icon: "CloseIcon",
+    quantity: 0,
+    type: "addable",
+    additionId: 15,
+    minusComplement: false,
+  },
+  //solo coquitas blancas
+  {
+    id: 16,
+    name: "Coquitas Blancas en las papas",
+    price: null,
+    icon: "SouceIcon",
+    quantity: 0,
+    type: "addable",
+    additionId: 16,
+    minusComplement: false,
+  },
+  //solo coquitas rojas
+  {
+    id: 17,
+    name: "Coquitas Rojas en las papas",
+    price: null,
+    icon: "SouceIcon",
+    quantity: 0,
+    type: "addable",
+    additionId: 17,
+    minusComplement: false,
+  },
+  // Solo salsa Roja en la hamburguesa
+  {
+    id: 23,
+    name: "Solo Salsa Roja en la hamburguesa",
+    price: null,
+    icon: "SouceIcon",
+    quantity: 0,
+    type: "addable",
+    additionId: 23,
+    minusComplement: false,
+  },
+  // Solo salsa Blanca en la hamburguesa.
+  {
+    id: 22,
+    name: "Solo Salsa Blanca en la hamburguesa",
+    price: null,
+    icon: "SouceIcon",
+    quantity: 0,
+    type: "addable",
+    additionId: 22,
+    minusComplement: false,
+  },
+  // Salsas aparte de la hamburguesa
+  {
+    id: 27,
+    name: "Salsas aparte de la hamburguesa",
+    price: null,
+    icon: "SouceIcon",
+    quantity: 0,
+    type: "addable",
+    additionId: 27,
+    minusComplement: false,
+  },
+];
+
 
 export {
   favoritosData,
   otrosData,
   gaseosasData,
+  salsasData,
   iconMap
 };

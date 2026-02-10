@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/dialog";
 import { QuantitySelector } from "../ui/quantitySelector";
 import { Complement } from "@/types/products";
-import { favoritosData, otrosData, gaseosasData, iconMap } from "@/utils/complementSections";
+import { favoritosData, otrosData, gaseosasData, iconMap, salsasData } from "@/utils/complementSections";
 
 import { ChevronDown, ChevronUp } from "lucide-react";
 
@@ -35,12 +35,14 @@ export const CustomizationModalSection = ({
   const [favoritos, setFavoritos] = useState<Complement[]>(favoritosData);
   const [otros, setOtros] = useState<Complement[]>(otrosData);
   const [gaseosas, setGaseosas] = useState<Complement[]>(gaseosasData);
+  const [salsas, setSalsas] = useState<Complement[]>([]);
   console.log("COMPLEMENTOS EN MODAL:", complements, gaseosas);
 
   // Estados de los acordeones
   const [isFavoritosOpen, setIsFavoritosOpen] = useState(true);
   const [isOtrosOpen, setIsOtrosOpen] = useState(false);
   const [isGaseosasOpen, setIsGaseosasOpen] = useState(false);
+  const [isSalsasOpen, setIsSalsasOpen] = useState(false);
 
   // Sincronizar ingredientes con complementos guardados
   useEffect(() => {
@@ -90,6 +92,7 @@ export const CustomizationModalSection = ({
       setOtros(syncIngredients(otrosData));
       console.log("GASEOSAS SYNC:", syncIngredients(gaseosasData), gaseosasData);
       setGaseosas(syncIngredients(gaseosasData));
+      setSalsas(syncIngredients(salsasData));
     }
   }, [complements, isOpen, productId]);
 
@@ -112,7 +115,7 @@ export const CustomizationModalSection = ({
   const handleIngredientChange = (
     ingredient: Complement,
     action: "plus" | "minus",
-    section: "favoritos" | "otros" | "gaseosas"
+    section: "favoritos" | "otros" | "gaseosas" | "salsas"
   ) => {
     if (
       action === "plus" &&
@@ -140,6 +143,8 @@ export const CustomizationModalSection = ({
       setOtros(updateSection);
     } else if (section === "gaseosas") {
       setGaseosas(updateSection);
+    } else if (section === "salsas") {
+      setSalsas(updateSection);
     }
 
     handleChangeComplement(ingredient, action);
@@ -149,11 +154,12 @@ export const CustomizationModalSection = ({
     setFavoritos(favoritosData);
     setOtros(otrosData);
     setGaseosas(gaseosasData);
+    setSalsas(salsasData);
   };
 
   const renderIngredientSection = (
     ingredients: Complement[],
-    section: "favoritos" | "otros" | "gaseosas"
+    section: "favoritos" | "otros" | "gaseosas" | "salsas"
   ) => {
     return ingredients.map((ingredient) => {
       const IconComponent = ingredient.icon ? iconMap[ingredient.icon] : null;
@@ -266,6 +272,34 @@ export const CustomizationModalSection = ({
               </div>
             )}
           </div>
+
+          {/* SECCIÓN SALSAS */}
+          <div className="flex flex-col items-start w-full">
+            <button
+              onClick={() => setIsSalsasOpen(!isSalsasOpen)}
+              className="flex items-center gap-4 px-0 py-3 w-full border-b border-neutral-black-30"
+            >
+              {/* <div className="flex-1 body-font font-bold text-left">Salsas</div> */}
+              <div className="flex-1 flex flex-col text-left">
+                <span className="body-font font-bold">Salsas</span>
+
+                <span className="text-sm text-neutral-black-60 font-normal mt-1">Manejamos Salsa de Ajo de la casa y Salsa roja (de tomate)</span>
+
+              </div>
+              {isSalsasOpen ? (
+                <ChevronUp className="w-5 h-5" />
+              ) : (
+                <ChevronDown className="w-5 h-5" />
+              )}
+            </button>
+
+            {isSalsasOpen && (
+              <div className="flex flex-col w-full pt-2">
+                {renderIngredientSection(salsas, "salsas")}
+              </div>
+            )}
+          </div>
+
 
           {/* SECCIÓN GASEOSAS */}
           <div className="flex flex-col items-start w-full">

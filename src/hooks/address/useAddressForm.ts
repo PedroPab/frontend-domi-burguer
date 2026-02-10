@@ -42,7 +42,7 @@ export const useAddressForm = (initialState?: Partial<AddressFormState>) => {
   const isFormValid = () => {
     return (
       formState.address !== '' &&
-      formState.addressName !== '' &&
+      // formState.addressName !== '' &&
       formState.selectedType !== '' &&
       formState.coordinates !== null &&
       formState.floor !== ''

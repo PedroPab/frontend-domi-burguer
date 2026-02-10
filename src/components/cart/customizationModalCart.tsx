@@ -10,7 +10,7 @@ import { ChevronDown, ChevronUp } from "lucide-react";
 import { QuantitySelector } from "../ui/quantitySelector";
 import { Complement } from "@/types/products";
 import { useCartStore, CartItem } from "@/store/cartStore";
-import { favoritosData, otrosData, gaseosasData, iconMap } from "@/utils/complementSections";
+import { favoritosData, otrosData, gaseosasData, iconMap, salsasData } from "@/utils/complementSections";
 
 
 interface CustomizationModalCartProps {
@@ -29,10 +29,12 @@ export const CustomizationModalCart = ({
   const [favoritos, setFavoritos] = useState(favoritosData);
   const [otros, setOtros] = useState(otrosData);
   const [gaseosas, setGaseosas] = useState(gaseosasData);
+  const [salsas, setSalsas] = useState(salsasData);
 
   const [isFavoritosOpen, setIsFavoritosOpen] = useState(true);
   const [isOtrosOpen, setIsOtrosOpen] = useState(true);
   const [isGaseosasOpen, setIsGaseosasOpen] = useState(false);
+  const [isSalsasOpen, setIsSalsasOpen] = useState(false);
 
   // Sincroniza complementos con el carrito
   useEffect(() => {
@@ -69,6 +71,7 @@ export const CustomizationModalCart = ({
       setFavoritos(sync(favoritosData));
       setOtros(sync(otrosData));
       setGaseosas(sync(gaseosasData));
+      setSalsas(sync(salsasData));
     }
   }, [cartItem, isOpen]);
 
@@ -89,7 +92,7 @@ export const CustomizationModalCart = ({
   const handleIngredientChange = (
     ingredient: Complement,
     action: "plus" | "minus",
-    section: "favoritos" | "otros" | "gaseosas"
+    section: "favoritos" | "otros" | "gaseosas" | "salsas"
   ) => {
     if (
       action === "plus" &&
@@ -110,10 +113,11 @@ export const CustomizationModalCart = ({
     if (section === "favoritos") setFavoritos(updateList);
     if (section === "otros") setOtros(updateList);
     if (section === "gaseosas") setGaseosas(updateList);
+    if (section === "salsas") setSalsas(updateList);
   };
 
   const convertToComplements = (): Complement[] => {
-    const all = [...favoritos, ...otros, ...gaseosas];
+    const all = [...favoritos, ...otros, ...gaseosas, ...salsas];
     const complements: Complement[] = [];
 
     all.forEach((ing) => {
@@ -162,16 +166,22 @@ export const CustomizationModalCart = ({
   const renderSection = (
     title: string,
     ingredients: Complement[],
-    section: "favoritos" | "otros" | "gaseosas",
+    section: "favoritos" | "otros" | "gaseosas" | "salsas",
     isOpen: boolean,
-    toggle: () => void
+    toggle: () => void,
+    description?: string
   ) => (
     <div className="flex flex-col items-start w-full">
       <button
         onClick={toggle}
         className="flex items-center gap-4 px-0 py-3 w-full border-b border-neutral-black-30"
       >
-        <div className="flex-1 body-font font-bold text-left">{title}</div>
+        <div className="flex-1 flex flex-col text-left">
+          <span className="body-font font-bold">{title}</span>
+          {description && (
+            <span className="text-sm text-neutral-black-60 font-normal mt-1">{description}</span>
+          )}
+        </div>
         {isOpen ? (
           <ChevronUp className="w-5 h-5" />
         ) : (
@@ -243,6 +253,8 @@ export const CustomizationModalCart = ({
           {renderSection("Gaseosas", gaseosas, "gaseosas", isGaseosasOpen, () =>
             setIsGaseosasOpen(!isGaseosasOpen)
           )}
+          {renderSection("Salsas", salsas, "salsas", isSalsasOpen, () =>
+            setIsSalsasOpen(!isSalsasOpen), 'Manejamos Salsa de Ajo de la casa y Salsa roja (de tomate)')}
 
           <div className="flex justify-between items-center pt-4">
             <Button
