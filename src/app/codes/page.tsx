@@ -4,11 +4,12 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import { Code } from "@/types/codes";
-import { Loader2, Plus } from "lucide-react";
+import { Loader2, Plus, Gift } from "lucide-react";
 import { CodesService } from "@/services/codesService";
 import { getIdToken } from "firebase/auth";
 import { CodeCard } from "./CodeCard";
 import { CodeModal } from "./CodeModal";
+import { UserCodeModal } from "./UserCodeModal";
 
 export default function CodesPage() {
     const { user, loading } = useAuth();
@@ -18,6 +19,7 @@ export default function CodesPage() {
     const [isLoadingCodes, setIsLoadingCodes] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isUserModalOpen, setIsUserModalOpen] = useState(false);
     const [codeToEdit, setCodeToEdit] = useState<Code | null>(null);
 
     useEffect(() => {
@@ -32,7 +34,8 @@ export default function CodesPage() {
         setError(null);
         try {
             const token = await getIdToken(user);
-            const response = await CodesService.getAllCodes(token);
+            const userId = user.uid;
+            const response = await CodesService.getCodesByUser(token, userId);
             setCodes(response.body);
         } catch (err) {
             console.error("Error cargando códigos", err);
@@ -46,7 +49,7 @@ export default function CodesPage() {
         if (user) {
             fetchCodes();
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user]);
 
     const handleOpenCreate = () => {
@@ -141,6 +144,14 @@ export default function CodesPage() {
                 )}
 
                 <button
+                    onClick={() => setIsUserModalOpen(true)}
+                    className="w-full py-4 mb-4 bg-gradient-to-r from-[#e73533] to-[#ff6b6b] rounded-lg flex items-center justify-center gap-2 text-white font-medium hover:opacity-90 transition-opacity"
+                >
+                    <Gift className="w-5 h-5" />
+                    CREAR MI CÓDIGO DE REFERIDO
+                </button>
+
+                <button
                     onClick={handleOpenCreate}
                     className="w-full py-4 border-2 border-dashed border-[#e73533] rounded-lg flex items-center justify-center gap-2 text-neutral-800 font-medium hover:bg-red-50 transition-colors"
                 >
@@ -153,6 +164,12 @@ export default function CodesPage() {
                 isOpen={isModalOpen}
                 onClose={handleCloseModal}
                 codeToEdit={codeToEdit}
+            />
+
+            <UserCodeModal
+                isOpen={isUserModalOpen}
+                onClose={() => setIsUserModalOpen(false)}
+                onSuccess={fetchCodes}
             />
         </div>
     );

@@ -19,7 +19,22 @@ export class CodesService {
             throw error;
         }
     }
-
+    static async getCodesByUser(token: string, id: string): Promise<{ body: Code[] }> {
+        try {
+            const response = await fetch(`${this.API_URL}api/v2/codes/user/${id}`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                },
+            });
+            if (!response.ok) {
+                throw new Error("Error fetching user's codes");
+            }
+            return await response.json();
+        } catch (error) {
+            console.error("Error fetching user's codes:", error);
+            throw error;
+        }
+    }
     static async getCodeId(id: string): Promise<{ body: Code }> {
         try {
             const response = await fetch(`${this.API_URL}api/v2/codes/${id}`);
