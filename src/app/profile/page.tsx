@@ -293,6 +293,18 @@ export default function ProfilePage() {
                             </div>
                             <ChevronRight className="w-5 h-5 text-neutral-black-60" />
                         </button>
+
+                        {/* mis codigos */}
+                        <button
+                            onClick={() => router.push("/codes")}
+                            className="w-full flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+                        >
+                            <div className="flex items-center gap-3">
+                                <Shield className="w-5 h-5 text-primary-red" />
+                                <span className="font-medium text-neutral-black-80">Mis Códigos</span>
+                            </div>
+                            <ChevronRight className="w-5 h-5 text-neutral-black-60" />
+                        </button>
                     </div>
                 </Card>
 
