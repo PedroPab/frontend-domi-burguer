@@ -225,6 +225,30 @@ export function useMenu() {
       quantity: 1,
       complements: [],
     },
+    {
+      id: 39,
+      name: "PAPAS VAQUERA",
+      basePrice: 23500,
+      price: 23500,
+      body: "Nuestras deliciosas papas con el toque especial de la casa, crujientes por fuera y suaves por dentro.",
+      bigImage: "/papaCayendo2.png",
+      image1: "/papaCayendo2.png",
+      icons: [FrenchFriesIcon],
+      quantity: 1,
+      complements: [],
+    },
+    {
+      id: 40,
+      name: "PAPAS TROYANA",
+      basePrice: 33500,
+      price: 33500,
+      body: "Papas premium cargadas con todos los ingredientes, una explosión de sabor en cada bocado.",
+      bigImage: "/papaTroyana3.png",
+      image1: "/papaTroyana3.png",
+      icons: [FrenchFriesIcon],
+      quantity: 1,
+      complements: [],
+    },
   ]);
 
   const [actualProduct, setActualProduct] = useState(0);

@@ -69,6 +69,25 @@ export const showFoodToast = (productName: string) => {
               className="absolute top-[5px] left-[3px] w-[118px] h-[85px] object-cover overflow-visible"
             />
           )}
+          {productName === "PAPAS VAQUERA" && (
+            <Image
+              src="/papaCayendo2.png"
+              alt="Papas Vaquera"
+              width={67}
+              height={105}
+              className="absolute top-[-5px] left-[15px] w-[67px] h-[105px] object-cover"
+            />
+          )}
+          {productName === "PAPAS TROYANA" && (
+            <Image
+              src="/papaTroyana3.png"
+              alt="Papas Troyana"
+              width={67}
+              height={105}
+              className="absolute top-[-5px] left-[15px] w-[67px] h-[105px] object-cover"
+            />
+          )}
+
         </div>
         <div className="flex flex-col flex-grow ml-4 mt-2 overflow-visible">
           <h4 className="font-bold text-[14px] md:text-[16px] text-[#333333]">
