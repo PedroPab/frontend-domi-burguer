@@ -228,8 +228,8 @@ export function useMenu() {
     {
       id: 39,
       name: "PAPAS VAQUERA",
-      basePrice: 23500,
-      price: 23500,
+      basePrice: 23900,
+      price: 23900,
       body: "Nuestras deliciosas papas con el toque especial de la casa, crujientes por fuera y suaves por dentro.",
       bigImage: "/papaCayendo2.png",
       image1: "/papaCayendo2.png",
@@ -240,8 +240,8 @@ export function useMenu() {
     {
       id: 40,
       name: "PAPAS TROYANA",
-      basePrice: 33500,
-      price: 33500,
+      basePrice: 33900,
+      price: 33900,
       body: "Papas premium cargadas con todos los ingredientes, una explosión de sabor en cada bocado.",
       bigImage: "/papaTroyana3.png",
       image1: "/papaTroyana3.png",
