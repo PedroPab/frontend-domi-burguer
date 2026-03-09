@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/dialog";
 import { QuantitySelector } from "../ui/quantitySelector";
 import { Complement } from "@/types/products";
-import { favoritosData, otrosData, gaseosasData, iconMap, salsasData } from "@/utils/complementSections";
+import { favoritosData, otrosData, gaseosasData, iconMap, salsasData, salsasPapasData } from "@/utils/complementSections";
 
 import { ChevronDown, ChevronUp } from "lucide-react";
 
@@ -32,6 +32,9 @@ export const CustomizationModalSection = ({
   handleChangeComplement,
   complements = [],
 }: CustomizationModalSectionProps) => {
+  // Detectar si es un producto de papas
+  const isPapas = productName === "PAPAS VAQUERA" || productName === "PAPAS TROYANA";
+
   const [favoritos, setFavoritos] = useState<Complement[]>(favoritosData);
   const [otros, setOtros] = useState<Complement[]>(otrosData);
   const [gaseosas, setGaseosas] = useState<Complement[]>(gaseosasData);
@@ -39,10 +42,10 @@ export const CustomizationModalSection = ({
   console.log("COMPLEMENTOS EN MODAL:", complements, gaseosas);
 
   // Estados de los acordeones
-  const [isFavoritosOpen, setIsFavoritosOpen] = useState(true);
+  const [isFavoritosOpen, setIsFavoritosOpen] = useState(!isPapas);
   const [isOtrosOpen, setIsOtrosOpen] = useState(false);
   const [isGaseosasOpen, setIsGaseosasOpen] = useState(false);
-  const [isSalsasOpen, setIsSalsasOpen] = useState(false);
+  const [isSalsasOpen, setIsSalsasOpen] = useState(isPapas);
 
   // Sincronizar ingredientes con complementos guardados
   useEffect(() => {
@@ -92,9 +95,10 @@ export const CustomizationModalSection = ({
       setOtros(syncIngredients(otrosData));
       console.log("GASEOSAS SYNC:", syncIngredients(gaseosasData), gaseosasData);
       setGaseosas(syncIngredients(gaseosasData));
-      setSalsas(syncIngredients(salsasData));
+      // Usar salsasPapasData para productos de papas
+      setSalsas(syncIngredients(isPapas ? salsasPapasData : salsasData));
     }
-  }, [complements, isOpen, productId]);
+  }, [complements, isOpen, productId, isPapas]);
 
   // Manejo del botón "atrás" del navegador
   useEffect(() => {
@@ -226,52 +230,58 @@ export const CustomizationModalSection = ({
 
         <div className="flex flex-col gap-6 px-10 pb-10">
           <p className="body-font mt-5 text-neutral-black-60">
-            Selecciona los ingredientes que quieres agregar o los que deseas retirar.
+            {isPapas
+              ? "Selecciona las salsas que deseas agregar."
+              : "Selecciona los ingredientes que quieres agregar o los que deseas retirar."}
           </p>
 
-          {/* SECCIÓN FAVORITOS */}
-          <div className="flex flex-col items-start w-full">
-            <button
-              onClick={() => setIsFavoritosOpen(!isFavoritosOpen)}
-              className="flex items-center gap-4 px-0 py-3 w-full border-b border-neutral-black-30"
-            >
-              <div className="flex-1 body-font font-bold text-left">
-                Favoritos
-              </div>
-              {isFavoritosOpen ? (
-                <ChevronUp className="w-5 h-5" />
-              ) : (
-                <ChevronDown className="w-5 h-5" />
+          {/* SECCIÓN FAVORITOS - Solo para hamburguesas/combos */}
+          {!isPapas && (
+            <div className="flex flex-col items-start w-full">
+              <button
+                onClick={() => setIsFavoritosOpen(!isFavoritosOpen)}
+                className="flex items-center gap-4 px-0 py-3 w-full border-b border-neutral-black-30"
+              >
+                <div className="flex-1 body-font font-bold text-left">
+                  Favoritos
+                </div>
+                {isFavoritosOpen ? (
+                  <ChevronUp className="w-5 h-5" />
+                ) : (
+                  <ChevronDown className="w-5 h-5" />
+                )}
+              </button>
+
+              {isFavoritosOpen && (
+                <div className="flex flex-col w-full pt-2">
+                  {renderIngredientSection(favoritos, "favoritos")}
+                </div>
               )}
-            </button>
+            </div>
+          )}
 
-            {isFavoritosOpen && (
-              <div className="flex flex-col w-full pt-2">
-                {renderIngredientSection(favoritos, "favoritos")}
-              </div>
-            )}
-          </div>
+          {/* SECCIÓN OTROS - Solo para hamburguesas/combos */}
+          {!isPapas && (
+            <div className="flex flex-col items-start w-full">
+              <button
+                onClick={() => setIsOtrosOpen(!isOtrosOpen)}
+                className="flex items-center gap-4 px-0 py-3 w-full border-b border-neutral-black-30"
+              >
+                <div className="flex-1 body-font font-bold text-left">Otros</div>
+                {isOtrosOpen ? (
+                  <ChevronUp className="w-5 h-5" />
+                ) : (
+                  <ChevronDown className="w-5 h-5" />
+                )}
+              </button>
 
-          {/* SECCIÓN OTROS */}
-          <div className="flex flex-col items-start w-full">
-            <button
-              onClick={() => setIsOtrosOpen(!isOtrosOpen)}
-              className="flex items-center gap-4 px-0 py-3 w-full border-b border-neutral-black-30"
-            >
-              <div className="flex-1 body-font font-bold text-left">Otros</div>
-              {isOtrosOpen ? (
-                <ChevronUp className="w-5 h-5" />
-              ) : (
-                <ChevronDown className="w-5 h-5" />
+              {isOtrosOpen && (
+                <div className="flex flex-col w-full pt-2">
+                  {renderIngredientSection(otros, "otros")}
+                </div>
               )}
-            </button>
-
-            {isOtrosOpen && (
-              <div className="flex flex-col w-full pt-2">
-                {renderIngredientSection(otros, "otros")}
-              </div>
-            )}
-          </div>
+            </div>
+          )}
 
           {/* SECCIÓN SALSAS */}
           <div className="flex flex-col items-start w-full">
@@ -283,7 +293,11 @@ export const CustomizationModalSection = ({
               <div className="flex-1 flex flex-col text-left">
                 <span className="body-font font-bold">Salsas</span>
 
-                <span className="text-sm text-neutral-black-60 font-normal mt-1">Manejamos Salsa de Ajo de la casa y Salsa roja (de tomate)</span>
+                <span className="text-sm text-neutral-black-60 font-normal mt-1">
+                  {isPapas
+                    ? "Puedes agregar salsas adicionales a tus papas"
+                    : "Manejamos Salsa de Ajo de la casa y Salsa roja (de tomate)"}
+                </span>
 
               </div>
               {isSalsasOpen ? (
@@ -301,28 +315,30 @@ export const CustomizationModalSection = ({
           </div>
 
 
-          {/* SECCIÓN GASEOSAS */}
-          <div className="flex flex-col items-start w-full">
-            <button
-              onClick={() => setIsGaseosasOpen(!isGaseosasOpen)}
-              className="flex items-center gap-4 px-0 py-3 w-full border-b border-neutral-black-30"
-            >
-              <div className="flex-1 body-font font-bold text-left">
-                Bebidas
-              </div>
-              {isGaseosasOpen ? (
-                <ChevronUp className="w-5 h-5" />
-              ) : (
-                <ChevronDown className="w-5 h-5" />
-              )}
-            </button>
+          {/* SECCIÓN GASEOSAS - Solo para hamburguesas/combos */}
+          {!isPapas && (
+            <div className="flex flex-col items-start w-full">
+              <button
+                onClick={() => setIsGaseosasOpen(!isGaseosasOpen)}
+                className="flex items-center gap-4 px-0 py-3 w-full border-b border-neutral-black-30"
+              >
+                <div className="flex-1 body-font font-bold text-left">
+                  Bebidas
+                </div>
+                {isGaseosasOpen ? (
+                  <ChevronUp className="w-5 h-5" />
+                ) : (
+                  <ChevronDown className="w-5 h-5" />
+                )}
+              </button>
 
-            {isGaseosasOpen && (
-              <div className="flex flex-col w-full pt-2">
-                {renderIngredientSection(gaseosas, "gaseosas")}
-              </div>
-            )}
-          </div>
+              {isGaseosasOpen && (
+                <div className="flex flex-col w-full pt-2">
+                  {renderIngredientSection(gaseosas, "gaseosas")}
+                </div>
+              )}
+            </div>
+          )}
 
           {/* Botones de acción */}
 

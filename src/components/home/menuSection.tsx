@@ -159,7 +159,7 @@ export default function MenuSection() {
             </p>
             <Button
               variant="ghost"
-              className={`px-4 py-2 w-[177px] h-[40px] bg-accent-yellow-20 hover:bg-accent-yellow-40 rounded-[30px] transition-all ${actualProduct >= 2 ? "hidden" : ""
+              className={`px-4 py-2 w-[177px] h-[40px] bg-accent-yellow-20 hover:bg-accent-yellow-40 rounded-[30px] transition-all ${actualProduct === 2 ? "hidden" : ""
                 }`}
               onClick={() => handleEditProduct()}
             >

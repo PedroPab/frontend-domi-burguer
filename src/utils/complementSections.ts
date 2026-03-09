@@ -273,11 +273,66 @@ const salsasData: Complement[] = [
   },
 ];
 
+// Salsas específicas para papas (sin opciones de hamburguesa)
+const salsasPapasData: Complement[] = [
+  {
+    id: 71,
+    name: "1 oz Salsa de Ajo",
+    price: 2000,
+    icon: "AjoIcon",
+    quantity: 0,
+    type: "addable",
+    additionId: 3,
+    minusComplement: false,
+  },
+  {
+    id: 72,
+    name: "1 oz salsa roja",
+    price: 1500,
+    icon: "TomateIcon",
+    quantity: 0,
+    type: "addable",
+    additionId: 8,
+    minusComplement: false,
+  },
+  {
+    id: 15,
+    name: "Sin Salsas",
+    price: null,
+    icon: "CloseIcon",
+    quantity: 0,
+    type: "addable",
+    additionId: 15,
+    minusComplement: false,
+  },
+  {
+    id: 16,
+    name: "Coquitas Blancas en las papas",
+    price: null,
+    icon: "SouceIcon",
+    quantity: 0,
+    type: "addable",
+    additionId: 16,
+    minusComplement: false,
+  },
+  {
+    id: 17,
+    name: "Coquitas Rojas en las papas",
+    price: null,
+    icon: "SouceIcon",
+    quantity: 0,
+    type: "addable",
+    additionId: 17,
+    minusComplement: false,
+  },
+];
+
 
 export {
   favoritosData,
   otrosData,
   gaseosasData,
   salsasData,
+  salsasPapasData,
   iconMap
 };

@@ -10,7 +10,7 @@ import { ChevronDown, ChevronUp } from "lucide-react";
 import { QuantitySelector } from "../ui/quantitySelector";
 import { Complement } from "@/types/products";
 import { useCartStore, CartItem } from "@/store/cartStore";
-import { favoritosData, otrosData, gaseosasData, iconMap, salsasData } from "@/utils/complementSections";
+import { favoritosData, otrosData, gaseosasData, iconMap, salsasData, salsasPapasData } from "@/utils/complementSections";
 
 
 interface CustomizationModalCartProps {
@@ -26,15 +26,18 @@ export const CustomizationModalCart = ({
 }: CustomizationModalCartProps) => {
   const { updateItemComplements } = useCartStore();
 
+  // Detectar si es un producto de papas
+  const isPapas = cartItem?.name === "PAPAS VAQUERA" || cartItem?.name === "PAPAS TROYANA";
+
   const [favoritos, setFavoritos] = useState(favoritosData);
   const [otros, setOtros] = useState(otrosData);
   const [gaseosas, setGaseosas] = useState(gaseosasData);
-  const [salsas, setSalsas] = useState(salsasData);
+  const [salsas, setSalsas] = useState(isPapas ? salsasPapasData : salsasData);
 
-  const [isFavoritosOpen, setIsFavoritosOpen] = useState(true);
-  const [isOtrosOpen, setIsOtrosOpen] = useState(true);
+  const [isFavoritosOpen, setIsFavoritosOpen] = useState(!isPapas);
+  const [isOtrosOpen, setIsOtrosOpen] = useState(!isPapas);
   const [isGaseosasOpen, setIsGaseosasOpen] = useState(false);
-  const [isSalsasOpen, setIsSalsasOpen] = useState(false);
+  const [isSalsasOpen, setIsSalsasOpen] = useState(isPapas);
 
   // Sincroniza complementos con el carrito
   useEffect(() => {
@@ -71,9 +74,10 @@ export const CustomizationModalCart = ({
       setFavoritos(sync(favoritosData));
       setOtros(sync(otrosData));
       setGaseosas(sync(gaseosasData));
-      setSalsas(sync(salsasData));
+      // Usar salsasPapasData para productos de papas
+      setSalsas(sync(isPapas ? salsasPapasData : salsasData));
     }
-  }, [cartItem, isOpen]);
+  }, [cartItem, isOpen, isPapas]);
 
   // Cierra con botón atrás
   useEffect(() => {
@@ -236,25 +240,26 @@ export const CustomizationModalCart = ({
 
         <div className="flex flex-col gap-6 px-10 pb-10">
           <p className="body-font mt-5 text-start text-neutral-black-60">
-            Selecciona los ingredientes que quieres agregar o los que deseas
-            retirar.
+            {isPapas
+              ? "Selecciona las salsas que deseas agregar."
+              : "Selecciona los ingredientes que quieres agregar o los que deseas retirar."}
           </p>
 
-          {renderSection(
+          {!isPapas && renderSection(
             "Favoritos",
             favoritos,
             "favoritos",
             isFavoritosOpen,
             () => setIsFavoritosOpen(!isFavoritosOpen)
           )}
-          {renderSection("Otros", otros, "otros", isOtrosOpen, () =>
+          {!isPapas && renderSection("Otros", otros, "otros", isOtrosOpen, () =>
             setIsOtrosOpen(!isOtrosOpen)
           )}
-          {renderSection("Gaseosas", gaseosas, "gaseosas", isGaseosasOpen, () =>
+          {!isPapas && renderSection("Gaseosas", gaseosas, "gaseosas", isGaseosasOpen, () =>
             setIsGaseosasOpen(!isGaseosasOpen)
           )}
           {renderSection("Salsas", salsas, "salsas", isSalsasOpen, () =>
-            setIsSalsasOpen(!isSalsasOpen), 'Manejamos Salsa de Ajo de la casa y Salsa roja (de tomate)')}
+            setIsSalsasOpen(!isSalsasOpen), isPapas ? 'Puedes agregar salsas adicionales a tus papas' : 'Manejamos Salsa de Ajo de la casa y Salsa roja (de tomate)')}
 
           <div className="flex justify-between items-center pt-4">
             <Button
