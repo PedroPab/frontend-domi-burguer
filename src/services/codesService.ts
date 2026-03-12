@@ -35,9 +35,13 @@ export class CodesService {
             throw error;
         }
     }
-    static async getCodeId(id: string): Promise<{ body: Code }> {
+    static async getCodeId(token: string, id: string): Promise<{ body: [Code] }> {
         try {
-            const response = await fetch(`${this.API_URL}api/v2/codes/${id}`);
+            const response = await fetch(`${this.API_URL}api/v2/codes/code/${id}`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                },
+            });
             if (!response.ok) {
                 throw new Error("Error fetching code");
             }
@@ -46,6 +50,21 @@ export class CodesService {
             console.error("Error fetching code:", error);
             throw error;
         }
+    }
+
+    static async validateCoupon(token: string, code: string): Promise<{ body: Code }> {
+        const response = await fetch(`${this.API_URL}api/v2/codes/validate/${code}`, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+            },
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json().catch(() => ({}));
+            throw new Error(errorData.message || "Código no válido");
+        }
+
+        return await response.json();
     }
 
     static async createCode(token: string, code: Partial<Code>): Promise<{ body: Code }> {

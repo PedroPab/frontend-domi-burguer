@@ -1,7 +1,7 @@
 
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { CalendarIcon, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -14,6 +14,7 @@ import Link from "next/link";
 import { useCartActions } from "@/hooks/cart/useCartActions";
 import { useCartSubmit } from "@/hooks/cart/useCartSubmit";
 import { useComplementsModal } from "@/hooks/cart/useComplementsModal";
+import { useCoupon } from "@/hooks/cart/useCoupon";
 import { CartItemCard } from "@/components/cart/CartItemCard";
 import { CouponInput } from "@/components/cart/CouponInput";
 
@@ -33,8 +34,15 @@ export const CartSummary = ({
     const { handleEditComplements } = useComplementsModal();
     const { isSubmitting } = useCartSubmit();
 
-
-    const [codeInput, setCodeInput] = useState("");
+    const {
+        couponCode,
+        setCouponCode,
+        appliedCoupon,
+        isLoading: isCouponLoading,
+        error: couponError,
+        applyCoupon,
+        removeCoupon,
+    } = useCoupon();
 
     return (
         <div className="flex flex-col gap-8 max-w-[500px] justify-center w-full h-full">
@@ -159,9 +167,13 @@ export const CartSummary = ({
 
                         <div className="flex flex-col items-start gap-8 w-full">
                             <CouponInput
-                                couponCode={codeInput}
-                                onCouponChange={(code) => setCodeInput(code)}
-                                onApplyCoupon={() => { console.log("Aplicar cupón:", codeInput); }}
+                                couponCode={couponCode}
+                                onCouponChange={setCouponCode}
+                                onApplyCoupon={applyCoupon}
+                                onRemoveCoupon={removeCoupon}
+                                isLoading={isCouponLoading}
+                                error={couponError ?? undefined}
+                                appliedCoupon={appliedCoupon}
                             />
 
                             <div className="flex flex-col items-start gap-10 w-full rounded-xl">
