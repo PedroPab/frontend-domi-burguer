@@ -17,16 +17,11 @@ import { useComplementsModal } from "@/hooks/cart/useComplementsModal";
 import { useCoupon } from "@/hooks/cart/useCoupon";
 import { CartItemCard } from "@/components/cart/CartItemCard";
 import { CouponInput } from "@/components/cart/CouponInput";
+import { OrderTotals } from "@/components/cart/OrderTotals";
 
 
 export const CartSummary = ({
 }) => {
-    // Utils
-    const formatCurrency = (value: number): string => {
-        if (isNaN(value)) return "0";
-        return value.toLocaleString("es-CO");
-    };
-
     // Context & Store
     const { getSubtotal, getTotal, getDeliveryFee, removeComplement, addItem } = useCartStore();
     const { items, handleDecrease, handleIncrease, } = useCartActions();
@@ -176,37 +171,12 @@ export const CartSummary = ({
                                 appliedCoupon={appliedCoupon}
                             />
 
-                            <div className="flex flex-col items-start gap-10 w-full rounded-xl">
-                                <div className="flex flex-col items-start justify-end gap-4 w-full">
-                                    <div className="flex items-start gap-10 w-full">
-                                        <p className="flex-1 mt-[-0.93px] body-font">Subtotal</p>
-
-                                        <p className="w-fit mt-[-0.93px] body-font">
-                                            ${formatCurrency(getSubtotal())}
-                                        </p>
-                                    </div>
-
-                                    <div className="flex items-start gap-10 w-full">
-                                        <div className="flex-1 mt-[-0.93px] font-body font-[number:var(--body-font-weight)] text-neutrosblack-80 text-[length:var(--body-font-size)] tracking-[var(--body-letter-spacing)] leading-[var(--body-line-height)] [font-style:var(--body-font-style)]">
-                                            Envío
-                                        </div>
-
-                                        <p className="w-fit body-font font-bold">
-                                            $t{formatCurrency(getDeliveryFee())}
-                                        </p>
-                                    </div>
-
-                                    <Separator orientation="horizontal" />
-
-                                    <div className="flex items-center gap-10 w-full">
-                                        <p className="flex-1 body-font font-bold">Total</p>
-
-                                        <h2 className="w-fit mt-[-0.93px]">
-                                            ${formatCurrency(getTotal())}
-                                        </h2>
-                                    </div>
-                                </div>
-                            </div>
+                            <OrderTotals
+                                subtotal={getSubtotal()}
+                                deliveryFee={getDeliveryFee()}
+                                total={getTotal()}
+                                appliedCoupon={appliedCoupon}
+                            />
 
                             <div className="flex items-start justify-end gap-6 w-full">
                                 <Button
