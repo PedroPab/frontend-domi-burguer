@@ -1,7 +1,7 @@
 
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { CalendarIcon, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -15,6 +15,7 @@ import { useCartActions } from "@/hooks/cart/useCartActions";
 import { useCartSubmit } from "@/hooks/cart/useCartSubmit";
 import { useComplementsModal } from "@/hooks/cart/useComplementsModal";
 import { CartItemCard } from "@/components/cart/CartItemCard";
+import { CouponInput } from "@/components/cart/CouponInput";
 
 
 export const CartSummary = ({
@@ -32,6 +33,8 @@ export const CartSummary = ({
     const { handleEditComplements } = useComplementsModal();
     const { isSubmitting } = useCartSubmit();
 
+
+    const [codeInput, setCodeInput] = useState("");
 
     return (
         <div className="flex flex-col gap-8 max-w-[500px] justify-center w-full h-full">
@@ -155,6 +158,12 @@ export const CartSummary = ({
                         </div>
 
                         <div className="flex flex-col items-start gap-8 w-full">
+                            <CouponInput
+                                couponCode={codeInput}
+                                onCouponChange={(code) => setCodeInput(code)}
+                                onApplyCoupon={() => { console.log("Aplicar cupón:", codeInput); }}
+                            />
+
                             <div className="flex flex-col items-start gap-10 w-full rounded-xl">
                                 <div className="flex flex-col items-start justify-end gap-4 w-full">
                                     <div className="flex items-start gap-10 w-full">
