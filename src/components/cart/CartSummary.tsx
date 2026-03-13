@@ -174,6 +174,7 @@ export const CartSummary = ({
                             <OrderTotals
                                 subtotal={getSubtotal()}
                                 deliveryFee={getDeliveryFee()}
+                                items={items}
                                 total={getTotal()}
                                 appliedCoupon={appliedCoupon}
                             />

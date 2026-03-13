@@ -3,64 +3,126 @@
 import React from "react";
 import { Separator } from "@/components/ui/separator";
 import { Code } from "@/types/codes";
+import { CartItem } from "@/store/cartStore";
+import { Complement } from "@/types/products";
 
+// Utilidad para formatear moneda
+const formatCurrency = (value: number): string => {
+  if (isNaN(value)) return "0";
+  return value.toLocaleString("es-CO");
+};
+
+// Componente para mostrar un complemento/adición
+const ComplementItem = ({ complement }: { complement: Complement }) => (
+  <div className="flex items-center justify-between text-xs text-neutral-black-60">
+    <span>
+      + {complement.name} {complement.quantity && complement.quantity > 1 ? `x${complement.quantity}` : ""}
+    </span>
+    <span>${formatCurrency((complement.price ?? 0) * (complement.quantity || 1))}</span>
+  </div>
+);
+
+// Componente para mostrar un producto con sus complementos
+const ProductItem = ({ item }: { item: CartItem }) => (
+  <div className="flex flex-col gap-1 w-full">
+    <div className="flex items-center justify-between w-full">
+      <p className="body-font text-neutral-black-80">
+        {item.name} <span className="text-neutral-black-60">x{item.quantity}</span>
+      </p>
+      <p className="body-font font-medium">
+        ${formatCurrency(item.price * item.quantity)}
+      </p>
+    </div>
+
+    {item.complements.length > 0 && (
+      <div className="flex flex-col gap-1 pl-3 border-l-2 border-neutral-black-20 ml-1">
+        {item.complements.map((comp) => (
+          <ComplementItem key={comp.id} complement={comp} />
+        ))}
+      </div>
+    )}
+  </div>
+);
+
+// Componente para una fila de resumen (subtotal, envío, descuento)
+const SummaryRow = ({
+  label,
+  value,
+  variant = "default",
+}: {
+  label: string;
+  value: number;
+  variant?: "default" | "discount" | "bold";
+}) => {
+  const textColor = variant === "discount" ? "text-green-600" : "";
+  const fontWeight = variant === "bold" ? "font-bold" : "";
+
+  return (
+    <div className="flex items-center justify-between w-full">
+      <p className={`flex-1 body-font ${textColor}`}>{label}</p>
+      <p className={`w-fit body-font ${textColor} ${fontWeight}`}>
+        {variant === "discount" ? "-" : ""}${formatCurrency(value)}
+      </p>
+    </div>
+  );
+};
+
+// Componente para el total
+const TotalRow = ({ total }: { total: number }) => (
+  <div className="flex items-center justify-between w-full">
+    <p className="flex-1 body-font font-bold">Total</p>
+    <h2 className="w-fit">${formatCurrency(total)}</h2>
+  </div>
+);
+
+// Props del componente principal
 interface OrderTotalsProps {
   subtotal: number;
   deliveryFee: number;
   total: number;
+  items: CartItem[];
   appliedCoupon?: Code | null;
   discount?: number;
 }
 
+// Componente principal
 export const OrderTotals = ({
   subtotal,
   deliveryFee,
+  items,
   total,
   appliedCoupon,
   discount = 0,
 }: OrderTotalsProps) => {
-  const formatCurrency = (value: number): string => {
-    if (isNaN(value)) return "0";
-    return value.toLocaleString("es-CO");
-  };
-
   return (
-    <div className="flex flex-col items-start gap-10 w-full rounded-xl">
-      <div className="flex flex-col items-start justify-end gap-4 w-full">
-        <div className="flex items-start gap-10 w-full">
-          <p className="flex-1 mt-[-0.93px] body-font">Subtotal</p>
-          <p className="w-fit mt-[-0.93px] body-font">
-            ${formatCurrency(subtotal)}
-          </p>
-        </div>
+    <div className="flex flex-col items-start gap-6 w-full rounded-xl">
+      {/* Resumen de productos */}
+      <div className="flex flex-col gap-3 w-full">
+        {items.map((item) => (
+          <ProductItem key={item.id} item={item} />
+        ))}
+      </div>
+
+      <Separator orientation="horizontal" />
+
+      {/* Resumen de costos */}
+      <div className="flex flex-col gap-3 w-full">
+        <SummaryRow label="Subtotal" value={subtotal} />
 
         {appliedCoupon && discount > 0 && (
-          <div className="flex items-start gap-10 w-full">
-            <p className="flex-1 mt-[-0.93px] body-font text-green-600">
-              Descuento ({appliedCoupon.code})
-            </p>
-            <p className="w-fit mt-[-0.93px] body-font text-green-600">
-              -${formatCurrency(discount)}
-            </p>
-          </div>
+          <SummaryRow
+            label={`Descuento (${appliedCoupon.code})`}
+            value={discount}
+            variant="discount"
+          />
         )}
 
-        <div className="flex items-start gap-10 w-full">
-          <p className="flex-1 mt-[-0.93px] body-font">Envío</p>
-          <p className="w-fit body-font font-bold">
-            ${formatCurrency(deliveryFee)}
-          </p>
-        </div>
-
-        <Separator orientation="horizontal" />
-
-        <div className="flex items-center gap-10 w-full">
-          <p className="flex-1 body-font font-bold">Total</p>
-          <h2 className="w-fit mt-[-0.93px]">
-            ${formatCurrency(total)}
-          </h2>
-        </div>
+        <SummaryRow label="Envío" value={deliveryFee} variant="bold" />
       </div>
+
+      <Separator orientation="horizontal" />
+
+      <TotalRow total={total} />
     </div>
   );
 };
