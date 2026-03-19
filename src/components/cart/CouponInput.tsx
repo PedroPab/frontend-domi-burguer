@@ -70,6 +70,14 @@ export const CouponInput = ({
           placeholder="Ingresa el cupón"
           value={couponCode}
           onChange={(e) => onCouponChange(e.target.value.toUpperCase())}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              e.preventDefault();
+              if (couponCode.trim() && !isLoading) {
+                onApplyCoupon();
+              }
+            }
+          }}
           className={`flex-1 bg-white ${error ? "border-red-400" : ""}`}
           disabled={isLoading}
         />

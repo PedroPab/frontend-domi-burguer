@@ -69,6 +69,7 @@ export const useCoupon = (): UseCouponReturn => {
   }, [couponCode, user]);
 
   const removeCoupon = useCallback(() => {
+    console.log("Removiendo cupón aplicado");
     setAppliedCoupon(null);
     setCouponCode("");
     setError(null);

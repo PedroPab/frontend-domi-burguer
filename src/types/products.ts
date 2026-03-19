@@ -1,15 +1,16 @@
 import { LogoProps } from "@/components/ui/icons";
 
 export interface Complement {
-  id: number;
+  id: number | string;
   name?: string;
   quantity: number;
   icon?: string;
   price?: number | null;
   type?: "removable" | "special" | "addable";
-  additionId?: number; 
+  additionId?: number;
   minusId?: number;
   minusComplement: boolean;
+  rewardCode?: string; // Para complementar con rewards de códigos
 }
 
 export type Product = {

@@ -1,5 +1,12 @@
+import { useCallback } from 'react';
 import { useCartStore } from '@/store/cartStore';
 import { useCartModalItemDeleteStore } from '@/store/cartModalItemDeleteStore';
+import { Code } from '@/types/codes';
+import { Complement } from '@/types/products';
+import { generateCartItemId, calculateTotalPrice } from '@/lib/utils';
+
+// ID base para complementos de referido (número negativo para evitar colisiones)
+const REFERRAL_COMPLEMENT_BASE_ID = -1000000;
 
 export const useCartActions = () => {
   const {
@@ -42,6 +49,107 @@ export const useCartActions = () => {
     closeDeleteModal();
   };
 
+  const addCodeInItems = useCallback((appliedCoupon: Code) => {
+    // Solo manejamos códigos de referidos por ahora
+    if (appliedCoupon.type !== 'referral') return;
+
+    const rewardElement = appliedCoupon.reward?.elements[0];
+    if (!rewardElement) return;
+    console.log('Procesando código de referido, reward element:', rewardElement);
+
+    // Solo manejamos rewards de tipo complement
+    if (appliedCoupon.reward?.typeAddReward !== 'complement') return;
+
+    // Obtener items actuales del store directamente
+    const currentItems = useCartStore.getState().items;
+    console.log('Items actuales en el carrito:', currentItems);
+
+    // Verificamos que hay items en el carrito
+    if (currentItems.length === 0) return;
+
+    const firstItem = currentItems[0];
+    console.log('Primer item del carrito:', firstItem);
+
+    // Verificar si ya existe un complemento con este código de referido (evitar duplicados)
+    const alreadyHasComplement = firstItem.complements.some(
+      (c) => c.rewardCode === appliedCoupon.code
+    );
+
+    if (alreadyHasComplement) {
+      console.log('El complemento de referido ya existe en el item, no se agrega de nuevo.');
+      return;
+    }
+
+    // Crear el complemento con los datos del reward
+    const newComplement: Complement = {
+      id: rewardElement.id,
+      name: rewardElement.note || `Complemento gratis (${appliedCoupon.code})`,
+      quantity: rewardElement.quantity || 1,
+      price: rewardElement.price,
+      type: 'special',
+      minusComplement: false,
+      rewardCode: appliedCoupon.code,
+    };
+    console.log('Agregando complemento de referido:', newComplement);
+
+    // Si el primer item tiene más de 1 unidad, separamos
+    if (firstItem.quantity > 1) {
+      console.log('Item tiene cantidad > 1, separando una unidad para aplicar el código');
+
+      // Restar 1 unidad al item original
+      useCartStore.getState().updateQuantity(firstItem.id, firstItem.quantity - 1);
+
+      // Crear nuevo item con 1 unidad y el complemento de referido
+      const newComplements = [...firstItem.complements, newComplement];
+      const newItemId = generateCartItemId(firstItem.productId, newComplements);
+      const newPrice = calculateTotalPrice(firstItem.basePrice, newComplements);
+
+      const newItem = {
+        ...firstItem,
+        id: newItemId,
+        quantity: 1,
+        complements: newComplements,
+        price: newPrice,
+      };
+
+      console.log('Agregando nuevo item separado con código:', newItem);
+      useCartStore.getState().addItem(newItem);
+    } else {
+      // Si solo tiene 1 unidad, aplicamos el complemento directamente
+      console.log('Item tiene cantidad = 1, aplicando código directamente');
+      const updatedComplements = [...firstItem.complements, newComplement];
+      useCartStore.getState().updateItemComplements(firstItem.id, updatedComplements);
+    }
+  }, []);
+
+  const removeCodeFromItems = useCallback((appliedCoupon: Code) => {
+    // Solo manejamos códigos de referidos
+    if (appliedCoupon.type !== 'referral') return;
+
+    if (appliedCoupon.reward?.typeAddReward !== 'complement') return;
+
+    console.log('Removiendo complemento de referido con código:', appliedCoupon.code);
+
+    // Obtener items actuales del store directamente
+    const currentItems = useCartStore.getState().items;
+
+    // Buscar el item que tiene el complemento con este rewardCode
+    for (const item of currentItems) {
+      const hasReferralComplement = item.complements.some(
+        (c) => c.rewardCode === appliedCoupon.code
+      );
+
+      if (hasReferralComplement) {
+        // Remover el complemento del item filtrando por rewardCode
+        const updatedComplements = item.complements.filter(
+          (c) => c.rewardCode !== appliedCoupon.code
+        );
+        useCartStore.getState().updateItemComplements(item.id, updatedComplements);
+        break;
+      }
+    }
+  }, []);
+
   return {
     items,
     handleIncrease,
@@ -52,5 +160,7 @@ export const useCartActions = () => {
     addItem,
     itemToDelete,
     isDeleteModalOpen,
+    addCodeInItems,
+    removeCodeFromItems,
   };
 };

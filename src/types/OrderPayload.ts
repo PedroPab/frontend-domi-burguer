@@ -2,7 +2,7 @@ interface OrderPayload {
   name?: string;
   phone?: string;
   comment: string;
-  locationId: string ;
+  locationId: string;
   userId?: string | null;
   delivery: {
     price: number;
@@ -14,6 +14,7 @@ interface OrderPayload {
     complements: {
       id: string;
       quantity: number;
+      codes?: [string];
     }[];
   }[];
   paymentMethod: string;

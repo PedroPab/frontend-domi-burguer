@@ -1,6 +1,6 @@
 export type CodeStatus = 'active' | 'inactive';
 
-export type CodeType = 'referral' | 'promotional' | 'loyalty';
+export type CodeType = 'referral';
 
 export type RewardType = 'fixedPriceInElement' | 'discount' | 'freeProduct';
 

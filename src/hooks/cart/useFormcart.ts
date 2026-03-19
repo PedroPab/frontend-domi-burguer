@@ -17,10 +17,10 @@ function useFormCart() {
   const { clearCart } = useCartStore();
   const router = useRouter();
   const { submitOrder, isSubmitting } = useOrderSubmit(
-  (result) => {
+    (result) => {
       console.log("Order submitted successfully:", result);
       //guardar la última orden en el almacenamiento local
-    // saveLastOrder();
+      // saveLastOrder();
 
       // Limpiar carrito y formulario
       clearCart();
@@ -126,8 +126,8 @@ function useFormCart() {
     address: Address;
     items: typeof items;
   }
-  const buildOrderPayload = ({formData, address , items} : BuildOrderPayloadParams): OrderPayload => {
-    return {
+  const buildOrderPayload = ({ formData, address, items }: BuildOrderPayloadParams): OrderPayload => {
+    const orderPayload: OrderPayload = {
       name: formData.name,
       phone: formData.phone,
       comment: formData.comment,
@@ -143,11 +143,14 @@ function useFormCart() {
         complements: item.complements.map((comp) => ({
           id: comp.id.toString(),
           quantity: comp.quantity,
+          codes: [comp?.rewardCode],
         })),
       })),
       paymentMethod: formData.paymentMethod,
       // origin: user ? "authenticated" : "public",
     };
+    console.log("Built order payload:", orderPayload);
+    return orderPayload;
   };
 
   // Maneja el envío de la orden
@@ -156,17 +159,17 @@ function useFormCart() {
 
     if (!validateForm()) {
       return;
-    } 
-    if(!address) {
+    }
+    if (!address) {
       setError("Debes agregar una dirección de entrega");
       return;
     }
-    
-     const orderPayload = buildOrderPayload({formData, address , items});
 
-     const token = await user?.getIdToken();
-     console.log(orderPayload, "Submitting order with token:");
-    await submitOrder({ orderPayload, token  });
+    const orderPayload = buildOrderPayload({ formData, address, items });
+
+    const token = await user?.getIdToken();
+    console.log(orderPayload, "Submitting order with token:");
+    await submitOrder({ orderPayload, token });
   };
 
   return {
