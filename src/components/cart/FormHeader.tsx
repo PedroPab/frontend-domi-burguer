@@ -1,10 +1,12 @@
 import React from "react";
+import { ErrorCard } from "./ErrorCard";
 
 interface FormHeaderProps {
     error?: string | null;
+    onClearError?: () => void;
 }
 
-export function FormHeader({ error }: FormHeaderProps) {
+export function FormHeader({ error, onClearError }: FormHeaderProps) {
     return (
         <div className="inline-flex gap-4 flex-col">
             <h2 className="items-start">INFORMACIÓN DE COMPRA</h2>
@@ -13,9 +15,7 @@ export function FormHeader({ error }: FormHeaderProps) {
             </p>
 
             {error && (
-                <div className="p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg text-sm">
-                    {error}
-                </div>
+                <ErrorCard error={error} onClose={onClearError} />
             )}
         </div>
     );

@@ -18,6 +18,8 @@ import { useCoupon } from "@/hooks/cart/useCoupon";
 import { CartItemCard } from "@/components/cart/CartItemCard";
 import { CouponInput } from "@/components/cart/CouponInput";
 import { OrderTotals } from "@/components/cart/OrderTotals";
+import { ErrorCard } from "@/components/cart/ErrorCard";
+import { useCheckoutFormStore } from "@/store/checkoutFormStore";
 
 
 export const CartSummary = ({
@@ -27,7 +29,8 @@ export const CartSummary = ({
     const { items, handleDecrease, handleIncrease, addCodeInItems, removeCodeFromItems } = useCartActions();
 
     const { handleEditComplements } = useComplementsModal();
-    const { isSubmitting } = useCartSubmit();
+    const { isSubmitting, error } = useCartSubmit();
+    const { setError } = useCheckoutFormStore();
 
     const {
         couponCode,
@@ -202,6 +205,10 @@ export const CartSummary = ({
                                 total={getTotal()}
                                 appliedCoupon={appliedCoupon}
                             />
+
+                            {error && (
+                                <ErrorCard error={error} onClose={() => setError(null)} />
+                            )}
 
                             <div className="flex items-start justify-end gap-6 w-full">
                                 <Button

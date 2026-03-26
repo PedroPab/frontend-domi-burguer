@@ -29,8 +29,10 @@ function useFormCart() {
       // Redirigir a la página de confirmación o mostrar mensaje de éxito
       router.push("/thankyou");
     },
-    (error) => {
-      console.error("Error submitting order:", error);
+    (apiError) => {
+      console.error("Error submitting order:", apiError);
+      setError(apiError.message || "Error al procesar la orden");
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   );
   const { user } = useAuth();
