@@ -14,7 +14,7 @@ interface OrderPayload {
     complements: {
       id: string;
       quantity: number;
-      codes?: [string];
+      codes?: [string | undefined] | undefined;
     }[];
   }[];
   paymentMethod: string;

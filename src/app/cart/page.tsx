@@ -23,6 +23,7 @@ export default function Cart() {
 
   //revisamos si el cliente tiene un numero verificado en su cuenta de google si esta autenticado
   const { user } = useAuth();
+  console.log("Current user:", user);
   useEffect(() => {
     if (user) {
       console.log("User is authenticated:", user);
