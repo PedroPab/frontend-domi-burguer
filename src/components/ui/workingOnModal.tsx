@@ -14,7 +14,7 @@ export const WorkingOnModal = ({ isOpen, onClose }: ModalProps) => {
     <Modal
       open={isOpen}
       onOpenChange={(open) => !open && onClose()}
-      title="ESTAMOS TRABAJANDO EN ESTA FUNCIÓN"
+      title="PRÓXIMAMENTE"
       size="lg"
       footer={{
         confirm: {
@@ -27,15 +27,33 @@ export const WorkingOnModal = ({ isOpen, onClose }: ModalProps) => {
         alignment: "center",
       }}
     >
-      <div className="flex flex-col gap-4 text-center">
+      <div className="flex flex-col gap-4">
         <p className="text-neutral-600">
-          Nuestro equipo está trabajando arduamente para implementarla y
-          ofrecerte la mejor experiencia posible.
+          Próximamente podrás registrarte para que tus pedidos sean más fácil y elegir desde qué cocina quieres que salga tu pedido.
         </p>
         <p className="text-neutral-600">
-          Mientras tanto, te invitamos a explorar otras características de
-          nuestra aplicación. ¡Gracias por tu paciencia y comprensión!
+          Actualmente contamos con 2 sedes en el área metropolitana:
         </p>
+        <div className="text-neutral-600 space-y-2">
+          <a
+            href="https://maps.app.goo.gl/CmTjewV63uy2SdDb9"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block hover:text-primary-red transition-colors"
+          >
+            <strong>📍 Sede Norte:</strong><br />
+            Barrio Pedregal – Tv. 103A #74A-94 (Cerca de Comfama Pedregal)
+          </a>
+          <a
+            href="https://maps.app.goo.gl/8uqEf6W9qg5yp62AA"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block hover:text-primary-red transition-colors"
+          >
+            <strong>📍 Sede Sur:</strong><br />
+            Itagüí – Cl. 84A #52D-53 (Cerca del Parque Chimeneas)
+          </a>
+        </div>
         <div className="flex justify-center">
           <Image
             src="/catWork.jpg"

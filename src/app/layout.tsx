@@ -26,6 +26,7 @@ export default function RootLayout({
     <html lang="es">
       <head>
         <meta name="apple-mobile-web-app-title" content="Domi Burguer" /></head>
+      <script defer src="https://umami.toxolinko.site/script.js" data-website-id="6449fca5-1454-49e0-8bdc-33fba01bcda4"></script>
       <body
         className={montserrat.variable}
       >

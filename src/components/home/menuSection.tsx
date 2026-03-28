@@ -26,6 +26,7 @@ export default function MenuSection() {
     handleRemoveComplement,
     resetCurrentProduct,
   } = useMenu();
+  console.log("RERENDER MENU SECTION", products, currentProduct);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { handleAddToCart } = useAddToCart();
@@ -151,9 +152,8 @@ export default function MenuSection() {
             </p>
             <Button
               variant="ghost"
-              className={`px-4 py-2 w-[177px] h-[40px] bg-accent-yellow-20 hover:bg-accent-yellow-40 rounded-[30px] transition-all ${
-                actualProduct === 2 ? "hidden" : ""
-              }`}
+              className={`px-4 py-2 w-[177px] h-[40px] bg-accent-yellow-20 hover:bg-accent-yellow-40 rounded-[30px] transition-all ${actualProduct === 2 ? "hidden" : ""
+                }`}
               onClick={() => handleEditProduct()}
             >
               PERSONALIZAR <EditarIcon className="w-4 h-4" />
@@ -211,12 +211,11 @@ export default function MenuSection() {
       </section>
 
       {/* Sección de miniaturas de productos */}
-      <section className="grid lg:gap-y-14 grid-cols-2 lg:grid-cols-3 items-center justify-center lg:gap-6 gap-2 gap-x-4 py-14 relative">
+      <section className="grid lg:gap-y-14 grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 items-center justify-center lg:gap-6 gap-2 gap-x-4 py-14 relative">
         {/* Cada tarjeta representa un producto (ejemplo producto 0) */}
         <div
-          className={`w-[160px] h-[160px] lg:w-[280px] lg:h-40 ${
-            actualProduct === 0 ? "bg-accent-yellow-40" : "bg-accent-yellow-20"
-          } rounded-2xl border-0 overflow-visible`}
+          className={`w-[160px] h-[160px] lg:w-[280px] lg:h-40 ${actualProduct === 0 ? "bg-accent-yellow-40" : "bg-accent-yellow-20"
+            } rounded-2xl border-0 overflow-visible`}
         >
           <div
             className={` flex relative flex-col items-center justify-center gap-[4.47px] overflow-visible p-0 h-full`}
@@ -236,9 +235,8 @@ export default function MenuSection() {
 
             <Button
               size="icon"
-              className={`absolute top-[5px] z-200 right-[5px] lg:top-[7px] lg:left-[232px] w-8 h-8 lg:w-10 lg:h-10 rounded-[30px] p-0 ${
-                actualProduct === 0 ? "hidden" : ""
-              }`}
+              className={`absolute top-[5px] z-200 right-[5px] lg:top-[7px] lg:left-[232px] w-8 h-8 lg:w-10 lg:h-10 rounded-[30px] p-0 ${actualProduct === 0 ? "hidden" : ""
+                }`}
               onClick={() => {
                 handleAddToCart(products[0]);
                 showFoodToast(products[0].name);
@@ -250,9 +248,8 @@ export default function MenuSection() {
           </div>
         </div>
         <div
-          className={`w-[160px] h-[160px] lg:w-[280px] lg:h-40 ${
-            actualProduct === 1 ? "bg-accent-yellow-40" : "bg-accent-yellow-20"
-          } rounded-2xl border-0 overflow-visible`}
+          className={`w-[160px] h-[160px] lg:w-[280px] lg:h-40 ${actualProduct === 1 ? "bg-accent-yellow-40" : "bg-accent-yellow-20"
+            } rounded-2xl border-0 overflow-visible`}
         >
           <div
             className={`${"relative gap-[4.47px]"} p-0 h-full`}
@@ -279,9 +276,8 @@ export default function MenuSection() {
 
             <Button
               size="icon"
-              className={`absolute z-200 top-[5px] right-[5px] lg:top-[7px] lg:left-[232px] w-8 h-8 lg:w-10 lg:h-10 rounded-[30px] p-0 ${
-                actualProduct === 1 ? "hidden" : ""
-              }`}
+              className={`absolute z-200 top-[5px] right-[5px] lg:top-[7px] lg:left-[232px] w-8 h-8 lg:w-10 lg:h-10 rounded-[30px] p-0 ${actualProduct === 1 ? "hidden" : ""
+                }`}
               onClick={() => {
                 handleAddToCart(products[1]);
                 showFoodToast(products[1].name);
@@ -293,9 +289,8 @@ export default function MenuSection() {
           </div>
         </div>
         <div
-          className={`w-[160px] h-[160px] lg:w-[280px] lg:h-40 ${
-            actualProduct === 2 ? "bg-accent-yellow-40" : "bg-accent-yellow-20"
-          } rounded-2xl border-0 overflow-visible`}
+          className={`w-[160px] h-[160px] lg:w-[280px] lg:h-40 ${actualProduct === 2 ? "bg-accent-yellow-40" : "bg-accent-yellow-20"
+            } rounded-2xl border-0 overflow-visible`}
           onClick={() => {
             handleChangeProduct(2);
             if (emblaApi) emblaApi.scrollTo(2);
@@ -313,12 +308,77 @@ export default function MenuSection() {
 
             <Button
               size="icon"
-              className={`absolute z-200 top-[5px] right-[5px] lg:top-[7px] lg:left-[232px] w-8 h-8 lg:w-10 lg:h-10 rounded-[30px] p-0 ${
-                actualProduct === 2 ? "hidden" : ""
-              }`}
+              className={`absolute z-200 top-[5px] right-[5px] lg:top-[7px] lg:left-[232px] w-8 h-8 lg:w-10 lg:h-10 rounded-[30px] p-0 ${actualProduct === 2 ? "hidden" : ""
+                }`}
               onClick={() => {
                 handleAddToCart(products[2]);
                 showFoodToast(products[2].name);
+                resetCurrentProduct();
+              }}
+            >
+              <Plus className="text-white" />
+            </Button>
+          </div>
+        </div>
+        {/* Papas Vaquera */}
+        <div
+          className={`w-[160px] h-[160px] lg:w-[280px] lg:h-40 ${actualProduct === 3 ? "bg-accent-yellow-40" : "bg-accent-yellow-20"
+            } rounded-2xl border-0 overflow-visible`}
+          onClick={() => {
+            handleChangeProduct(3);
+            if (emblaApi) emblaApi.scrollTo(3);
+          }}
+        >
+          <div className={`${"relative gap-[4.47px]"} p-0 h-full`}>
+            <Image
+              src="/papaCayendo2.png"
+              alt="Papas Vaquera"
+              width={153}
+              height={230}
+              className="absolute top-[-0px] left-[26px] lg:top-[-38px] lg:left-[69px] w-[110px] h-[166px] lg:w-[153px] lg:h-[230px] object-cover"
+            />
+
+            <Button
+              size="icon"
+              className={`absolute z-200 top-[5px] right-[5px] lg:top-[7px] lg:left-[232px] w-8 h-8 lg:w-10 lg:h-10 rounded-[30px] p-0 ${actualProduct === 3 ? "hidden" : ""
+                }`}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleAddToCart(products[3]);
+                showFoodToast(products[3].name);
+                resetCurrentProduct();
+              }}
+            >
+              <Plus className="text-white" />
+            </Button>
+          </div>
+        </div>
+        {/* Papas Troyana */}
+        <div
+          className={`w-[160px] h-[160px] lg:w-[280px] lg:h-40 ${actualProduct === 4 ? "bg-accent-yellow-40" : "bg-accent-yellow-20"
+            } rounded-2xl border-0 overflow-visible`}
+          onClick={() => {
+            handleChangeProduct(4);
+            if (emblaApi) emblaApi.scrollTo(4);
+          }}
+        >
+          <div className={`${"relative gap-[4.47px]"} p-0 h-full`}>
+            <Image
+              src="/papaTroyana3.png"
+              alt="Papas Troyana"
+              width={153}
+              height={230}
+              className="absolute top-[-0px] left-[26px] lg:top-[-38px] lg:left-[69px] w-[110px] h-[166px] lg:w-[153px] lg:h-[230px] object-cover"
+            />
+
+            <Button
+              size="icon"
+              className={`absolute z-200 top-[5px] right-[5px] lg:top-[7px] lg:left-[232px] w-8 h-8 lg:w-10 lg:h-10 rounded-[30px] p-0 ${actualProduct === 4 ? "hidden" : ""
+                }`}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleAddToCart(products[4]);
+                showFoodToast(products[4].name);
                 resetCurrentProduct();
               }}
             >

@@ -24,7 +24,7 @@ export default function LegalPage() {
                             LEGAL
                         </h1>
                         <p className="body-font">
-                            En DomiBurger, creemos que la confianza también se cocina a fuego
+                            En Domi Burger, creemos que la confianza también se cocina a fuego
                             lento. Por eso, esta página está hecha para contarte de forma
                             clara y sin rodeos cómo usamos tu información, qué derechos tienes
                             como usuario y bajo qué reglas jugamos.
@@ -123,7 +123,7 @@ function TermsOfService() {
     return (
         <div>
             <p className="mt-4 max-w-3xl">
-                Bienvenido a DomiBurger. Al usar nuestro sitio web, app, servicios de
+                Bienvenido a Domi Burger. Al usar nuestro sitio web, app, servicios de
                 entrega o cualquier otro canal digital, aceptas estos Términos de
                 Servicio.
             </p>
@@ -147,8 +147,7 @@ function TermsOfService() {
             <Section id="tos-2" title="2.0 MÉTODOS DE PAGO">
                 <List>
                     <li>
-                        Aceptamos pagos con tarjeta de crédito/débito, billeteras digitales
-                        y otras pasarelas seguras.
+                        Nuestros metodos de pago son: Efectivo, Tranferencia bancaria por nequi y bancolombia
                     </li>
                     <li>
                         No almacenamos tu información bancaria directamente; usamos

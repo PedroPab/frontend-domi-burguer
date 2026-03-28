@@ -34,12 +34,13 @@ const handleAddableComplement = (
   const complementsToAdd: Complement[] = [];
   const complementsToRemove: (number | string)[] = [];
 
-  const isComboEspecial = productId === 1;
+  //esta harcodeada para el combo especial que permite  que ya tiene papas incluidas, pero da mas problemas
+  // const isComboEspecial = productId === 1;
 
-  if (isComboEspecial) {
-    if (action === 'minus' && newQuantity < 1) {
-      return { complementsToAdd, complementsToRemove };
-    }
+  // if (isComboEspecial) {
+  //   if (action === 'minus' && newQuantity < 1) {
+  //     return { complementsToAdd, complementsToRemove };
+  //   }
 
     if (action === 'plus' && newQuantity > 1 && ingredient.additionId) {
       const existing = currentComplements.find(c => c.id === ingredient.additionId);
@@ -55,12 +56,12 @@ const handleAddableComplement = (
       }
     }
 
-    if (action === 'minus' && newQuantity === 1 && ingredient.additionId) {
-      complementsToRemove.push(ingredient.additionId);
-    }
+  //   if (action === 'minus' && newQuantity === 1 && ingredient.additionId) {
+  //     complementsToRemove.push(ingredient.additionId);
+  //   }
 
-    return { complementsToAdd, complementsToRemove };
-  }
+  //   return { complementsToAdd, complementsToRemove };
+  // }
 
   if (action === 'minus' && newQuantity < 0) {
     return { complementsToAdd, complementsToRemove };
@@ -103,7 +104,7 @@ const handleSpecialComplement = (
     if (newQuantity === 1 && ingredient.minusId) {
       complementsToRemove.push(ingredient.minusId);
     }
-    
+
     if (newQuantity === 2 && ingredient.additionId) {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { additionId: _additionId, minusId: _minusId, ...rest } = ingredient;
@@ -115,7 +116,7 @@ const handleSpecialComplement = (
       });
     }
   }
-  
+
   if (action === 'minus') {
     if (newQuantity === 0 && ingredient.minusId) {
       const hasVegetariano = currentComplements.some(c => c.id === ingredient.minusId);
@@ -131,7 +132,7 @@ const handleSpecialComplement = (
         });
       }
     }
-    
+
     if (newQuantity === 1 && ingredient.additionId) {
       complementsToRemove.push(ingredient.additionId);
     }
@@ -194,8 +195,8 @@ export function useMenu() {
     {
       id: 2,
       name: "HAMBURGUESA ARTESANAL",
-      basePrice: 18900,
-      price: 18900,
+      basePrice: 23900,
+      price: 23900,
       body: "Pan artesanal hecho en casa, carne jugosa, tocineta crocante, queso mozzarella lechuga fresca, tomate , pepinos, cebolla y el toque de nuestra Salsa de Ajo.",
       bigImage: "/burgerBig.png",
       image1: "/burgerSmall.png",
@@ -206,9 +207,9 @@ export function useMenu() {
     {
       id: 1,
       name: "COMBO ESPECIAL",
-      basePrice: 22900,
-      price: 22900,
-      body: "Nuestra hamburguesa estrella, acompañada de papas rizadas, crocantes.",
+      basePrice: 28900,
+      price: 28900,
+      body: "Nuestra hamburguesa, acompañada de papas rizadas crocantes y nuestra coquitas de Salsa de Ajo y salsa roja.",
       bigImage: "/comboEspecial.png",
       image1: "/burgerSmall.png",
       image2: "/papitasSmall.png",
@@ -219,12 +220,36 @@ export function useMenu() {
     {
       id: 38,
       name: "SALSA DE AJO",
-      basePrice: 25000,
-      price: 25000,
+      basePrice: 27000,
+      price: 27000,
       body: "Cremosa, intensa y perfectamente balanceada, nuestra receta familiar de Salsa de Ajo. Es el secreto que se queda en tu memoria.",
       bigImage: "/salsaAjo.png",
       image1: "/salsaSmall.png",
       icons: [HuevoIcon, AjoIcon],
+      quantity: 1,
+      complements: [],
+    },
+    {
+      id: 39,
+      name: "PAPAS VAQUERA",
+      basePrice: 23900,
+      price: 23900,
+      body: "Nuestras deliciosas papas con el toque especial de la casa, crujientes por fuera y suaves por dentro.",
+      bigImage: "/papaCayendo2.png",
+      image1: "/papaCayendo2.png",
+      icons: [FrenchFriesIcon],
+      quantity: 1,
+      complements: [],
+    },
+    {
+      id: 40,
+      name: "PAPAS TROYANA",
+      basePrice: 33900,
+      price: 33900,
+      body: "Papas premium cargadas con todos los ingredientes, una explosión de sabor en cada bocado.",
+      bigImage: "/papaTroyana3.png",
+      image1: "/papaTroyana3.png",
+      icons: [FrenchFriesIcon],
       quantity: 1,
       complements: [],
     },
@@ -274,7 +299,7 @@ export function useMenu() {
         if (index !== actualProduct) return product;
 
         let result;
-        
+
         if (ingredient.type === 'special') {
           result = handleSpecialComplement(ingredient, action, product.complements, newQuantity);
         } else if (ingredient.type === 'addable') {
@@ -321,15 +346,15 @@ export function useMenu() {
           }
         }
 
-        return { 
-          ...product, 
+        return {
+          ...product,
           complements: updatedComplements,
         };
       })
     );
   };
 
-  
+
   const handleRemoveComplement = (complementId: number | string) => {
     setProducts((prev) =>
       prev.map((product, index) => {
@@ -337,7 +362,7 @@ export function useMenu() {
 
         // Encontrar el complemento a eliminar
         const complementToRemove = product.complements.find(c => c.id === complementId);
-        
+
         if (!complementToRemove) return product;
 
         console.log("Eliminando complemento:", complementToRemove);
@@ -372,7 +397,7 @@ export function useMenu() {
    */
   const calculateProductPrice = (product: Product): number => {
     const basePrice = product.price;
-    
+
     // Sumar el precio de todos los complementos
     const complementsPrice = product.complements.reduce((total, complement) => {
       // Solo sumar si el complemento tiene precio y no es un "minus" (sin ingrediente)
@@ -414,7 +439,7 @@ export function useMenu() {
     handleChangeProduct,
     handleChangeComplement,
     handleRemoveComplement,
-    resetCurrentProduct, 
+    resetCurrentProduct,
     clearCurrentProductComplements,
     getCurrentProductComplements,
   };
