@@ -1,6 +1,7 @@
 import React from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import InputPhone from "./inputPhone";
+import { Input } from "../ui/input";
 
 interface UserInfoSectionProps {
     formData: {
@@ -34,6 +35,16 @@ export function UserInfoSection({
 
             <div className="inline-flex flex-col gap-2 items-start w-full">
 
+                {!user && (
+                    <Input
+                        id="name"
+                        name="name"
+                        maxLength={70}
+                        placeholder="Nombres y Apellidos"
+                        onChange={handleChange}
+                        value={formData.name}
+                    />
+                )}
                 <InputPhone />
 
                 <div className="relative w-full">

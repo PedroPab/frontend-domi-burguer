@@ -134,7 +134,6 @@ function useFormCart() {
       phone: formData.phone,
       comment: formData.comment,
       locationId: address?.id,
-      userId: user?.uid || null,
       delivery: {
         price: address?.deliveryPrice || 0,
         distance: address?.distance || 0,
@@ -151,6 +150,9 @@ function useFormCart() {
       paymentMethod: formData.paymentMethod,
       // origin: user ? "authenticated" : "public",
     };
+    if (user) {
+      orderPayload.userId = user.uid;
+    }
     console.log("Built order payload:", orderPayload);
     return orderPayload;
   };
