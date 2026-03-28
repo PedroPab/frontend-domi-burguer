@@ -1,17 +1,12 @@
+"use client";
+
 import React, { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { QuantitySelector } from "../ui/quantitySelector";
 import { Complement } from "@/types/products";
 import { useCartStore, CartItem } from "@/store/cartStore";
 import { favoritosData, otrosData, gaseosasData, iconMap } from "@/utils/complementSections";
-
+import { Modal } from "@/components/ui/modal";
 
 interface CustomizationModalCartProps {
   isOpen: boolean;
@@ -40,21 +35,15 @@ export const CustomizationModalCart = ({
       const sync = (list: Complement[]) =>
         list.map((ing) => {
           if (ing.type === "special") {
-            const minus = cartItem.complements.some(
-              (c) => c.id === ing.minusId
-            );
+            const minus = cartItem.complements.some((c) => c.id === ing.minusId);
             if (minus) return { ...ing, quantity: 0 };
 
-            const add = cartItem.complements.find(
-              (c) => c.id === ing.additionId
-            );
+            const add = cartItem.complements.find((c) => c.id === ing.additionId);
             return { ...ing, quantity: add ? 1 + add.quantity : 1 };
           }
 
           if (ing.type === "addable") {
-            const add = cartItem.complements.find(
-              (c) => c.id === ing.additionId
-            );
+            const add = cartItem.complements.find((c) => c.id === ing.additionId);
             return { ...ing, quantity: add ? add.quantity : 0 };
           }
 
@@ -72,30 +61,12 @@ export const CustomizationModalCart = ({
     }
   }, [cartItem, isOpen]);
 
-  // Cierra con botón atrás
-  useEffect(() => {
-    const handlePopState = () => onClose();
-
-    if (isOpen) {
-      window.history.pushState({ complementsModalOpen: true }, "");
-      window.addEventListener("popstate", handlePopState);
-    } else if (window.history.state?.complementsModalOpen) {
-      window.history.back();
-    }
-
-    return () => window.removeEventListener("popstate", handlePopState);
-  }, [isOpen, onClose]);
-
   const handleIngredientChange = (
     ingredient: Complement,
     action: "plus" | "minus",
     section: "favoritos" | "otros" | "gaseosas"
   ) => {
-    if (
-      action === "plus" &&
-      ingredient.type === "removable" &&
-      ingredient.quantity >= 1
-    )
+    if (action === "plus" && ingredient.type === "removable" && ingredient.quantity >= 1)
       return;
     if (action === "minus" && ingredient.quantity <= 0) return;
 
@@ -103,9 +74,7 @@ export const CustomizationModalCart = ({
       action === "plus" ? ingredient.quantity + 1 : ingredient.quantity - 1;
 
     const updateList = (list: Complement[]) =>
-      list.map((i) =>
-        i.id === ingredient.id ? { ...i, quantity: newQuantity } : i
-      );
+      list.map((i) => (i.id === ingredient.id ? { ...i, quantity: newQuantity } : i));
 
     if (section === "favoritos") setFavoritos(updateList);
     if (section === "otros") setOtros(updateList);
@@ -163,7 +132,7 @@ export const CustomizationModalCart = ({
     title: string,
     ingredients: Complement[],
     section: "favoritos" | "otros" | "gaseosas",
-    isOpen: boolean,
+    sectionOpen: boolean,
     toggle: () => void
   ) => (
     <div className="flex flex-col items-start w-full">
@@ -172,39 +141,25 @@ export const CustomizationModalCart = ({
         className="flex items-center gap-4 px-0 py-3 w-full border-b border-neutral-black-30"
       >
         <div className="flex-1 body-font font-bold text-left">{title}</div>
-        {isOpen ? (
-          <ChevronUp className="w-5 h-5" />
-        ) : (
-          <ChevronDown className="w-5 h-5" />
-        )}
+        {sectionOpen ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
       </button>
-      {isOpen && (
+      {sectionOpen && (
         <div className="flex flex-col w-full pt-2">
           {ingredients.map((ingredient) => {
             const Icon = ingredient.icon ? iconMap[ingredient.icon] : null;
             return (
-              <div
-                key={ingredient.id}
-                className="flex h-12 items-center gap-4 py-3 rounded-xl"
-              >
+              <div key={ingredient.id} className="flex h-12 items-center gap-4 py-3 rounded-xl">
                 {Icon && <Icon />}
                 <div className="flex-1 font-medium text-sm leading-4">
                   <span className="text-[#313131]">{ingredient.name}</span>
                   {ingredient.price && (
-                    <span className="text-[#808080]">
-                      {" "}
-                      (+${ingredient.price})
-                    </span>
+                    <span className="text-[#808080]"> (+${ingredient.price})</span>
                   )}
                 </div>
                 <QuantitySelector
                   value={ingredient.quantity}
-                  onIncrease={() =>
-                    handleIngredientChange(ingredient, "plus", section)
-                  }
-                  onDecrease={() =>
-                    handleIngredientChange(ingredient, "minus", section)
-                  }
+                  onIncrease={() => handleIngredientChange(ingredient, "plus", section)}
+                  onDecrease={() => handleIngredientChange(ingredient, "minus", section)}
                   size="sm"
                 />
               </div>
@@ -216,51 +171,28 @@ export const CustomizationModalCart = ({
   );
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent onOpenChange={onClose} className="p-0 bg-background modal-scrollbar rounded-2xl z-500 max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle className="font-bold text-[16px] md:text-[20px] leading-[18px] md:leading-[22px] text-neutral-black-80">
-            ¿QUIERES PERSONALIZAR TU {cartItem?.name}?
-          </DialogTitle>
-        </DialogHeader>
-
-        <div className="flex flex-col gap-6 px-10 pb-10">
-          <p className="body-font mt-5 text-start text-neutral-black-60">
-            Selecciona los ingredientes que quieres agregar o los que deseas
-            retirar.
-          </p>
-
-          {renderSection(
-            "Favoritos",
-            favoritos,
-            "favoritos",
-            isFavoritosOpen,
-            () => setIsFavoritosOpen(!isFavoritosOpen)
-          )}
-          {renderSection("Otros", otros, "otros", isOtrosOpen, () =>
-            setIsOtrosOpen(!isOtrosOpen)
-          )}
-          {renderSection("Gaseosas", gaseosas, "gaseosas", isGaseosasOpen, () =>
-            setIsGaseosasOpen(!isGaseosasOpen)
-          )}
-
-          <div className="flex justify-between items-center pt-4">
-            <Button
-              variant="ghost"
-              className="bg-accent-yellow-40 hover:bg-accent-yellow-60 rounded-[30px] w-[133px] h-[48px]"
-              onClick={onClose}
-            >
-              CANCELAR
-            </Button>
-            <Button
-              className="text-white rounded-[30px] w-[133px] h-[48px]"
-              onClick={handleConfirm}
-            >
-              CONFIRMAR
-            </Button>
-          </div>
-        </div>
-      </DialogContent>
-    </Dialog>
+    <Modal
+      open={isOpen}
+      onOpenChange={(open) => !open && onClose()}
+      title={`¿QUIERES PERSONALIZAR TU ${cartItem?.name}?`}
+      description="Selecciona los ingredientes que quieres agregar o los que deseas retirar."
+      size="lg"
+      footer={{
+        cancel: { label: "CANCELAR" },
+        confirm: { label: "CONFIRMAR", onClick: handleConfirm },
+      }}
+    >
+      <div className="flex flex-col gap-4">
+        {renderSection("Favoritos", favoritos, "favoritos", isFavoritosOpen, () =>
+          setIsFavoritosOpen(!isFavoritosOpen)
+        )}
+        {renderSection("Otros", otros, "otros", isOtrosOpen, () =>
+          setIsOtrosOpen(!isOtrosOpen)
+        )}
+        {renderSection("Gaseosas", gaseosas, "gaseosas", isGaseosasOpen, () =>
+          setIsGaseosasOpen(!isGaseosasOpen)
+        )}
+      </div>
+    </Modal>
   );
 };
