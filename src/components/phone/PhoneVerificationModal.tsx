@@ -13,6 +13,7 @@ import {
 } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 import { Modal } from "@/components/ui/modal";
+import { ConfirmModal } from "@/components/ui/modal/presets/ConfirmModal";
 import { modalErrorVariants } from "@/components/ui/modal/variants";
 import { cn } from "@/lib/utils";
 
@@ -45,6 +46,7 @@ export const PhoneVerificationModal: React.FC<PhoneVerificationModalProps> = ({
 
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
+  const [showUnlinkConfirm, setShowUnlinkConfirm] = useState(false);
 
   const [verificationId, setVerificationId] = useState<string | null>(null);
 
@@ -250,6 +252,7 @@ export const PhoneVerificationModal: React.FC<PhoneVerificationModalProps> = ({
       await unlink(user, "phone");
       await user.reload();
 
+      setShowUnlinkConfirm(false);
       setSuccessMsg("Teléfono desvinculado. Ahora puedes agregar uno nuevo.");
     } catch (e: unknown) {
       if (e instanceof Error) {
@@ -279,7 +282,8 @@ export const PhoneVerificationModal: React.FC<PhoneVerificationModalProps> = ({
       footer={false}
       variant="form"
     >
-      <div className="flex flex-col w-full gap-4">
+      <div className="flex flex-col w-full gap-5">
+        {/* Mensajes de error/éxito */}
         {(errorMsg || error) && (
           <div className={cn(modalErrorVariants({ type: "error" }))}>
             {errorMsg || error?.message}
@@ -292,67 +296,95 @@ export const PhoneVerificationModal: React.FC<PhoneVerificationModalProps> = ({
           </div>
         )}
 
+        {/* Modal de confirmación para desvincular */}
+        <ConfirmModal
+          open={showUnlinkConfirm}
+          onOpenChange={setShowUnlinkConfirm}
+          title="Desvincular teléfono"
+          message={`¿Estás seguro de que deseas desvincular el número ${user?.phoneNumber}? Tendrás que verificar un nuevo número.`}
+          onConfirm={handleUnlinkPhone}
+          confirmText="DESVINCULAR"
+          cancelText="CANCELAR"
+          destructive
+          loading={unlinking}
+        />
+
+        {/* Teléfono actual (solo en modo cambio) */}
         {mode === "change" && user?.phoneNumber && (
-          <div className="bg-gray-50 p-3 rounded-lg">
-            <p className="text-sm text-neutral-black-60">Teléfono actual:</p>
-            <p className="font-medium">{user.phoneNumber}</p>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleUnlinkPhone}
+          <div className="p-4 border border-gray-200 rounded-xl">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-xs text-neutral-400 uppercase tracking-wide">Teléfono actual</p>
+                <p className="font-semibold text-neutral-800 mt-1">{user.phoneNumber}</p>
+              </div>
+            </div>
+            <button
+              onClick={() => setShowUnlinkConfirm(true)}
               disabled={unlinking}
-              className="mt-2 text-red-600 border-red-200 hover:bg-red-50"
+              className="mt-3 w-full py-2 text-sm font-medium text-red-500 border border-red-200 rounded-lg hover:bg-red-50 transition-colors disabled:opacity-50"
             >
               {unlinking ? "Desvinculando..." : "Desvincular teléfono"}
+            </button>
+          </div>
+        )}
+
+        {/* Step 1: Ingresar teléfono */}
+        {step === "phone" && (
+          <div className="space-y-4">
+            <div>
+              <label className="text-xs text-neutral-500 uppercase tracking-wide mb-2 block">
+                Número de teléfono
+              </label>
+              <PhoneNumberInput
+                value={phone}
+                onChange={(value: string | undefined) => setPhone(value || "")}
+                placeholder="Ej: 300 123 4567"
+                className="w-full"
+              />
+            </div>
+
+            <Button
+              onClick={handleSendCode}
+              disabled={sending || !phone || phone.length < 8}
+              className="text-white rounded-xl w-full h-12 text-base font-medium"
+            >
+              {sending ? "Enviando..." : "ENVIAR CÓDIGO"}
             </Button>
           </div>
         )}
 
-        <div
-          className={`w-full ${step === "code" ? "opacity-60 pointer-events-none" : ""
-            }`}
-        >
-          <PhoneNumberInput
-            value={phone}
-            onChange={(value: string | undefined) => setPhone(value || "")}
-            placeholder="Número de teléfono"
-            disabled={step === "code"}
-            className="w-full"
-          />
-        </div>
-
-        <Input
-          value={code}
-          onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))}
-          maxLength={6}
-          disabled={step !== "code"}
-          className="gap-4 px-5 py-0 self-stretch w-full flex h-12 items-center justify-center relative rounded-[30px] border-[1.5px] border-solid border-[#cccccc] tracking-[0.5em] bg-transparent text-neutral-black-80 font-normal leading-[18px] text-center text-xl disabled:opacity-50"
-          placeholder="0 0 0 0 0 0"
-        />
-
-        <div className="flex justify-between px-5">
-          <p className="text-sm text-neutral-black-60">Código válido por</p>
-          <span className="text-sm font-bold">
-            {step === "code" ? formatMMSS(timeLeft) : "7:00"}
-          </span>
-        </div>
-
-        {step === "phone" && (
-          <Button
-            onClick={handleSendCode}
-            disabled={sending || !phone || phone.length < 8}
-            className="text-white rounded-[30px] mb-2 flex items-center gap-2 text-[16px] w-full h-[48px]"
-          >
-            {sending ? "Enviando..." : "ENVIAR CÓDIGO"}
-          </Button>
-        )}
-
+        {/* Step 2: Verificar código */}
         {step === "code" && (
-          <>
+          <div className="space-y-4">
+            <div className="text-center py-2">
+              <p className="text-sm text-neutral-600">
+                Enviamos un código a <span className="font-semibold">{phone}</span>
+              </p>
+            </div>
+
+            <div>
+              <label className="text-xs text-neutral-500 uppercase tracking-wide mb-2 block">
+                Código de verificación
+              </label>
+              <Input
+                value={code}
+                onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))}
+                maxLength={6}
+                className="w-full h-14 text-center text-2xl tracking-[0.4em] font-semibold rounded-xl border-gray-300 focus:border-primary-red"
+                placeholder="000000"
+              />
+            </div>
+
+            <div className="flex justify-center">
+              <span className={`text-sm ${timeLeft < 60 ? 'text-red-500' : 'text-neutral-500'}`}>
+                Código válido por <span className="font-bold">{formatMMSS(timeLeft)}</span>
+              </span>
+            </div>
+
             <Button
               onClick={handleVerifyAndLink}
               disabled={verifying || code.length < 6 || timeLeft === 0}
-              className="text-white rounded-[30px] mb-2 flex items-center gap-2 text-[16px] w-full h-[48px]"
+              className="text-white rounded-xl w-full h-12 text-base font-medium"
             >
               {verifying ? "Verificando..." : "VERIFICAR"}
             </Button>
@@ -361,11 +393,11 @@ export const PhoneVerificationModal: React.FC<PhoneVerificationModalProps> = ({
               type="button"
               onClick={handleResend}
               disabled={sending}
-              className="text-sm underline self-center text-neutral-600 hover:text-neutral-800"
+              className="text-sm text-neutral-500 hover:text-neutral-700 self-center w-full text-center py-2"
             >
-              ¿No recibiste el código? Reenviar
+              ¿No recibiste el código? <span className="underline">Reenviar</span>
             </button>
-          </>
+          </div>
         )}
 
         <div id={recaptchaContainerId} />

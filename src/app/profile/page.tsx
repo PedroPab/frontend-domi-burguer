@@ -4,20 +4,23 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import {
     Loader2,
-    User,
-    Mail,
-    Phone,
-    Calendar,
-    MapPin,
     LogOut,
-    Edit,
-    Shield,
+    Plus,
+    Phone,
     ChevronRight,
+    CheckCircle,
 } from "lucide-react";
 import { PhoneVerificationModal } from "@/components/phone/PhoneVerificationModal";
+import { Location } from "@/types/locations";
+import { LocationService } from "@/services/locationService";
+import { getIdToken } from "firebase/auth";
+import { ModalAddress } from "@/components/cart/modalAddress";
+import { CheckoutFormProvider } from "@/contexts/CheckoutFormContext";
+import { Address } from "@/types/address";
+import { LocationCard } from "@/app/locations/LocationCard";
+import { ComingSoonSection } from "./ComingSoonSection";
 
 export default function ProfilePage() {
     const { user, loading, logout, reloadUser } = useAuth();
@@ -27,11 +30,38 @@ export default function ProfilePage() {
     const [phoneModalOpen, setPhoneModalOpen] = useState(false);
     const [phoneModalMode, setPhoneModalMode] = useState<"link" | "change">("link");
 
+    // Estados para direcciones
+    const [locations, setLocations] = useState<Location[]>([]);
+    const [isLoadingAddresses, setIsLoadingAddresses] = useState(true);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [addressToEdit, setAddressToEdit] = useState<Address | null>(null);
+
     useEffect(() => {
         if (!loading && !user) {
             router.push("/login");
         }
     }, [user, loading, router]);
+
+    // Cargar direcciones
+    useEffect(() => {
+        const fetchAddresses = async () => {
+            if (!user) return;
+            setIsLoadingAddresses(true);
+            try {
+                const token = await getIdToken(user);
+                const userAddresses = await LocationService.getUserLocations(token);
+                setLocations(userAddresses.body);
+            } catch (err) {
+                console.error("Error cargando direcciones del usuario", err);
+            } finally {
+                setIsLoadingAddresses(false);
+            }
+        };
+
+        if (user) {
+            fetchAddresses();
+        }
+    }, [user]);
 
     const handleLogout = async () => {
         try {
@@ -45,16 +75,6 @@ export default function ProfilePage() {
         }
     };
 
-    const formatDate = (dateString: string | null) => {
-        if (!dateString) return "No disponible";
-        const date = new Date(dateString);
-        return date.toLocaleDateString("es-ES", {
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-        });
-    };
-
     const handleOpenPhoneModal = (mode: "link" | "change") => {
         setPhoneModalMode(mode);
         setPhoneModalOpen(true);
@@ -64,278 +84,211 @@ export default function ProfilePage() {
         await reloadUser();
     };
 
+    // Funciones para direcciones
+    const mapLocationToAddress = (location: Location): Address => {
+        return {
+            id: location.id,
+            name: location.name,
+            address: location.address,
+            fullAddress: location.address,
+            city: location.city,
+            country: location.country,
+            floor: location.floor,
+            comment: location.comment,
+            propertyType: location.propertyType || "",
+            coordinates: {
+                lat: location.coordinates.lat ?? 0,
+                lng: location.coordinates.lng ?? 0,
+            },
+            distance: 0,
+            deliveryPrice: 0,
+        };
+    };
+
+    const handleOpenCreate = () => {
+        setAddressToEdit(null);
+        setIsModalOpen(true);
+    };
+
+    const handleOpenEdit = (location: Location) => {
+        setAddressToEdit(mapLocationToAddress(location));
+        setIsModalOpen(true);
+    };
+
+    const handleCloseModal = async () => {
+        setIsModalOpen(false);
+        setAddressToEdit(null);
+        if (user) {
+            try {
+                const token = await getIdToken(user);
+                const userAddresses = await LocationService.getUserLocations(token);
+                setLocations(userAddresses.body);
+            } catch (err) {
+                console.error("Error recargando direcciones", err);
+            }
+        }
+    };
+
+    const handleRefresh = async () => {
+        if (!user) return;
+        try {
+            const token = await getIdToken(user);
+            const userAddresses = await LocationService.getUserLocations(token);
+            setLocations(userAddresses.body);
+        } catch (err) {
+            console.error("Error recargando direcciones", err);
+        }
+    };
+
+    // Obtener nombre para el saludo
+    const getUserFirstName = () => {
+        if (user?.displayName) {
+            return user.displayName.split(" ")[0].toUpperCase();
+        }
+        return "USUARIO";
+    };
+
     if (loading || !user) {
         return (
-            <div className="min-h-screen flex items-center justify-center bg-gray-50">
+            <div className="min-h-screen flex items-center justify-center bg-white">
                 <Loader2 className="animate-spin text-primary-red" size={70} />
             </div>
         );
     }
 
     return (
-        <div className="min-h-screen bg-gray-50 py-8 px-4">
-            <div className="max-w-4xl mx-auto">
-                {/* Header */}
-                <div className="mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                    <div>
-                        <h1 className="text-3xl md:text-4xl font-bold text-neutral-black-80 mb-2">
-                            Mi Cuenta
-                        </h1>
-                        <p className="text-neutral-black-60">
-                            Administra tu información personal y preferencias
-                        </p>
-                    </div>
-
-                    <Button
-                        onClick={handleLogout}
-                        disabled={isLoggingOut}
-                        className="h-11 px-4 flex items-center gap-2 rounded-lg text-white hover:bg-red-700 transition-colors"
-                        variant="destructive"
-                    >
-                        {isLoggingOut ? (
-                            <>
-                                <Loader2 className="animate-spin w-4 h-4" />
-                                Saliendo...
-                            </>
-                        ) : (
-                            <>
-                                <LogOut className="w-4 h-4" />
-                                Cerrar sesión
-                            </>
-                        )}
-                    </Button>
-                </div>
-
-                {/* Tarjeta de Perfil Principal */}
-                <Card className="p-6 mb-6 shadow-lg">
-                    <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
-                        {/* Avatar */}
-                        <div className="relative">
-                            {user.photoURL ? (
-                                <img
-                                    src={user.photoURL}
-                                    alt="Foto de perfil"
-                                    className="w-24 h-24 md:w-32 md:h-32 rounded-full object-cover border-4 border-primary-red"
-                                />
-                            ) : (
-                                <div className="w-24 h-24 md:w-32 md:h-32 rounded-full bg-gradient-to-br from-primary-red to-orange-500 flex items-center justify-center border-4 border-white shadow-lg">
-                                    <User className="w-12 h-12 md:w-16 md:h-16 text-white" />
-                                </div>
-                            )}
-                            <button className="absolute bottom-0 right-0 bg-white rounded-full p-2 shadow-lg hover:bg-gray-100 transition-colors">
-                                <Edit className="w-4 h-4 text-neutral-black-60" />
-                            </button>
-                        </div>
-
-                        {/* Información Principal */}
-                        <div className="flex-1 text-center md:text-left">
-                            <h2 className="text-2xl font-bold text-neutral-black-80 mb-1">
-                                {user.displayName || "Usuario de DomiBurguer"}
-                            </h2>
+        <CheckoutFormProvider>
+            <div className="mt-[130px] min-h-screen bg-white py-8 px-4">
+                <div className="max-w-2xl mx-auto">
+                    {/* Header */}
+                    <div className="flex items-start justify-between mb-8">
+                        <div>
+                            <h1 className="text-2xl md:text-3xl font-bold text-neutral-800">
+                                HOLA {getUserFirstName()}
+                            </h1>
                             {user.email && (
-                                <p className="text-neutral-black-60 mb-4">{user.email}</p>
+                                <p className="text-neutral-500 text-sm mt-1">{user.email}</p>
                             )}
+                        </div>
+                        <Button
+                            onClick={handleLogout}
+                            disabled={isLoggingOut}
+                            variant="ghost"
+                            size="sm"
+                            className="text-neutral-500 hover:text-primary-red hover:bg-red-50"
+                        >
+                            {isLoggingOut ? (
+                                <Loader2 className="animate-spin w-5 h-5" />
+                            ) : (
+                                <LogOut className="w-5 h-5" />
+                            )}
+                        </Button>
+                    </div>
 
-                            <div className="flex flex-wrap gap-2 justify-center md:justify-start">
-                                {user.emailVerified && (
-                                    <span className="inline-flex items-center gap-1 px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-medium">
-                                        <Shield className="w-4 h-4" />
-                                        Verificado
-                                    </span>
-                                )}
-                                <span className="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-medium">
-                                    Usuario activo
-                                </span>
+                    {/* Sección MIS DIRECCIONES */}
+                    <div className="mb-8">
+                        <h2 className="text-sm font-bold text-neutral-400 uppercase tracking-wide mb-4">
+                            MIS DIRECCIONES
+                        </h2>
 
-                                {/* Badge de teléfono */}
-                                {user.phoneNumber && (
-                                    <span className="inline-flex items-center gap-1 px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-sm font-medium">
-                                        <Phone className="w-4 h-4" />
-                                        Teléfono verificado
-                                    </span>
-                                )}
+                        {isLoadingAddresses ? (
+                            <div className="flex justify-center py-8">
+                                <Loader2 className="animate-spin text-primary-red" size={32} />
                             </div>
+                        ) : locations.length === 0 ? (
+                            <div className="bg-gray-50 rounded-xl p-6 text-center mb-4">
+                                <p className="text-neutral-500">
+                                    Aún no tienes direcciones guardadas
+                                </p>
+                            </div>
+                        ) : (
+                            <div className="mb-4">
+                                {locations.map((location) => (
+                                    <LocationCard
+                                        key={location.id}
+                                        location={location}
+                                        onEdit={handleOpenEdit}
+                                        onRefresh={handleRefresh}
+                                    />
+                                ))}
+                            </div>
+                        )}
+
+                        {/* Botón agregar dirección */}
+                        <button
+                            onClick={handleOpenCreate}
+                            className="w-full py-4 border-2 border-dashed border-neutral-300 rounded-xl flex items-center justify-center gap-2 text-neutral-700 font-medium hover:border-primary-red hover:text-primary-red transition-colors"
+                        >
+                            <Plus className="w-5 h-5" />
+                            AGREGAR DIRECCIÓN
+                        </button>
+
+                        {/* Mensaje de seguridad */}
+                        <div className="flex items-center gap-3 mt-6 text-neutral-400 text-sm">
+                            <CheckCircle className="w-5 h-5 flex-shrink-0" />
+                            <span>Guardaremos tu información de forma segura</span>
                         </div>
                     </div>
-                </Card>
 
-                {/* Información de Contacto */}
-                <Card className="p-6 mb-6 shadow-lg">
-                    <h3 className="text-xl font-bold text-neutral-black-80 mb-4">
-                        Información de Contacto
-                    </h3>
-
-                    <div className="space-y-4">
-                        {/* Email */}
-                        <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-                            <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 bg-primary-red/10 rounded-full flex items-center justify-center">
-                                    <Mail className="w-5 h-5 text-primary-red" />
-                                </div>
-                                <div>
-                                    <p className="text-sm text-neutral-black-60">Correo electrónico</p>
-                                    <p className="font-medium text-neutral-black-80">
-                                        {user.email || "No proporcionado"}
-                                    </p>
-                                </div>
-                            </div>
-                            <ChevronRight className="w-5 h-5 text-neutral-black-60" />
-                        </div>
-
-                        {/* Teléfono */}
+                    {/* Sección MI TELÉFONO */}
+                    <div className="mb-8">
+                        <h2 className="text-sm font-bold text-neutral-400 uppercase tracking-wide mb-4">
+                            MI TELÉFONO
+                        </h2>
                         <button
                             onClick={() => handleOpenPhoneModal(user.phoneNumber ? "change" : "link")}
-                            className="w-full flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+                            className="w-full flex items-center justify-between p-4 border border-gray-200 rounded-xl hover:bg-gray-50 transition-colors"
                         >
-                            <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 bg-primary-red/10 rounded-full flex items-center justify-center">
-                                    <Phone className="w-5 h-5 text-primary-red" />
-                                </div>
+                            <div className="flex items-center gap-4">
+                                <Phone className="w-5 h-5 text-neutral-500" />
                                 <div className="text-left">
-                                    <p className="text-sm text-neutral-black-60">Teléfono</p>
-                                    <p className="font-medium text-neutral-black-80">
-                                        {user.phoneNumber || "No proporcionado"}
-                                    </p>
-                                    {!user.phoneNumber && (
-                                        <p className="text-xs text-primary-red mt-1">
-                                            Toca para verificar tu número
-                                        </p>
+                                    {user.phoneNumber ? (
+                                        <>
+                                            <p className="font-medium text-neutral-800">
+                                                {user.phoneNumber}
+                                            </p>
+                                            <p className="text-xs text-green-600">
+                                                Verificado
+                                            </p>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <p className="font-medium text-neutral-500">
+                                                Agregar número de teléfono
+                                            </p>
+                                            <p className="text-xs text-primary-red">
+                                                Toca para verificar
+                                            </p>
+                                        </>
                                     )}
                                 </div>
                             </div>
-                            <ChevronRight className="w-5 h-5 text-neutral-black-60" />
+                            <ChevronRight className="w-5 h-5 text-neutral-400" />
                         </button>
                     </div>
-                </Card>
 
-                {/* Información de la Cuenta */}
-                <Card className="p-6 mb-6 shadow-lg">
-                    <h3 className="text-xl font-bold text-neutral-black-80 mb-4">
-                        Detalles de la Cuenta
-                    </h3>
-                    <div className="space-y-4">
-                        {/* Fecha de Creación */}
-                        <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-lg">
-                            <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                                <Calendar className="w-5 h-5 text-blue-600" />
-                            </div>
-                            <div>
-                                <p className="text-sm text-neutral-black-60">Miembro desde</p>
-                                <p className="font-medium text-neutral-black-80">
-                                    {formatDate(user.metadata.creationTime || null)}
-                                </p>
-                            </div>
-                        </div>
+                    {/* Sección MIS PEDIDOS - Próximamente */}
+                    <ComingSoonSection title="MIS PEDIDOS" />
 
-                        {/* Último Acceso */}
-                        <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-lg">
-                            <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
-                                <Calendar className="w-5 h-5 text-green-600" />
-                            </div>
-                            <div>
-                                <p className="text-sm text-neutral-black-60">Último acceso</p>
-                                <p className="font-medium text-neutral-black-80">
-                                    {formatDate(user.metadata.lastSignInTime || null)}
-                                </p>
-                            </div>
-                        </div>
+                    {/* Sección MIS CÓDIGOS - Próximamente */}
+                    <ComingSoonSection title="MIS CÓDIGOS" />
+                </div>
 
-                        {/* ID de Usuario */}
-                        <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-lg">
-                            <div className="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center">
-                                <Shield className="w-5 h-5 text-purple-600" />
-                            </div>
-                            <div className="flex-1 overflow-hidden">
-                                <p className="text-sm text-neutral-black-60">ID de Usuario</p>
-                                <p className="font-mono text-sm text-neutral-black-80 truncate">
-                                    {user.uid}
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </Card>
+                {/* Modal de dirección */}
+                <ModalAddress
+                    isOpen={isModalOpen}
+                    onClose={handleCloseModal}
+                    addressToEdit={addressToEdit}
+                />
 
-                {/* Acciones Rápidas */}
-                <Card className="p-6 mb-6 shadow-lg">
-                    <h3 className="text-xl font-bold text-neutral-black-80 mb-4">
-                        Acciones Rápidas
-                    </h3>
-                    <div className="space-y-3">
-                        <button
-                            onClick={() => router.push("/locations")}
-                            className="w-full flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
-                        >
-                            <div className="flex items-center gap-3">
-                                <MapPin className="w-5 h-5 text-primary-red" />
-                                <span className="font-medium text-neutral-black-80">Mis Direcciones</span>
-                            </div>
-                            <ChevronRight className="w-5 h-5 text-neutral-black-60" />
-                        </button>
-
-                        <button
-                            onClick={() => router.push("/")}
-                            className="w-full flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
-                        >
-                            <div className="flex items-center gap-3">
-                                <User className="w-5 h-5 text-primary-red" />
-                                <span className="font-medium text-neutral-black-80">Hacer un Pedido</span>
-                            </div>
-                            <ChevronRight className="w-5 h-5 text-neutral-black-60" />
-                        </button>
-
-                        <button
-                            onClick={() => router.push("/orders")}
-                            className="w-full flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
-                        >
-                            <div className="flex items-center gap-3">
-                                <Calendar className="w-5 h-5 text-primary-red" />
-                                <span className="font-medium text-neutral-black-80">Mis Pedidos</span>
-                            </div>
-                            <ChevronRight className="w-5 h-5 text-neutral-black-60" />
-                        </button>
-
-                        {/* mis codigos */}
-                        <button
-                            onClick={() => router.push("/codes")}
-                            className="w-full flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
-                        >
-                            <div className="flex items-center gap-3">
-                                <Shield className="w-5 h-5 text-primary-red" />
-                                <span className="font-medium text-neutral-black-80">Mis Códigos</span>
-                            </div>
-                            <ChevronRight className="w-5 h-5 text-neutral-black-60" />
-                        </button>
-                    </div>
-                </Card>
-
-                {/* Botón de Cerrar Sesión */}
-                <Button
-                    onClick={handleLogout}
-                    disabled={isLoggingOut}
-                    className="w-full h-12 rounded-lg flex items-center justify-center gap-2 transition-colors border border-destructive text-destructive hover:bg-destructive hover:text-destructive-foreground"
-                    variant="outline"
-                >
-                    {isLoggingOut ? (
-                        <>
-                            <Loader2 className="animate-spin w-5 h-5" />
-                            Cerrando sesión...
-                        </>
-                    ) : (
-                        <>
-                            <LogOut className="w-5 h-5" />
-                            Cerrar Sesión
-                        </>
-                    )}
-                </Button>
+                {/* Modal de verificación de teléfono */}
+                <PhoneVerificationModal
+                    open={phoneModalOpen}
+                    onOpenChange={setPhoneModalOpen}
+                    mode={phoneModalMode}
+                    onSuccess={handlePhoneVerified}
+                />
             </div>
-
-            {/* Modal de verificación de teléfono */}
-            <PhoneVerificationModal
-                open={phoneModalOpen}
-                onOpenChange={setPhoneModalOpen}
-                mode={phoneModalMode}
-                onSuccess={handlePhoneVerified}
-            />
-        </div>
+        </CheckoutFormProvider>
     );
 }
