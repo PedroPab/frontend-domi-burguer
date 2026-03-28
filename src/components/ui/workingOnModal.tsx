@@ -3,9 +3,6 @@ import React, { useEffect } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
-import { Input } from "../ui/input";
-import { GoogleIcon } from "../ui/icons";
-import { Separator } from "../ui/separator";
 
 interface ModalProps {
   isOpen: boolean;

@@ -26,7 +26,7 @@ const iconMap: { [key: string]: React.FC<LogoProps> } = {
 
 interface ComplementsLargeProps {
   complements: Complement[];
-  onRemove?: (complementId: number) => void;
+  onRemove?: (complementId: number | string) => void;
   gapPx?: number;
 }
 
@@ -117,6 +117,7 @@ export const ComplementsLarge: React.FC<ComplementsLargeProps> = ({
 
       return () => clearTimeout(timeoutId);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [visibleCount, isStable]);
 
   // Recalcular en resize
@@ -139,6 +140,7 @@ export const ComplementsLarge: React.FC<ComplementsLargeProps> = ({
       clearTimeout(resizeTimeout);
       window.removeEventListener("resize", handleResize);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (!complements || complements.length === 0) return null;

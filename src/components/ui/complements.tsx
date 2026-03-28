@@ -28,7 +28,7 @@ interface ComplementsProps {
   complements: Complement[];
   maxVisible?: number;
   gapPx?: number;
-  onRemove?: (complementId: number) => void;
+  onRemove?: (complementId: number | string) => void;
 }
 
 export const Complements: React.FC<ComplementsProps> = ({
@@ -37,6 +37,7 @@ export const Complements: React.FC<ComplementsProps> = ({
   gapPx = 4,
   onRemove,
 }) => {
+  console.log("Renderizando Complements con:", complements, "maxVisible:", maxVisible);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const measureRef = useRef<HTMLDivElement | null>(null);
   const [visibleCount, setVisibleCount] = useState<number>(complements.length);
@@ -44,15 +45,15 @@ export const Complements: React.FC<ComplementsProps> = ({
   const calculateVisible = () => {
     const container = containerRef.current;
     const measureContainer = measureRef.current;
-    
+
     if (!container || !measureContainer) return;
 
     const containerWidth = container.offsetWidth;
     const badgeWidth = 30; // Ancho aproximado del "+N"
-    
+
     // Obtener todos los chips medidos
     const chips = Array.from(measureContainer.children) as HTMLElement[];
-    
+
     let totalWidth = 0;
     let count = 0;
 
@@ -60,10 +61,10 @@ export const Complements: React.FC<ComplementsProps> = ({
       const chipWidth = chips[i].offsetWidth;
       const isLast = i === chips.length - 1;
       const hasMore = i < complements.length - 1;
-      
+
       // Si no es el último chip, reservar espacio para el badge
       const spaceNeeded = totalWidth + chipWidth + (hasMore && !isLast ? badgeWidth + gapPx : 0);
-      
+
       if (spaceNeeded <= containerWidth) {
         totalWidth += chipWidth + gapPx;
         count++;
@@ -87,6 +88,7 @@ export const Complements: React.FC<ComplementsProps> = ({
     }, 0);
 
     return () => clearTimeout(timeoutId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [complements, maxVisible, gapPx]);
 
   // Recalcular en resize
@@ -106,6 +108,7 @@ export const Complements: React.FC<ComplementsProps> = ({
       clearTimeout(resizeTimeout);
       window.removeEventListener("resize", handleResize);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [complements, maxVisible, gapPx]);
 
   if (!complements || complements.length === 0) return null;

@@ -11,7 +11,6 @@ export const LogoDesktop: React.FC<LogoProps> = ({
   width = 106,
   height = 56,
   className = "",
-  priority = true,
 }) => {
   return (
     <svg
@@ -118,7 +117,6 @@ export const LogoDesktopWhite: React.FC<LogoProps> = ({
   width = 106,
   height = 56,
   className = "",
-  priority = true,
 }) => {
   return (
     <svg
@@ -225,12 +223,12 @@ export const LogoMobile: React.FC<LogoProps> = ({
   width = 28,
   height = 40,
   className = "",
-  priority = true,
 }) => {
   return (
     <svg
       width={width}
       height={height}
+      className={className}
       viewBox="0 0 65 91"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -311,7 +309,6 @@ export const LogoMobileRed: React.FC<LogoProps> = ({
   width = 51,
   height = 72,
   className = "",
-  priority = true,
 }) => {
   return (
     <svg
@@ -1131,7 +1128,6 @@ export const ShieldIcon: React.FC<LogoProps> = ({
 
 export const SpikesIcon: React.FC<LogoProps> = ({
   width = 560,
-  height = 70,
   className = "",
 }) => {
   return (

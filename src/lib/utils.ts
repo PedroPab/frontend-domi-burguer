@@ -16,7 +16,7 @@ export const generateCartItemId = (
 
   // Crear un string único ordenando complementos por ID
   const complementsSignature = complements
-    .sort((a, b) => a.id - b.id)
+    .sort((a, b) => String(a.id).localeCompare(String(b.id)))
     .map((c) => `${c.id}:${c.quantity}`)
     .join("|");
 

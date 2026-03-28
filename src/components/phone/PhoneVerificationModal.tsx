@@ -11,7 +11,6 @@ import {
     DialogDescription,
 } from "@/components/ui/dialog";
 import { useAuth } from "@/contexts/AuthContext";
-import { AuthService } from "@/services/authService";
 import {
     PhoneAuthProvider,
     RecaptchaVerifier,

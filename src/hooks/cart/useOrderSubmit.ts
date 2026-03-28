@@ -1,23 +1,5 @@
 import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { useCartStore, CartItem } from "@/store/cartStore";
-import { useCheckoutFormStore } from "@/store/checkoutFormStore";
-import { Address } from "@/types/address";
 import { OrderPayload } from "@/types/OrderPayload";
-
-interface LastOrder {
-  name: string;
-  phone: string;
-  comment: string;
-  locationId: number | undefined;
-  address: Address | null;
-  orderItems: CartItem[];
-  paymentMethod: string;
-  prices: {
-    subtotal: number;
-    total: number;
-  };
-}
 
 interface OrderResult {
   id: number;

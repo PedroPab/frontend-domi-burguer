@@ -5,9 +5,6 @@ import { Code } from '@/types/codes';
 import { Complement } from '@/types/products';
 import { generateCartItemId, calculateTotalPrice } from '@/lib/utils';
 
-// ID base para complementos de referido (número negativo para evitar colisiones)
-const REFERRAL_COMPLEMENT_BASE_ID = -1000000;
-
 export const useCartActions = () => {
   const {
     items,

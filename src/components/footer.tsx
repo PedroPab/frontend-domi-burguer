@@ -3,9 +3,7 @@ import { Button } from "@/components/ui/button";
 import {
   LogoDesktopWhite,
   WhatsAppIcon,
-  TiktokIcon,
   InstagramIcon,
-  EmailIcon,
 } from "./ui/icons";
 import Image from "next/image";
 import Link from "next/link";

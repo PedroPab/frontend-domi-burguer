@@ -1,12 +1,10 @@
 "use client";
-import React, { use, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import {
-  EmailIcon,
   InstagramIcon,
   MapPinIcon,
-  TiktokIcon,
   WhatsAppIcon,
 } from "../ui/icons";
 import {

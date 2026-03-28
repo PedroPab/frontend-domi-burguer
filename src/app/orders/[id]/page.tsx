@@ -5,11 +5,10 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useAuth } from "@/contexts/AuthContext";
-import { Loader2, ArrowLeft, MapPin, User, Phone, Calendar, Package } from "lucide-react";
+import { Loader2, ArrowLeft, MapPin } from "lucide-react";
 import { Order } from "@/types/orders";
 import { OrderService } from "@/services/orderService";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
 
 interface OrderDetailPageProps {
     params: {

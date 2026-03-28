@@ -1,7 +1,5 @@
-import { useAuth } from "@/contexts/AuthContext";
 import { LocationService } from "@/services/locationService";
 import { Location } from "@/types/locations";
-import { getIdToken } from "firebase/auth";
 import { useEffect, useState } from "react";
 
 const useGetLocationByUser = ( token : string )  =>  {
@@ -24,14 +22,13 @@ const useGetLocationByUser = ( token : string )  =>  {
         };
         
     useEffect(() => {
-        
-
         if (token) {
             fetchLocations();
-        }else {
+        } else {
             setIsLoading(false);
             setError("No token provided");
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [token]);
 
     return { locations, isLoading, error , fetchLocations};

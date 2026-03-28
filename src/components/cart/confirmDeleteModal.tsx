@@ -3,8 +3,6 @@
 import React, { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
-import { Trash2 } from "lucide-react";
-
 interface ConfirmDeleteModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -16,7 +14,6 @@ export const ConfirmDeleteModal = ({
   isOpen,
   onClose,
   onConfirm,
-  productName,
 }: ConfirmDeleteModalProps) => {
   useEffect(() => {
     const handlePopState = () => onClose();

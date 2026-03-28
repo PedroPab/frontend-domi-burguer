@@ -1,5 +1,5 @@
 import { useCartStore } from "@/store/cartStore";
-import { Product, Complement } from "@/types/products";
+import { Product } from "@/types/products";
 import { generateCartItemId, calculateTotalPrice } from "@/lib/utils";
 
 export const useAddToCart = () => {

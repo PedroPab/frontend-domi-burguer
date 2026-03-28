@@ -37,7 +37,7 @@ export default function Cart() {
     } else {
       console.log("No authenticated user.");
     }
-  }, [user]);
+  }, [user, router]);
 
   return (
     <CheckoutFormProvider>

@@ -12,7 +12,6 @@ import { showFoodToast } from "../toastFood";
 import Link from "next/link";
 import useEmblaCarousel from "embla-carousel-react";
 import { useAddToCart } from "@/hooks/cart/useAddToCart";
-import { Complements } from "../ui/complements";
 import { ComplementsLarge } from "../ui/complementsLarge";
 
 export default function MenuSection() {
@@ -29,7 +28,6 @@ export default function MenuSection() {
   } = useMenu();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState<string>("");
   const { handleAddToCart } = useAddToCart();
 
   // Configurar Embla Carousel para el carrusel principal
@@ -76,12 +74,7 @@ export default function MenuSection() {
     }
   }, [emblaApi]);
 
-  const handleEditProduct = (productName?: string) => {
-    if (productName) {
-      setSelectedProduct(productName);
-    } else {
-      setSelectedProduct("");
-    }
+  const handleEditProduct = () => {
     setIsModalOpen(true);
   };
 

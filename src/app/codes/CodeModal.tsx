@@ -41,7 +41,7 @@ interface FormData {
 
 const initialFormData: FormData = {
     code: "",
-    type: "promotional",
+    type: "referral",
     description: "",
     usageLimit: "",
     expirationDate: "",
@@ -108,10 +108,10 @@ export function CodeModal({ isOpen, onClose, codeToEdit }: CodeModalProps) {
                 status: formData.status,
                 reward: formData.rewardType
                     ? {
-                          type: formData.rewardType as RewardType,
-                          typeAddReward: formData.rewardAddType,
-                          elements: [],
-                      }
+                        type: formData.rewardType as RewardType,
+                        typeAddReward: formData.rewardAddType,
+                        elements: [],
+                    }
                     : null,
             };
 

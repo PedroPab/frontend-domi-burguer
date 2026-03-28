@@ -29,10 +29,10 @@ const handleAddableComplement = (
   newQuantity: number
 ): {
   complementsToAdd: Complement[];
-  complementsToRemove: number[];
+  complementsToRemove: (number | string)[];
 } => {
   const complementsToAdd: Complement[] = [];
-  const complementsToRemove: number[] = [];
+  const complementsToRemove: (number | string)[] = [];
 
   const isComboEspecial = productId === 1;
 
@@ -44,7 +44,8 @@ const handleAddableComplement = (
     if (action === 'plus' && newQuantity > 1 && ingredient.additionId) {
       const existing = currentComplements.find(c => c.id === ingredient.additionId);
       if (!existing) {
-        const { additionId, minusId, ...rest } = ingredient;
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { additionId: _additionId, minusId: _minusId, ...rest } = ingredient;
         complementsToAdd.push({
           ...rest,
           id: ingredient.additionId,
@@ -66,7 +67,8 @@ const handleAddableComplement = (
   }
 
   if (action === 'plus' && newQuantity === 1 && ingredient.additionId) {
-    const { additionId, minusId, ...rest } = ingredient;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { additionId: _additionId, minusId: _minusId, ...rest } = ingredient;
     complementsToAdd.push({
       ...rest,
       id: ingredient.additionId,
@@ -92,10 +94,10 @@ const handleSpecialComplement = (
   newQuantity: number
 ): {
   complementsToAdd: Complement[];
-  complementsToRemove: number[];
+  complementsToRemove: (number | string)[];
 } => {
   const complementsToAdd: Complement[] = [];
-  const complementsToRemove: number[] = [];
+  const complementsToRemove: (number | string)[] = [];
 
   if (action === 'plus') {
     if (newQuantity === 1 && ingredient.minusId) {
@@ -103,7 +105,8 @@ const handleSpecialComplement = (
     }
     
     if (newQuantity === 2 && ingredient.additionId) {
-      const { additionId, minusId, ...rest } = ingredient;
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { additionId: _additionId, minusId: _minusId, ...rest } = ingredient;
       complementsToAdd.push({
         ...rest,
         id: ingredient.additionId,
@@ -117,7 +120,8 @@ const handleSpecialComplement = (
     if (newQuantity === 0 && ingredient.minusId) {
       const hasVegetariano = currentComplements.some(c => c.id === ingredient.minusId);
       if (!hasVegetariano) {
-        const { additionId, minusId, ...rest } = ingredient;
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { additionId: _additionId, minusId: _minusId, ...rest } = ingredient;
         complementsToAdd.push({
           ...rest,
           id: ingredient.minusId,
@@ -146,10 +150,10 @@ const handleRemovableComplement = (
   newQuantity: number
 ): {
   complementsToAdd: Complement[];
-  complementsToRemove: number[];
+  complementsToRemove: (number | string)[];
 } => {
   const complementsToAdd: Complement[] = [];
-  const complementsToRemove: number[] = [];
+  const complementsToRemove: (number | string)[] = [];
 
   if (action === 'plus' && newQuantity > 1) {
     return { complementsToAdd, complementsToRemove };
@@ -326,7 +330,7 @@ export function useMenu() {
   };
 
   
-  const handleRemoveComplement = (complementId: number) => {
+  const handleRemoveComplement = (complementId: number | string) => {
     setProducts((prev) =>
       prev.map((product, index) => {
         if (index !== actualProduct) return product;

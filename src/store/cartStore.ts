@@ -23,7 +23,7 @@ interface CartStore {
   addItem: (item: CartItem) => void;
   removeItem: (id: string) => void;
   updateQuantity: (id: string, quantity: number) => void;
-  removeComplement: (itemId: string, complementId: number) => void;
+  removeComplement: (itemId: string, complementId: number | string) => void;
   updateItemComplements: (itemId: string, newComplements: Complement[]) => void; // NUEVA
   setAddress: (address: Address) => void;
   removeAddress: () => void; // NUEVA

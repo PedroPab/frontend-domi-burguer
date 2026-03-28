@@ -5,8 +5,7 @@ import { PhoneNumberInput } from "@/components/ui/inputPhone";
 import { useAuth } from "@/contexts/AuthContext";
 import useFormCart from "@/hooks/cart/useFormcart";
 import { PhoneVerificationModal } from "@/components/phone/PhoneVerificationModal";
-import { Button } from "@/components/ui/button";
-import { Phone, CheckCircle } from "lucide-react";
+import { Phone } from "lucide-react";
 
 const InputPhone = () => {
     const { user, reloadUser } = useAuth();

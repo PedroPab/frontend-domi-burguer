@@ -11,7 +11,7 @@ import { Complements } from "@/components/ui/complements";
 interface CartItemCardProps {
     item: CartItem;
     onEditComplements: (item: CartItem) => void;
-    onRemoveComplement: (itemId: string, complementId: number) => void;
+    onRemoveComplement: (itemId: string, complementId: number | string) => void;
     onDecrease: (id: string, quantity: number) => void;
     onIncrease: (id: string, quantity: number) => void;
 }

@@ -92,6 +92,7 @@ export const CheckoutFormProvider = ({ children }: { children: React.ReactNode }
             fetchLocations();
             setListLocationsClient(locations);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [token]);
 
 

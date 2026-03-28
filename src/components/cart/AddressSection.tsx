@@ -13,13 +13,11 @@ import { useAuth } from "@/contexts/AuthContext";
 export function AddressSection() {
 
     //si no es usuario autenticado , miramos si tiene direccion en el local storage
-    const { addressClient, location, listLocationsClient } = useCheckoutForm();
+    const { addressClient, listLocationsClient } = useCheckoutForm();
     console.log('%caddressClient in AddressSection :', 'color: blue;', addressClient);
     const {
         isModalOpen,
         addressToEdit,
-        handleEditAddress,
-        removeAddress,
         handleCloseModal,
         handleOpenModal,
     } = useAddressManagement();
@@ -31,6 +29,7 @@ export function AddressSection() {
         if (!addressClient) {
             console.log("No addressClient found in AddressSection.");
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const hasMultipleLocations = listLocationsClient && listLocationsClient.length > 0;

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   BancolombiaIcon,
@@ -37,42 +37,6 @@ export default function InfoOrder() {
       selected: false,
     },
   ];
-
-  const orderItems = [
-    // {
-    //   id: 1,
-    //   name: "COMBO ESPECIAL",
-    //   price: "$29.900",
-    //   quantity: "01",
-    //   image1: "/burger-1-2.png",
-    //   image2: "/domiburger-papitas-3.png",
-    //   modifications: [
-    //     { icon: "/pickles.svg", text: "0 Pepinillos" },
-    //     { icon: "/lechuga.svg", text: "0 lechuga" },
-    //     { icon: "/carne.svg", text: "2 Carne (+$6.000)" },
-    //   ],
-    // },
-    {
-      id: 2,
-      name: "COMBO ESPECIAL",
-      price: "$29.900",
-      quantity: "01",
-      image1: "/burgerSmall.png",
-      image2: "/papitasSmall.png",
-      modifications: [{ icon: "/carne.svg", text: "2 Carne (+$6.000)" }],
-    },
-    {
-      id: 4,
-      name: "PORCIÓN PAPITAS RIZADAS",
-      price: "$6.900",
-      quantity: "01",
-      image1: "/papitasSmall.png",
-      image2: null,
-      modifications: [],
-    },
-  ];
-
-  const [selectedMethod, setSelectedMethod] = useState("efectivo");
 
   const lastOrder =
     typeof window !== "undefined" ? localStorage.getItem("lastOrder") : null;
