@@ -94,30 +94,14 @@ export default function LocationsPage() {
         }
     };
 
-    const handleDelete = async (addressId: string) => {
-        if (!confirm("¿Seguro que quieres eliminar esta dirección?")) return;
+    const handleRefresh = async () => {
+        if (!user) return;
         try {
-            // TODO: implementar eliminación vía LocationService cuando el backend lo soporte
-            setLocations((prev) => prev.filter((a) => a.id !== addressId));
+            const token = await getIdToken(user);
+            const userAddresses = await LocationService.getUserLocations(token);
+            setLocations(userAddresses.body);
         } catch (err) {
-            console.error("Error eliminando dirección", err);
-            alert("No se pudo eliminar la dirección");
-        }
-    };
-
-    const handleSetFavorite = async (locationId: string) => {
-        try {
-            // Actualizar localmente mientras se implementa el backend
-            setLocations((prev) =>
-                prev.map((loc) => ({
-                    ...loc,
-                    favorite: loc.id === locationId,
-                }))
-            );
-            // TODO: implementar actualización vía LocationService cuando el backend lo soporte
-        } catch (err) {
-            console.error("Error marcando dirección como favorita", err);
-            alert("No se pudo marcar la dirección como principal");
+            console.error("Error recargando direcciones", err);
         }
     };
 
@@ -158,8 +142,7 @@ export default function LocationsPage() {
                                     key={location.id}
                                     location={location}
                                     onEdit={handleOpenEdit}
-                                    onDelete={handleDelete}
-                                    onSetFavorite={handleSetFavorite}
+                                    onRefresh={handleRefresh}
                                 />
                             ))}
                         </div>
