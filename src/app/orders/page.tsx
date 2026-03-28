@@ -45,7 +45,9 @@ export default function OrdersPage() {
             quantity: item.quantity,
             image1: item.image1 || '/placeholder.png',
             image2: item.image2,
-            complements
+            complements,
+            allowCustomization: false,
+            customizationType: 'none' as const,
         };
     };
 

@@ -22,7 +22,7 @@ export const CustomizationModalCart = ({
   const { updateItemComplements } = useCartStore();
 
   // Detectar si es un producto de papas
-  const isPapas = cartItem?.name === "PAPAS VAQUERA" || cartItem?.name === "PAPAS TROYANA";
+  const isPapas = cartItem?.customizationType === 'papas';
 
   const [favoritos, setFavoritos] = useState(favoritosData);
   const [otros, setOtros] = useState(otrosData);
@@ -190,7 +190,7 @@ export const CustomizationModalCart = ({
       onOpenChange={(open) => !open && onClose()}
       title={`¿QUIERES PERSONALIZAR TU ${cartItem?.name}?`}
       description={isPapas
-        ? "Selecciona las salsas que deseas agregar."
+        ? "Selecciona las salsas o bebidas que deseas agregar."
         : "Selecciona los ingredientes que quieres agregar o los que deseas retirar."}
       size="lg"
       footer={{
@@ -205,7 +205,7 @@ export const CustomizationModalCart = ({
         {!isPapas && renderSection("Otros", otros, "otros", isOtrosOpen, () =>
           setIsOtrosOpen(!isOtrosOpen)
         )}
-        {!isPapas && renderSection("Gaseosas", gaseosas, "gaseosas", isGaseosasOpen, () =>
+        {renderSection("Bebidas", gaseosas, "gaseosas", isGaseosasOpen, () =>
           setIsGaseosasOpen(!isGaseosasOpen)
         )}
         {renderSection("Salsas", salsas, "salsas", isSalsasOpen, () =>

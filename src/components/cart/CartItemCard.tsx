@@ -59,7 +59,7 @@ export const CartItemCard = ({
                     <div className="flex gap-3 self-stretch w-full rounded-[80.62px] flex-col items-start">
                         <div className="gap-3 self-stretch w-full flex items-center">
                             <div className="flex-1 font-h4">{item.name}</div>
-                            {item.name.includes("SALSA DE AJO") ? null : (
+                            {!item.allowCustomization ? null : (
                                 <PencilIcon
                                     className="w-4 h-4 cursor-pointer hover:text-neutral-black-60 transition-colors"
                                     onClick={() => {

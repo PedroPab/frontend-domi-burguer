@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import { Address } from "@/types/address";
-import { Complement } from "@/types/products";
+import { Complement, CustomizationType } from "@/types/products";
 import { generateCartItemId, calculateTotalPrice } from "@/lib/utils";
 
 export interface CartItem {
@@ -14,6 +14,8 @@ export interface CartItem {
   image1: string;
   image2?: string | null;
   complements: Complement[];
+  allowCustomization: boolean;
+  customizationType: CustomizationType;
 }
 
 interface CartStore {

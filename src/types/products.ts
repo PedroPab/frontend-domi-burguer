@@ -13,6 +13,8 @@ export interface Complement {
   rewardCode?: string; // Para complementar con rewards de códigos
 }
 
+export type CustomizationType = 'burger' | 'papas' | 'none';
+
 export type Product = {
   id: number;
   name: string;
@@ -25,4 +27,6 @@ export type Product = {
   quantity: number;
   icons: React.FC<LogoProps>[];
   complements: Complement[];
+  allowCustomization: boolean;
+  customizationType: CustomizationType;
 };

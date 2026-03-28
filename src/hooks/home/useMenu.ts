@@ -42,19 +42,19 @@ const handleAddableComplement = (
   //     return { complementsToAdd, complementsToRemove };
   //   }
 
-    if (action === 'plus' && newQuantity > 1 && ingredient.additionId) {
-      const existing = currentComplements.find(c => c.id === ingredient.additionId);
-      if (!existing) {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { additionId: _additionId, minusId: _minusId, ...rest } = ingredient;
-        complementsToAdd.push({
-          ...rest,
-          id: ingredient.additionId,
-          minusComplement: false,
-          quantity: 1,
-        });
-      }
+  if (action === 'plus' && newQuantity > 1 && ingredient.additionId) {
+    const existing = currentComplements.find(c => c.id === ingredient.additionId);
+    if (!existing) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { additionId: _additionId, minusId: _minusId, ...rest } = ingredient;
+      complementsToAdd.push({
+        ...rest,
+        id: ingredient.additionId,
+        minusComplement: false,
+        quantity: 1,
+      });
     }
+  }
 
   //   if (action === 'minus' && newQuantity === 1 && ingredient.additionId) {
   //     complementsToRemove.push(ingredient.additionId);
@@ -203,6 +203,8 @@ export function useMenu() {
       icons: [CarneIcon, TomateIcon, QuesoIcon, TocinetaIcon],
       quantity: 1,
       complements: [],
+      allowCustomization: true,
+      customizationType: 'burger',
     },
     {
       id: 1,
@@ -216,6 +218,8 @@ export function useMenu() {
       icons: [HamburgerIcon, FrenchFriesIcon],
       quantity: 1,
       complements: [],
+      allowCustomization: true,
+      customizationType: 'burger',
     },
     {
       id: 38,
@@ -228,6 +232,8 @@ export function useMenu() {
       icons: [HuevoIcon, AjoIcon],
       quantity: 1,
       complements: [],
+      allowCustomization: false,
+      customizationType: 'none',
     },
     {
       id: 39,
@@ -240,6 +246,8 @@ export function useMenu() {
       icons: [FrenchFriesIcon],
       quantity: 1,
       complements: [],
+      allowCustomization: true,
+      customizationType: 'papas',
     },
     {
       id: 40,
@@ -252,6 +260,38 @@ export function useMenu() {
       icons: [FrenchFriesIcon],
       quantity: 1,
       complements: [],
+      allowCustomization: true,
+      customizationType: 'papas',
+    },
+    //postre chescake
+    {
+      id: 43,
+      name: "CHEESECAKE DE FRESA",
+      basePrice: 13500,
+      price: 13500,
+      body: "Nuestro delicioso cheesecake hecho con frutas frescas, una explosión de sabor en cada bocado.",
+      bigImage: "/cheesecakeFresa.png",
+      image1: "/cheesecakeFresa.png",
+      icons: [],
+      quantity: 1,
+      complements: [],
+      allowCustomization: false,
+      customizationType: 'none',
+    },
+    //jugo natura de mora
+    {
+      id: 44,
+      name: "JUGO NATURAL DE MORA",
+      basePrice: 7000,
+      price: 7000,
+      body: "Nuestro delicioso jugo natural de mora sin conservantes, una explosión de sabor en cada bocado",
+      bigImage: "/JugoDeMora.png",
+      image1: "/JugoDeMora.png",
+      icons: [],
+      quantity: 1,
+      complements: [],
+      allowCustomization: false,
+      customizationType: 'none',
     },
   ]);
 

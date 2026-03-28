@@ -168,6 +168,8 @@ export const CartSummary = ({
                                                                     quantity: 1,
                                                                     image1: "/salsaSmall.png",
                                                                     complements: [],
+                                                                    allowCustomization: false,
+                                                                    customizationType: 'none',
                                                                 };
                                                                 addItem(salsaItem);
                                                             }}

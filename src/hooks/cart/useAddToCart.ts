@@ -24,6 +24,8 @@ export const useAddToCart = () => {
       image1: product.image1,
       image2: product.image2 || null,
       complements: product.complements,
+      allowCustomization: product.allowCustomization,
+      customizationType: product.customizationType,
     };
     
     addItem(cartItem);

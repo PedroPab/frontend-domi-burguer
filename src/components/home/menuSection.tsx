@@ -152,7 +152,7 @@ export default function MenuSection() {
             </p>
             <Button
               variant="ghost"
-              className={`px-4 py-2 w-[177px] h-[40px] bg-accent-yellow-20 hover:bg-accent-yellow-40 rounded-[30px] transition-all ${actualProduct === 2 ? "hidden" : ""
+              className={`px-4 py-2 w-[177px] h-[40px] bg-accent-yellow-20 hover:bg-accent-yellow-40 rounded-[30px] transition-all ${!currentProduct.allowCustomization ? "hidden" : ""
                 }`}
               onClick={() => handleEditProduct()}
             >
@@ -386,6 +386,75 @@ export default function MenuSection() {
             </Button>
           </div>
         </div>
+
+        {/* Postre Cheesecake de fresa */}
+        <div
+          className={`w-[160px] h-[160px] lg:w-[280px] lg:h-40 ${actualProduct === 5 ? "bg-accent-yellow-40" : "bg-accent-yellow-20"
+            } rounded-2xl border-0 overflow-visible`}
+          onClick={() => {
+            handleChangeProduct(5);
+            if (emblaApi) emblaApi.scrollTo(5);
+          }}
+        >
+          <div className={`${"relative gap-[4.47px]"} p-0 h-full`}>
+            <Image
+              src="/cheesecakeFresa.png"
+              alt="Cheesecake de Fresa"
+              width={153}
+              height={230}
+              className="absolute top-[-0px] left-[26px] lg:top-[-38px] lg:left-[69px] w-[110px] h-[166px] lg:w-[153px] lg:h-[230px] object-cover"
+            />
+
+            <Button
+              size="icon"
+              className={`absolute z-200 top-[5px] right-[5px] lg:top-[7px] lg:left-[232px] w-8 h-8 lg:w-10 lg:h-10 rounded-[30px] p-0 ${actualProduct === 5 ? "hidden" : ""
+                }`}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleAddToCart(products[5]);
+                showFoodToast(products[5].name);
+                resetCurrentProduct();
+              }}
+            >
+              <Plus className="text-white" />
+            </Button>
+          </div>
+        </div>
+
+        {/* Jugo Natural de Mora */}
+        <div
+          className={`w-[160px] h-[160px] lg:w-[280px] lg:h-40 ${actualProduct === 6 ? "bg-accent-yellow-40" : "bg-accent-yellow-20"
+            } rounded-2xl border-0 overflow-visible`}
+          onClick={() => {
+            handleChangeProduct(6);
+            if (emblaApi) emblaApi.scrollTo(6);
+          }}
+        >
+          <div className={`${"relative gap-[4.47px]"} p-0 h-full`}>
+            <Image
+              src="/JugoDeMora.png"
+              alt="Jugo Natural de Mora"
+              width={153}
+              height={230}
+              className="absolute top-[-0px] left-[26px] lg:top-[-38px] lg:left-[69px] w-[110px] h-[166px] lg:w-[153px] lg:h-[230px] object-cover"
+            />
+
+            <Button
+              size="icon"
+              className={`absolute z-200 top-[5px] right-[5px] lg:top-[7px] lg:left-[232px] w-8 h-8 lg:w-10 lg:h-10 rounded-[30px] p-0 ${actualProduct === 6 ? "hidden" : ""
+                }`}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleAddToCart(products[6]);
+                showFoodToast(products[6].name);
+                resetCurrentProduct();
+              }}
+            >
+              <Plus className="text-white" />
+            </Button>
+          </div>
+        </div>
+
         {/* <div
           className={`w-[160px] h-[160px] lg:w-[280px] lg:h-40 ${
             actualProduct === 3 ? "bg-accent-yellow-40" : "bg-accent-yellow-20"
@@ -421,6 +490,7 @@ export default function MenuSection() {
         onClose={() => setIsModalOpen(false)}
         productName={currentProduct.name}
         productId={currentProduct.id}
+        customizationType={currentProduct.customizationType}
         handleChangeComplement={handleChangeComplement}
         complements={currentProduct.complements}
       />

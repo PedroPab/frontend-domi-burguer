@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { QuantitySelector } from "../ui/quantitySelector";
-import { Complement } from "@/types/products";
+import { Complement, CustomizationType } from "@/types/products";
 import { favoritosData, otrosData, gaseosasData, iconMap, salsasData, salsasPapasData } from "@/utils/complementSections";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { Modal } from "@/components/ui/modal";
@@ -12,6 +12,7 @@ interface CustomizationModalSectionProps {
   onClose: () => void;
   productName?: string;
   productId?: number;
+  customizationType?: CustomizationType;
   handleChangeComplement: (ingredient: Complement, action: "plus" | "minus") => void;
   complements?: Complement[];
 }
@@ -21,11 +22,12 @@ export const CustomizationModalSection = ({
   onClose,
   productName = "BURGER",
   productId,
+  customizationType = 'burger',
   handleChangeComplement,
   complements = [],
 }: CustomizationModalSectionProps) => {
   // Detectar si es un producto de papas
-  const isPapas = productName === "PAPAS VAQUERA" || productName === "PAPAS TROYANA";
+  const isPapas = customizationType === 'papas';
 
   const [favoritos, setFavoritos] = useState<Complement[]>(favoritosData);
   const [otros, setOtros] = useState<Complement[]>(otrosData);
@@ -198,7 +200,7 @@ export const CustomizationModalSection = ({
       onOpenChange={(open) => !open && onClose()}
       title={`¿QUIERES PERSONALIZAR TU ${productName}?`}
       description={isPapas
-        ? "Selecciona las salsas que deseas agregar."
+        ? "Selecciona las salsas o bebidas que deseas agregar."
         : "Selecciona los ingredientes que quieres agregar o los que deseas retirar."}
       size="lg"
       footer={{
@@ -219,7 +221,7 @@ export const CustomizationModalSection = ({
         {!isPapas && renderSection("Otros", otros, "otros", isOtrosOpen, () =>
           setIsOtrosOpen(!isOtrosOpen)
         )}
-        {!isPapas && renderSection("Bebidas", gaseosas, "gaseosas", isGaseosasOpen, () =>
+        {renderSection("Bebidas", gaseosas, "gaseosas", isGaseosasOpen, () =>
           setIsGaseosasOpen(!isGaseosasOpen)
         )}
         {renderSection("Salsas", salsas, "salsas", isSalsasOpen, () =>
