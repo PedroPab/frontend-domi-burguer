@@ -3,6 +3,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { PhoneNumberInput } from "@/components/ui/inputPhone";
 import { useAuth } from "@/contexts/AuthContext";
 import {
   PhoneAuthProvider,
@@ -100,8 +101,8 @@ export const PhoneVerificationModal: React.FC<PhoneVerificationModalProps> = ({
   };
 
   const normalizePhone = (phoneValue: string): string => {
-    const cleaned = phoneValue.replace(/\D/g, "");
-    return "+57" + cleaned;
+    // PhoneNumberInput ya devuelve el número con código de país (ej: +57, +1, +34)
+    return phoneValue;
   };
 
   const getOrCreateRecaptcha = (): RecaptchaVerifier => {
@@ -134,7 +135,8 @@ export const PhoneVerificationModal: React.FC<PhoneVerificationModalProps> = ({
       setSending(true);
 
       const normalized = normalizePhone(phone);
-      if (normalized.length < 12) {
+      // Validación básica: debe tener al menos código de país (+X) y algunos dígitos
+      if (!normalized || normalized.length < 8) {
         throw new Error("Ingresa un número de teléfono válido.");
       }
 
@@ -307,21 +309,15 @@ export const PhoneVerificationModal: React.FC<PhoneVerificationModalProps> = ({
         )}
 
         <div
-          className={`w-full pl-6 pr-0 py-0 flex h-12 items-center justify-center relative rounded-[30px] border-[1.5px] border-solid border-[#cccccc] ${
-            step === "code" ? "opacity-60 pointer-events-none" : ""
-          }`}
+          className={`w-full ${step === "code" ? "opacity-60 pointer-events-none" : ""
+            }`}
         >
-          <div className="text-sm relative w-fit font-bold text-neutrosblack-80 tracking-[0] leading-[18px] whitespace-nowrap">
-            +57
-          </div>
-          <div className="bg-[#cccccc] ml-6 w-[1px] h-full rotate-180" />
-          <Input
-            inputMode="tel"
+          <PhoneNumberInput
             value={phone}
-            onChange={(e) => setPhone(e.target.value.replace(/\D/g, ""))}
-            placeholder="000 000 00 00"
-            className="border-none shadow-none w-full"
+            onChange={(value: string | undefined) => setPhone(value || "")}
+            placeholder="Número de teléfono"
             disabled={step === "code"}
+            className="w-full"
           />
         </div>
 
@@ -337,14 +333,14 @@ export const PhoneVerificationModal: React.FC<PhoneVerificationModalProps> = ({
         <div className="flex justify-between px-5">
           <p className="text-sm text-neutral-black-60">Código válido por</p>
           <span className="text-sm font-bold">
-            {step === "code" ? formatMMSS(timeLeft) : "15:00"}
+            {step === "code" ? formatMMSS(timeLeft) : "7:00"}
           </span>
         </div>
 
         {step === "phone" && (
           <Button
             onClick={handleSendCode}
-            disabled={sending || !phone || phone.length < 10}
+            disabled={sending || !phone || phone.length < 8}
             className="text-white rounded-[30px] mb-2 flex items-center gap-2 text-[16px] w-full h-[48px]"
           >
             {sending ? "Enviando..." : "ENVIAR CÓDIGO"}
