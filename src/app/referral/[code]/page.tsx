@@ -6,8 +6,9 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { CodesService } from "@/services/codesService";
 import { Code } from "@/types/codes";
-import { Loader2, Gift, Copy, Check, ShoppingBag, ArrowRight } from "lucide-react";
+import { Loader2, Gift, Copy, Check, ShoppingBag, ArrowRight, QrCode } from "lucide-react";
 import Image from "next/image";
+import { QRShare } from "@/components/QRShare";
 
 export default function ReferralPage() {
     const params = useParams();
@@ -18,6 +19,11 @@ export default function ReferralPage() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [copied, setCopied] = useState(false);
+    const [currentUrl, setCurrentUrl] = useState("");
+
+    useEffect(() => {
+        setCurrentUrl(window.location.href);
+    }, []);
 
     useEffect(() => {
         const fetchCode = async () => {
@@ -201,6 +207,23 @@ export default function ReferralPage() {
                                 </div>
                             </li>
                         </ol>
+                    </CardContent>
+                </Card>
+
+                {/* Código QR para compartir */}
+                <Card className="mb-6">
+                    <CardContent className="p-6">
+                        <h2 className="font-bold text-lg text-gray-800 mb-4 flex items-center justify-center gap-2">
+                            <QrCode className="w-5 h-5 text-primary-red" />
+                            Comparte con QR
+                        </h2>
+                        {currentUrl && (
+                            <QRShare
+                                url={currentUrl}
+                                title="Escanea para usar el código de referido"
+                                fileName={`referido-${code.code}`}
+                            />
+                        )}
                     </CardContent>
                 </Card>
 
