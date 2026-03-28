@@ -4,11 +4,10 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import { Code } from "@/types/codes";
-import { Loader2, Plus, Gift } from "lucide-react";
+import { Loader2, Gift } from "lucide-react";
 import { CodesService } from "@/services/codesService";
 import { getIdToken } from "firebase/auth";
 import { CodeCard } from "./CodeCard";
-import { CodeModal } from "./CodeModal";
 import { UserCodeModal } from "./UserCodeModal";
 
 export default function CodesPage() {
@@ -18,9 +17,7 @@ export default function CodesPage() {
     const [codes, setCodes] = useState<Code[]>([]);
     const [isLoadingCodes, setIsLoadingCodes] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    const [isModalOpen, setIsModalOpen] = useState(false);
     const [isUserModalOpen, setIsUserModalOpen] = useState(false);
-    const [codeToEdit, setCodeToEdit] = useState<Code | null>(null);
 
     useEffect(() => {
         if (!loading && !user) {
@@ -52,24 +49,7 @@ export default function CodesPage() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user]);
 
-    const handleOpenCreate = () => {
-        setCodeToEdit(null);
-        setIsModalOpen(true);
-    };
-
-    const handleOpenEdit = (code: Code) => {
-        setCodeToEdit(code);
-        setIsModalOpen(true);
-    };
-
-    const handleCloseModal = async () => {
-        setIsModalOpen(false);
-        setCodeToEdit(null);
-        await fetchCodes();
-    };
-
     const handleDelete = async (codeId: string) => {
-        if (!confirm("¿Seguro que quieres eliminar este código?")) return;
         if (!user) return;
 
         try {
@@ -78,7 +58,6 @@ export default function CodesPage() {
             setCodes((prev) => prev.filter((c) => c.id !== codeId));
         } catch (err) {
             console.error("Error eliminando código", err);
-            alert("No se pudo eliminar el código");
         }
     };
 
@@ -99,6 +78,8 @@ export default function CodesPage() {
             alert("No se pudo actualizar el estado del código");
         }
     };
+
+    const hasReferralCode = codes.some((code) => code.type === "referral");
 
     if (loading || !user) {
         return (
@@ -130,12 +111,11 @@ export default function CodesPage() {
                         <p className="mb-4">Aún no tienes códigos creados.</p>
                     </div>
                 ) : (
-                    <div className="mb-6 grid gap-4 md:grid-cols-2">
+                    <div className="mb-6 bg-white rounded-lg border border-gray-200 px-4">
                         {codes.map((code) => (
                             <CodeCard
                                 key={code.id}
                                 code={code}
-                                onEdit={handleOpenEdit}
                                 onDelete={handleDelete}
                                 onToggleStatus={handleToggleStatus}
                             />
@@ -145,26 +125,17 @@ export default function CodesPage() {
 
                 <button
                     onClick={() => setIsUserModalOpen(true)}
-                    className="w-full py-4 mb-4 bg-gradient-to-r from-[#e73533] to-[#ff6b6b] rounded-lg flex items-center justify-center gap-2 text-white font-medium hover:opacity-90 transition-opacity"
+                    disabled={hasReferralCode}
+                    className={`w-full py-4 mb-4 rounded-lg flex items-center justify-center gap-2 font-medium transition-opacity ${
+                        hasReferralCode
+                            ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                            : "bg-gradient-to-r from-[#e73533] to-[#ff6b6b] text-white hover:opacity-90"
+                    }`}
                 >
                     <Gift className="w-5 h-5" />
-                    CREAR MI CÓDIGO DE REFERIDO
-                </button>
-
-                <button
-                    onClick={handleOpenCreate}
-                    className="w-full py-4 border-2 border-dashed border-[#e73533] rounded-lg flex items-center justify-center gap-2 text-neutral-800 font-medium hover:bg-red-50 transition-colors"
-                >
-                    <Plus className="w-5 h-5" />
-                    CREAR CÓDIGO
+                    {hasReferralCode ? "YA TIENES UN CÓDIGO DE REFERIDO" : "CREAR MI CÓDIGO DE REFERIDO"}
                 </button>
             </div>
-
-            <CodeModal
-                isOpen={isModalOpen}
-                onClose={handleCloseModal}
-                codeToEdit={codeToEdit}
-            />
 
             <UserCodeModal
                 isOpen={isUserModalOpen}
