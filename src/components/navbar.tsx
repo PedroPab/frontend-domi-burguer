@@ -1,5 +1,6 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { UserIcon } from "lucide-react";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -11,11 +12,19 @@ import {
   LogoMobile,
 } from "./ui/icons";
 import Link from "next/link";
-import { LogInModal } from "./login/logInModal";
 import { useCartStore } from "@/store/cartStore";
-import { WorkingOnModal } from "./ui/workingOnModal";
 import { useAuth } from "@/contexts/AuthContext";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+
+// Lazy load modales
+const LogInModal = dynamic(
+  () => import("./login/logInModal").then(mod => mod.LogInModal),
+  { ssr: false }
+);
+const WorkingOnModal = dynamic(
+  () => import("./ui/workingOnModal").then(mod => mod.WorkingOnModal),
+  { ssr: false }
+);
 
 export const Navbar = () => {
   const [isAcountModalOpen, setIsAcountModalOpen] = useState(false);

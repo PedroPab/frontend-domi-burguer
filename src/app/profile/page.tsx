@@ -1,5 +1,6 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useAuth } from "@/contexts/AuthContext";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -12,15 +13,23 @@ import {
     ChevronRight,
     CheckCircle,
 } from "lucide-react";
-import { PhoneVerificationModal } from "@/components/phone/PhoneVerificationModal";
 import { Location } from "@/types/locations";
 import { LocationService } from "@/services/locationService";
 import { getIdToken } from "firebase/auth";
-import { ModalAddress } from "@/components/cart/modalAddress";
 import { CheckoutFormProvider } from "@/contexts/CheckoutFormContext";
 import { Address } from "@/types/address";
 import { LocationCard } from "@/app/locations/LocationCard";
 import { ComingSoonSection } from "./ComingSoonSection";
+
+// Lazy load modales pesados
+const PhoneVerificationModal = dynamic(
+    () => import("@/components/phone/PhoneVerificationModal").then(mod => mod.PhoneVerificationModal),
+    { ssr: false }
+);
+const ModalAddress = dynamic(
+    () => import("@/components/cart/modalAddress").then(mod => mod.ModalAddress),
+    { ssr: false }
+);
 
 export default function ProfilePage() {
     const { user, loading, logout, reloadUser } = useAuth();

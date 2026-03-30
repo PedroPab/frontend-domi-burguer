@@ -1,10 +1,16 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
-import { PhoneVerificationModal } from "@/components/phone/PhoneVerificationModal";
 import { Loader2 } from "lucide-react";
+
+// Lazy load modal pesado
+const PhoneVerificationModal = dynamic(
+    () => import("@/components/phone/PhoneVerificationModal").then(mod => mod.PhoneVerificationModal),
+    { ssr: false }
+);
 
 function VerifyPhoneContent() {
     const router = useRouter();

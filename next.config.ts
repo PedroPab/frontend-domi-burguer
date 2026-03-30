@@ -1,7 +1,23 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  // Habilitar compresión
+  compress: true,
+
+  // Optimizar paquetes externos (tree-shaking agresivo)
+  experimental: {
+    optimizePackageImports: [
+      "lucide-react",
+      "@heroui/system",
+      "@heroui/theme",
+      "@heroui/toast",
+      "framer-motion",
+      "react-phone-number-input",
+    ],
+  },
+
+  // Desactivar source maps en producción
+  productionBrowserSourceMaps: false,
 };
 
 export default nextConfig;

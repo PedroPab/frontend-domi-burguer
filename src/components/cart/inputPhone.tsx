@@ -1,11 +1,17 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useState } from "react";
 import { PhoneNumberInput } from "@/components/ui/inputPhone";
 import { useAuth } from "@/contexts/AuthContext";
 import useFormCart from "@/hooks/cart/useFormcart";
-import { PhoneVerificationModal } from "@/components/phone/PhoneVerificationModal";
 import { Phone } from "lucide-react";
+
+// Lazy load modal pesado
+const PhoneVerificationModal = dynamic(
+    () => import("@/components/phone/PhoneVerificationModal").then(mod => mod.PhoneVerificationModal),
+    { ssr: false }
+);
 
 const InputPhone = () => {
     const { user, reloadUser } = useAuth();

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import dynamic from "next/dynamic";
 import { CheckoutFormProvider } from "@/contexts/CheckoutFormContext";
 
 import { useCartSubmit } from "@/hooks/cart/useCartSubmit";
@@ -11,7 +12,12 @@ import { CheckoutForm } from "@/components/cart/CheckoutForm";
 import { CartSummary } from "@/components/cart/CartSummary";
 import { CartModals } from "@/components/cart/CartModals";
 import { useAuth } from "@/contexts/AuthContext";
-import { PhoneVerificationModal } from "@/components/phone/PhoneVerificationModal";
+
+// Lazy load modal pesado
+const PhoneVerificationModal = dynamic(
+  () => import("@/components/phone/PhoneVerificationModal").then(mod => mod.PhoneVerificationModal),
+  { ssr: false }
+);
 
 export default function Cart() {
   const { handleSubmitWithValidation, isSubmitting, error } = useCartSubmit();

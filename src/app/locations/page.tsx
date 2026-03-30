@@ -1,16 +1,22 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import { Location } from "@/types/locations";
 import { Loader2, Plus } from "lucide-react";
-import { ModalAddress } from "@/components/cart/modalAddress";
 import { LocationService } from "@/services/locationService";
 import { getIdToken } from "firebase/auth";
 import { LocationCard } from "./LocationCard";
 import { CheckoutFormProvider } from "@/contexts/CheckoutFormContext";
 import { Address } from "@/types/address";
+
+// Lazy load modal pesado
+const ModalAddress = dynamic(
+    () => import("@/components/cart/modalAddress").then(mod => mod.ModalAddress),
+    { ssr: false }
+);
 
 export default function LocationsPage() {
     const { user, loading } = useAuth();

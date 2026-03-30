@@ -1,12 +1,18 @@
 import React, { useState } from "react";
+import dynamic from "next/dynamic";
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import AddressCard from "../AddressCard";
 import { useCheckoutForm } from "@/contexts/CheckoutFormContext";
-import { ModalAddress } from "./modalAddress";
 import { ModalLocationsList } from "./ModalLocationsList";
 import { useAddressManagement } from "@/hooks/cart/useAddressManagement";
 import { useAuth } from "@/contexts/AuthContext";
+
+// Lazy load modal pesado
+const ModalAddress = dynamic(
+    () => import("./modalAddress").then(mod => mod.ModalAddress),
+    { ssr: false }
+);
 
 
 

@@ -1,11 +1,11 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { ArrowIcon, EditarIcon, HamburgerIcon } from "@/components/ui/icons";
 import { Plus } from "lucide-react";
 import { useMenu } from "@/hooks/home/useMenu";
-import { CustomizationModalSection } from "./customizeOrderModal";
 import { useState, useCallback, useEffect } from "react";
 import { QuantitySelector } from "@/components/ui/quantitySelector";
 import { showFoodToast } from "../toastFood";
@@ -13,6 +13,12 @@ import Link from "next/link";
 import useEmblaCarousel from "embla-carousel-react";
 import { useAddToCart } from "@/hooks/cart/useAddToCart";
 import { ComplementsLarge } from "../ui/complementsLarge";
+
+// Lazy load modal pesado
+const CustomizationModalSection = dynamic(
+  () => import("./customizeOrderModal").then(mod => mod.CustomizationModalSection),
+  { ssr: false }
+);
 
 export default function MenuSection() {
   const {
