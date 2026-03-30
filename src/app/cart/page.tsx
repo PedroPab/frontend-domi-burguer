@@ -1,8 +1,7 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { CheckoutFormProvider } from "@/contexts/CheckoutFormContext";
-import { useRouter } from "next/navigation";
 
 import { useCartSubmit } from "@/hooks/cart/useCartSubmit";
 
@@ -12,32 +11,34 @@ import { CheckoutForm } from "@/components/cart/CheckoutForm";
 import { CartSummary } from "@/components/cart/CartSummary";
 import { CartModals } from "@/components/cart/CartModals";
 import { useAuth } from "@/contexts/AuthContext";
+import { PhoneVerificationModal } from "@/components/phone/PhoneVerificationModal";
 
 export default function Cart() {
-
-  const router = useRouter();
   const { handleSubmitWithValidation, isSubmitting, error } = useCartSubmit();
   useEffect(() => {
     console.log(error)
   }, [error])
 
-  //revisamos si el cliente tiene un numero verificado en su cuenta de google si esta autenticado
-  const { user } = useAuth();
-  console.log("Current user:", user);
+  // Verificación de teléfono integrada
+  const { user, reloadUser } = useAuth();
+  const [phoneModalOpen, setPhoneModalOpen] = useState(false);
+  const [hasCheckedPhone, setHasCheckedPhone] = useState(false);
+
+  // Abrir modal si el usuario está autenticado pero no tiene teléfono verificado
   useEffect(() => {
-    if (user) {
-      console.log("User is authenticated:", user);
-      if (user.phoneNumber) {
-        console.log("User has a verified phone number:", user.phoneNumber);
-      } else {
-        console.log("User does not have a verified phone number.");
-        //lo mandamos a verificar el telefono
-        router.push("/verify-phone");
+    if (user && !hasCheckedPhone) {
+      if (!user.phoneNumber) {
+        setPhoneModalOpen(true);
       }
-    } else {
-      console.log("No authenticated user.");
+      setHasCheckedPhone(true);
     }
-  }, [user, router]);
+  }, [user, hasCheckedPhone]);
+
+  // Callback cuando el teléfono se verifica exitosamente
+  const handlePhoneVerified = async () => {
+    await reloadUser();
+    setPhoneModalOpen(false);
+  };
 
   return (
     <CheckoutFormProvider>
@@ -53,6 +54,14 @@ export default function Cart() {
 
           {/* Todos los modales */}
           <CartModals />
+
+          {/* Modal de verificación de teléfono */}
+          <PhoneVerificationModal
+            open={phoneModalOpen}
+            onOpenChange={setPhoneModalOpen}
+            mode="link"
+            onSuccess={handlePhoneVerified}
+          />
         </div>
       </form>
     </CheckoutFormProvider>

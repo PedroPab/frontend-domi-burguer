@@ -29,12 +29,14 @@ function VerifyPhoneContent() {
     }, [user, loading, router, redirectTo]);
 
     const handleSuccess = () => {
-        router.push(redirectTo);
+        router.replace(redirectTo);
     };
 
     const handleOpenChange = (open: boolean) => {
         setModalOpen(open);
-        if (!open) {
+        // Solo navegar atrás si el usuario cancela manualmente (no tiene teléfono verificado)
+        // Si ya verificó el teléfono, handleSuccess se encarga de la redirección
+        if (!open && !user?.phoneNumber) {
             router.back();
         }
     };
