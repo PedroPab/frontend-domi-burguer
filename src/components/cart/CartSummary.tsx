@@ -2,7 +2,7 @@
 "use client";
 
 import React, { useEffect } from "react";
-import { CalendarIcon, Plus } from "lucide-react";
+import { CalendarIcon, Loader2, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { SpikesIcon } from "@/components/ui/icons";
@@ -216,10 +216,16 @@ export const CartSummary = ({
                                 <Button
                                     type="submit"
                                     disabled={isSubmitting || items.length === 0}
-                                    className={`text-white rounded-[30px] flex items-center gap-2 text-[16px] w-[128px] h-[48px] disabled:opacity-50 disabled:cursor-not-allowed ${isSubmitting ? "w-auto" : "w-[128px]"
-                                        }`}
+                                    className="text-white rounded-[30px] flex items-center gap-2 text-[16px] min-w-[128px] h-[48px] disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
-                                    COMPRAR
+                                    {isSubmitting ? (
+                                        <>
+                                            <Loader2 className="animate-spin" size={20} />
+                                            ENVIANDO...
+                                        </>
+                                    ) : (
+                                        "COMPRAR"
+                                    )}
                                 </Button>
                             </div>
                         </div>
