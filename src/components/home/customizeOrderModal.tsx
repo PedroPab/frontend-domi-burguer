@@ -33,7 +33,6 @@ export const CustomizationModalSection = ({
   const [otros, setOtros] = useState<Complement[]>(otrosData);
   const [gaseosas, setGaseosas] = useState<Complement[]>(gaseosasData);
   const [salsas, setSalsas] = useState<Complement[]>([]);
-  console.log("COMPLEMENTOS EN MODAL:", complements, gaseosas);
 
   // Estados de los acordeones
   const [isFavoritosOpen, setIsFavoritosOpen] = useState(!isPapas);
@@ -46,7 +45,6 @@ export const CustomizationModalSection = ({
     if (isOpen) {
       const syncIngredients = (ingredients: Complement[]) =>
         ingredients.map((ing) => {
-          console.log("SYNC INGREDIENT:", ing);
           if (ing.type === "special") {
             const hasVegetariano = complements.some((c) => c.id === ing.minusId);
             if (hasVegetariano) {
@@ -87,7 +85,6 @@ export const CustomizationModalSection = ({
 
       setFavoritos(syncIngredients(favoritosData));
       setOtros(syncIngredients(otrosData));
-      console.log("GASEOSAS SYNC:", syncIngredients(gaseosasData), gaseosasData);
       setGaseosas(syncIngredients(gaseosasData));
       // Usar salsasPapasData para productos de papas
       setSalsas(syncIngredients(isPapas ? salsasPapasData : salsasData));

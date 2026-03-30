@@ -1,5 +1,4 @@
-// app/(tu-ruta)/layout.tsx o app/layout.tsx
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 
 export const metadataConfig: Metadata = {
     // Título base y plantilla para páginas internas
@@ -10,7 +9,6 @@ export const metadataConfig: Metadata = {
     applicationName: 'Domi Burguer',
     description:
         '¡Haz tu pedido de hamburguesas artesanales! Creamos nuestro propio sabor con ingredientes frescos y recetas familiares.',
-    themeColor: '#e73533',
     manifest: '/manifest.webmanifest', // Next servirá app/manifest.ts en esta URL
     icons: {
         icon: [
@@ -50,4 +48,8 @@ export const metadataConfig: Metadata = {
             '¡Haz tu pedido de hamburguesas artesanales! Creamos nuestro propio sabor con ingredientes frescos y recetas familiares.',
         images: ['/soloPiensaEnDomi.jpg'],
     },
+};
+
+export const viewportConfig: Viewport = {
+    themeColor: '#e73533',
 };

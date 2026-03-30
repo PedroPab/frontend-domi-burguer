@@ -18,9 +18,9 @@ const ConfettiComponent: React.FC<ConfettiComponentProps> = ({
         <Confetti
             width={width}
             height={height}
+            numberOfPieces={numberOfPieces}
             recycle={false}
             gravity={0.1}
-        // numberOfPieces={numberOfPieces}
         // style={{
         //     position: 'fixed',
         //     top: 0,

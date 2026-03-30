@@ -5,8 +5,8 @@ import { Navbar } from "@/components/navbar";
 import { HeroUIProvider } from "@heroui/system";
 import { ToastProvider } from "@heroui/toast";
 import { AuthProvider } from "@/contexts/AuthContext";
-import { Metadata } from "next";
-import { metadataConfig } from "./metadata";
+import { Metadata, Viewport } from "next";
+import { metadataConfig, viewportConfig } from "./metadata";
 import Script from "next/script";
 
 const montserrat = Montserrat({
@@ -16,7 +16,8 @@ const montserrat = Montserrat({
   display: 'swap',
 });
 
-export const metadata: Metadata = metadataConfig
+export const metadata: Metadata = metadataConfig;
+export const viewport: Viewport = viewportConfig;
 
 export default function RootLayout({
   children,

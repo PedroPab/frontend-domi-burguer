@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import AddressCard from "../AddressCard";
@@ -14,7 +14,6 @@ export function AddressSection() {
 
     //si no es usuario autenticado , miramos si tiene direccion en el local storage
     const { addressClient, listLocationsClient } = useCheckoutForm();
-    console.log('%caddressClient in AddressSection :', 'color: blue;', addressClient);
     const {
         isModalOpen,
         addressToEdit,
@@ -24,13 +23,6 @@ export function AddressSection() {
 
     const { user } = useAuth();
     const [isListModalOpen, setIsListModalOpen] = useState(false);
-
-    useEffect(() => {
-        if (!addressClient) {
-            console.log("No addressClient found in AddressSection.");
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
 
     const hasMultipleLocations = listLocationsClient && listLocationsClient.length > 0;
 

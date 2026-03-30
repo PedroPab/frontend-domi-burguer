@@ -40,7 +40,6 @@ export default function InfoOrder() {
 
   const lastOrder =
     typeof window !== "undefined" ? localStorage.getItem("lastOrder") : null;
-  console.log("Last Order from localStorage:", lastOrder);
 
   const items = lastOrder ? JSON.parse(lastOrder).orderItems : [];
   const address = lastOrder ? JSON.parse(lastOrder).address : null;

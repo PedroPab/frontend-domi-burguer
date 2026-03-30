@@ -1,6 +1,5 @@
 "use client";
 
-import { LogoMobile } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 

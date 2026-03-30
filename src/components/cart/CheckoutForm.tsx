@@ -21,8 +21,6 @@ export function CheckoutForm() {
         setError(null);
     };
 
-    console.log("Rendering CheckoutForm with formData:", formData);
-
     return (
         <div className="flex flex-col gap-14 pb-6 w-full lg:mt-4 max-w-[500px]">
             <div className="flex flex-col gap-6 w-full">

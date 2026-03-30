@@ -26,7 +26,6 @@ export default function MenuSection() {
     handleRemoveComplement,
     resetCurrentProduct,
   } = useMenu();
-  console.log("RERENDER MENU SECTION", products, currentProduct);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { handleAddToCart } = useAddToCart();
