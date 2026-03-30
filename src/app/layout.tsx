@@ -7,6 +7,7 @@ import { ToastProvider } from "@heroui/toast";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { Metadata } from "next";
 import { metadataConfig } from "./metadata";
+import Script from "next/script";
 
 const montserrat = Montserrat({
   subsets: ['latin'],
@@ -25,8 +26,8 @@ export default function RootLayout({
   return (
     <html lang="es">
       <head>
-        <meta name="apple-mobile-web-app-title" content="Domi Burguer" /></head>
-      <script defer src="https://umami.toxolinko.site/script.js" data-website-id="6449fca5-1454-49e0-8bdc-33fba01bcda4"></script>
+        <meta name="apple-mobile-web-app-title" content="Domi Burguer" />
+      </head>
       <body
         className={montserrat.variable}
       >
@@ -44,6 +45,12 @@ export default function RootLayout({
           </HeroUIProvider>
           <Footer />
         </AuthProvider>
+        <Script
+          defer
+          src="https://umami.toxolinko.site/script.js"
+          data-website-id="6449fca5-1454-49e0-8bdc-33fba01bcda4"
+          strategy="afterInteractive"
+        />
       </body>
     </html>
   );

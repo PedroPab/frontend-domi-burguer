@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
+import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 import { motion, useMotionValue, animate } from "framer-motion";
 import { useDrag } from "react-use-gesture";
 import { X, Loader2 } from "lucide-react";
@@ -281,6 +282,15 @@ export function Modal({
                 </button>
               )}
 
+              {/* Hidden Title for Accessibility (when no visible header) */}
+              {!hasHeader && (
+                <VisuallyHidden.Root asChild>
+                  <DialogPrimitive.Title>
+                    {ariaLabel || "Modal"}
+                  </DialogPrimitive.Title>
+                </VisuallyHidden.Root>
+              )}
+
               {/* Header */}
               {hasHeader &&
                 (customHeader || (
@@ -319,7 +329,15 @@ export function ModalHeader({
   const { variant } = useModalContext();
 
   if (children) {
-    return <div className={cn(modalHeaderVariants({ variant }), className)}>{children}</div>;
+    return (
+      <div className={cn(modalHeaderVariants({ variant }), className)}>
+        {/* Hidden Title for Accessibility when using custom children */}
+        <VisuallyHidden.Root asChild>
+          <DialogPrimitive.Title>Modal</DialogPrimitive.Title>
+        </VisuallyHidden.Root>
+        {children}
+      </div>
+    );
   }
 
   return (
@@ -327,9 +345,13 @@ export function ModalHeader({
       {/* Icon */}
       {icon && <div className={cn(modalIconContainerVariants({ variant }))}>{icon}</div>}
 
-      {/* Title */}
-      {title && (
+      {/* Title - Always render for accessibility, hide if no visible title */}
+      {title ? (
         <DialogPrimitive.Title className={cn(modalTitleVariants())}>{title}</DialogPrimitive.Title>
+      ) : (
+        <VisuallyHidden.Root asChild>
+          <DialogPrimitive.Title>Modal</DialogPrimitive.Title>
+        </VisuallyHidden.Root>
       )}
 
       {/* Description */}

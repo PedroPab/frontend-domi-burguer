@@ -11,7 +11,7 @@ import { useRouter } from "next/navigation";
 
 
 function useFormCart() {
-  const { items, address } = useCartStore();
+  const { items, address, getSubtotal, getTotal } = useCartStore();
   const { formData, setFormData, setFormField, error, setError } = useCheckoutFormStore();
   const { resetForm } = useCheckoutFormStore();
   const { clearCart } = useCartStore();
@@ -19,14 +19,27 @@ function useFormCart() {
   const { submitOrder, isSubmitting } = useOrderSubmit(
     (result) => {
       console.log("Order submitted successfully:", result);
-      //guardar la última orden en el almacenamiento local
-      // saveLastOrder();
+
+      // Guardar última orden en localStorage ANTES de limpiar
+      const lastOrder = {
+        name: formData.name,
+        phone: formData.phone,
+        comment: formData.comment,
+        address: address,
+        orderItems: items,
+        paymentMethod: formData.paymentMethod,
+        prices: {
+          subtotal: getSubtotal(),
+          total: getTotal(),
+        },
+      };
+      localStorage.setItem("lastOrder", JSON.stringify(lastOrder));
 
       // Limpiar carrito y formulario
       clearCart();
       resetForm();
 
-      // Redirigir a la página de confirmación o mostrar mensaje de éxito
+      // Redirigir a la página de confirmación
       router.push("/thankyou");
     },
     (apiError) => {
