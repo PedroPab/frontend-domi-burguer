@@ -10,6 +10,7 @@ import { metadataConfig, viewportConfig } from "./metadata";
 import Script from "next/script";
 import { InstallBanner } from "@/components/pwa/InstallBanner";
 import { ServiceWorkerRegistration } from "@/components/pwa/ServiceWorkerRegistration";
+import { NotificationBanner } from "@/components/pwa/NotificationBanner";
 
 const montserrat = Montserrat({
   subsets: ['latin'],
@@ -61,6 +62,7 @@ export default function RootLayout({
           strategy="afterInteractive"
         />
         <InstallBanner />
+        <NotificationBanner />
         <ServiceWorkerRegistration />
       </body>
     </html>

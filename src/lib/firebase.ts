@@ -1,6 +1,7 @@
 import { initializeApp, getApps } from 'firebase/app';
 import { getAuth, connectAuthEmulator } from 'firebase/auth';
 import { getFirestore, connectFirestoreEmulator } from 'firebase/firestore';
+import { getMessaging, getToken, onMessage, isSupported, Messaging } from 'firebase/messaging';
 
 /**
  * Configuración de Firebase
@@ -26,6 +27,57 @@ const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0
  */
 export const auth = getAuth(app);
 export const db = getFirestore(app);
+
+/**
+ * Firebase Cloud Messaging
+ * Solo disponible en el navegador y si el navegador soporta notificaciones
+ */
+let messaging: Messaging | null = null;
+
+export const getMessagingInstance = async (): Promise<Messaging | null> => {
+  if (typeof window === 'undefined') return null;
+
+  const supported = await isSupported();
+  if (!supported) return null;
+
+  if (!messaging) {
+    messaging = getMessaging(app);
+  }
+  return messaging;
+};
+
+/**
+ * Obtener token de FCM para notificaciones push
+ */
+export const getFCMToken = async (): Promise<string | null> => {
+  try {
+    const messagingInstance = await getMessagingInstance();
+    if (!messagingInstance) return null;
+
+    const vapidKey = process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY;
+    if (!vapidKey) {
+      console.warn('VAPID key not configured');
+      return null;
+    }
+
+    const token = await getToken(messagingInstance, { vapidKey });
+    return token;
+  } catch (error) {
+    console.error('Error getting FCM token:', error);
+    return null;
+  }
+};
+
+/**
+ * Escuchar mensajes en foreground
+ */
+export const onForegroundMessage = (callback: (payload: unknown) => void) => {
+  getMessagingInstance().then((messagingInstance) => {
+    if (messagingInstance) {
+      onMessage(messagingInstance, callback);
+    }
+  });
+};
 
 /**
  * Configurar emuladores para desarrollo local si es necesario
