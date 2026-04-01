@@ -74,26 +74,34 @@
 @theme {
   --color-background: #ffffff;
   --color-foreground: #171717;
-  --color-primary-red: #e73533;
-  --color-primary-red-60: #ed6866;
-  --color-primary-red-hover: #E10300;
-  --color-primary-red-active: #C40200;
-  --color-primary-light: #FECECE;
-  --color-primary-light-hover: #FDB5B5;
-  --color-primary-light-active: #FC9C9C;
-  --color-accent-yellow-10: #fff9e6;
-  --color-accent-yellow-20: #fff3cd;
-  --color-accent-yellow-40: #ffe79b;
-  --color-accent-yellow-60: #ffda69;
-  --color-accent-yellow-80: #ffce37;
-  --color-accent-yellow-80: #ffce37;
-  --color-accent-yellow-90: #ffc205;
-  --color-neutral-white: #ffffff;
-  --color-neutral-black-10: #e6e6e6;
-  --color-neutral-black-20: #cccccc;
-  --color-neutral-black-30: #f7f7f7;
-  --color-neutral-black-50: #808080;
-  --color-neutral-black-80: #313131;
+
+  /* Primary Red - Color Primario */
+  --color-primary-red: #E73533;      /* RED 80 - Principal */
+  --color-primary-red-100: #E10300;  /* RED 100 - Hover/Active */
+  --color-primary-red-60: #ED6866;   /* RED 60 */
+  --color-primary-red-40: #F39A99;   /* RED 40 */
+  --color-primary-red-20: #F9CDCC;   /* RED 20 - Light variant */
+  --color-primary-red-10: #FCE6E6;   /* RED 10 - Lightest */
+
+  /* Accent Yellow/Mikado - Color de Acento */
+  --color-accent-yellow-100: #FFC205; /* MIKADO 100 */
+  --color-accent-yellow-80: #FFCE37;  /* MIKADO 80 */
+  --color-accent-yellow-60: #FFDA69;  /* MIKADO 60 */
+  --color-accent-yellow-40: #FFE79B;  /* MIKADO 40 */
+  --color-accent-yellow-20: #FFF3CD;  /* MIKADO 20 */
+  --color-accent-yellow-10: #FFF9E6;  /* MIKADO 10 */
+
+  /* Neutral Colors - Colores Neutros */
+  --color-neutral-white: #FFFFFF;     /* WHITE */
+  --color-neutral-black-100: #000000; /* BLACK 100 */
+  --color-neutral-black-90: #313131;  /* BLACK 90 */
+  --color-neutral-black-80: #313131;  /* BLACK 90 (alias) */
+  --color-neutral-black-50: #808080;  /* BLACK 50 */
+  --color-neutral-black-20: #CCCCCC;  /* BLACK 20 */
+  --color-neutral-black-10: #E6E6E6;  /* BLACK 10 */
+  --color-neutral-black-3: #F7F7F7;   /* BLACK 3 */
+  --color-neutral-black-30: #F7F7F7;  /* Alias for BLACK 3 */
+
   --font-family-sans: var(--font-montserrat), 'Montserrat', ui-sans-serif, system-ui, sans-serif;
 }
 

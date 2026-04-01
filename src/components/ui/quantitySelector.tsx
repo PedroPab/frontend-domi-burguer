@@ -40,7 +40,7 @@ export function QuantitySelector({
     >
       <Button
         type="button"
-        variant="primary-light"
+        variant="yellow"
         size={size === "sm" ? "icon-sm" : "icon"}
         onClick={onDecrease}
         className={cn(size === "sm" && "w-[24px] h-[24px]", size === "lg" && "w-[38px] h-[38px]")}
@@ -63,7 +63,7 @@ export function QuantitySelector({
 
       <Button
         type="button"
-        variant="primary-light"
+        variant="yellow"
         size={size === "sm" ? "icon-sm" : "icon"}
         onClick={onIncrease}
         className={cn(size === "sm" && "w-[24px] h-[24px]", size === "lg" && "w-[38px] h-[38px]")}

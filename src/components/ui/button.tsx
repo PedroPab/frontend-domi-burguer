@@ -18,60 +18,74 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        // Nuevas variantes del sistema de diseño
+        // PRIMARY - RED 80 base
         primary: [
-          "bg-primary-red text-white",
-          "hover:bg-[#E10300]",
-          "active:bg-[#C40200]",
+          "bg-primary-red text-white",           // RED 80 (#E73533)
+          "hover:bg-primary-red-100",            // RED 100 (#E10300)
+          "active:bg-primary-red-100",
           "shadow-sm",
         ],
+        // PRIMARY LIGHT - RED 20 base
         "primary-light": [
-          "bg-[#FECECE] text-primary-red",
-          "hover:bg-[#FDB5B5]",
-          "active:bg-[#FC9C9C]",
+          "bg-primary-red-20 text-primary-red",  // RED 20 (#F9CDCC) + RED 80 text
+          "hover:bg-primary-red-40",             // RED 40 (#F39A99)
+          "active:bg-primary-red-60",            // RED 60 (#ED6866)
         ],
+        // YELLOW/ACCENT - MIKADO 40 base
+        yellow: [
+          "bg-accent-yellow-40 text-neutral-black-80", // MIKADO 40 (#FFE79B)
+          "hover:bg-accent-yellow-60",                 // MIKADO 60 (#FFDA69)
+          "active:bg-accent-yellow-80",                // MIKADO 80 (#FFCE37)
+        ],
+        // OUTLINE - Transparent with BLACK 90 border
         outline: [
           "border-[1.5px] border-neutral-black-80 bg-transparent text-neutral-black-80",
-          "hover:bg-neutral-black-10",
-          "active:bg-neutral-black-20",
+          "hover:bg-neutral-black-10",           // BLACK 10 (#E6E6E6)
+          "active:bg-neutral-black-20",          // BLACK 20 (#CCCCCC)
         ],
+        // DARK - BLACK 90 base
         dark: [
-          "bg-neutral-black-80 text-white",
-          "hover:bg-[#1a1a1a]",
-          "active:bg-black",
+          "bg-neutral-black-80 text-white",      // BLACK 90 (#313131)
+          "hover:bg-neutral-black-100",          // BLACK 100 (#000000)
+          "active:bg-neutral-black-100",
           "shadow-sm",
         ],
+        // DARK GRAY - BLACK 50 base
         "dark-gray": [
-          "bg-neutral-black-50 text-white",
-          "hover:bg-[#666666]",
-          "active:bg-[#555555]",
+          "bg-neutral-black-50 text-white",      // BLACK 50 (#808080)
+          "hover:bg-neutral-black-80",           // BLACK 90 (#313131)
+          "active:bg-neutral-black-80",
         ],
+        // LIGHT OUTLINE - White with BLACK 20 border
         "light-outline": [
           "bg-white border-[1.5px] border-neutral-black-20 text-neutral-black-80",
-          "hover:bg-neutral-black-30",
-          "active:bg-neutral-black-10",
+          "hover:bg-neutral-black-3",            // BLACK 3 (#F7F7F7)
+          "active:bg-neutral-black-10",          // BLACK 10 (#E6E6E6)
         ],
+        // GHOST - Transparent
         ghost: [
           "bg-transparent text-neutral-black-80",
-          "hover:bg-neutral-black-10",
-          "active:bg-neutral-black-20",
+          "hover:bg-neutral-black-10",           // BLACK 10 (#E6E6E6)
+          "active:bg-neutral-black-20",          // BLACK 20 (#CCCCCC)
         ],
+        // LINK
         link: [
-          "text-primary-red underline-offset-4",
+          "text-primary-red underline-offset-4", // RED 80 (#E73533)
           "hover:underline",
           "p-0 h-auto",
         ],
+        // DESTRUCTIVE - RED 100 base (más oscuro)
         destructive: [
-          "bg-red-600 text-white",
-          "hover:bg-red-700",
-          "active:bg-red-800",
+          "bg-primary-red-100 text-white",       // RED 100 (#E10300)
+          "hover:bg-[#C40200]",                  // Darker red
+          "active:bg-[#A30200]",
           "shadow-sm",
         ],
-        // Variantes legacy (para compatibilidad durante migración)
+        // Legacy (alias de primary)
         default: [
           "bg-primary-red text-white",
-          "hover:bg-[#E10300]",
-          "active:bg-[#C40200]",
+          "hover:bg-primary-red-100",
+          "active:bg-primary-red-100",
           "shadow-sm",
         ],
       },

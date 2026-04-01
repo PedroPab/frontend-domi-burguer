@@ -105,7 +105,7 @@ export const Navbar = () => {
               rel="noopener noreferrer"
               className="focus:outline-0! focus:ring-0!"
             >
-              <Button variant="primary-light" size="icon">
+              <Button variant="yellow" size="icon">
                 <WhatsAppIcon className="w-5 h-5 md:w-6 md:h-6" />
               </Button>
             </Link>

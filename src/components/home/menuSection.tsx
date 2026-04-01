@@ -210,7 +210,7 @@ export default function MenuSection() {
               </Button>
             </Link>
             <Button
-              variant="primary-light"
+              variant="yellow"
               size="lg"
               className="w-[215px] transition-all hover:scale-105 active:scale-95"
               onClick={() => {

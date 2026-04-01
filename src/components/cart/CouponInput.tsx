@@ -83,7 +83,7 @@ export const CouponInput = ({
         />
         <Button
           type="button"
-          variant="primary-light"
+          variant="yellow"
           size="icon"
           onClick={onApplyCoupon}
           disabled={!couponCode.trim()}
