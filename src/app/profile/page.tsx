@@ -10,6 +10,7 @@ import { PointsSection } from "./PointsSection";
 import { AddressesSection } from "./AddressesSection";
 import { PhoneSection } from "./PhoneSection";
 import { ComingSoonSection } from "./ComingSoonSection";
+import { CodesSection } from "./CodesSection";
 
 export default function ProfilePage() {
     const { user, loading } = useAuth();
@@ -37,7 +38,7 @@ export default function ProfilePage() {
                     <AddressesSection />
                     <PhoneSection />
                     <ComingSoonSection title="MIS PEDIDOS" />
-                    <ComingSoonSection title="MIS CÓDIGOS" />
+                    <CodesSection />
                     <PointsSection />
 
                 </div>
