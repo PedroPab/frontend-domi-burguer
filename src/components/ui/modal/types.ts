@@ -15,7 +15,7 @@ export interface ModalButtonConfig {
   /** Texto del boton */
   label: string;
   /** Variante visual del boton */
-  variant?: "default" | "destructive" | "outline" | "secondary" | "ghost" | "link";
+  variant?: "primary" | "primary-light" | "outline" | "dark" | "dark-gray" | "light-outline" | "ghost" | "destructive" | "link" | "default";
   /** Callback al hacer click */
   onClick?: () => void | Promise<void>;
   /** Estado de carga */

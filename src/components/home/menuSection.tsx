@@ -16,8 +16,9 @@ import { ComplementsLarge } from "../ui/complementsLarge";
 
 // Lazy load modal pesado
 const CustomizationModalSection = dynamic(
-  () => import("./customizeOrderModal").then(mod => mod.CustomizationModalSection),
-  { ssr: false }
+  () =>
+    import("./customizeOrderModal").then((mod) => mod.CustomizationModalSection),
+  { ssr: false },
 );
 
 export default function MenuSection() {
@@ -115,15 +116,17 @@ export default function MenuSection() {
             {/* Botones de navegación */}
             <div className="w-full max-w-[720px] px-[13%] py-0 absolute top-[43%] left-0 flex justify-between z-10 pointer-events-none">
               <Button
-                variant="ghost"
-                className="w-10 h-10 md:w-14 md:h-14 bg-accent-yellow-20 rounded-[30px] hover:bg-accent-yellow-40 pr-5 transition-all active:scale-95 pointer-events-auto"
+                variant="light-outline"
+                size="icon"
+                className="md:h-14 md:w-14 active:scale-95 pointer-events-auto"
                 onClick={scrollPrev}
               >
                 <ArrowIcon className="w-5 h-5 rotate-180 text-neutral-black-80" />
               </Button>
               <Button
-                variant="ghost"
-                className="w-10 h-10 md:w-14 md:h-14 bg-accent-yellow-20 rounded-[30px] hover:bg-accent-yellow-40 pl-5 transition-all active:scale-95 pointer-events-auto"
+                variant="light-outline"
+                size="icon"
+                className="md:h-14 md:w-14 active:scale-95 pointer-events-auto"
                 onClick={scrollNext}
               >
                 <ArrowIcon className="w-5 h-5 text-neutral-black-80" />
@@ -156,12 +159,13 @@ export default function MenuSection() {
               {currentProduct.body}
             </p>
             <Button
-              variant="ghost"
-              className={`px-4 py-2 w-[177px] h-[40px] bg-accent-yellow-20 hover:bg-accent-yellow-40 rounded-[30px] transition-all ${!currentProduct.allowCustomization ? "hidden" : ""
-                }`}
+              variant="outline"
+              size="md"
+              rightIcon={<EditarIcon className="w-4 h-4" />}
+              className={`w-[177px] ${!currentProduct.allowCustomization ? "hidden" : ""}`}
               onClick={() => handleEditProduct()}
             >
-              PERSONALIZAR <EditarIcon className="w-4 h-4" />
+              PERSONALIZAR
             </Button>
           </div>
 
@@ -181,7 +185,10 @@ export default function MenuSection() {
             />
             <div>
               <h1 className="font-bold! text-[28px]! md:text-[32px]! leading-[30px]! md:leading-[28px]!">
-                ${(currentProduct.price * currentProduct.quantity).toLocaleString("es-CO")}
+                $
+                {(currentProduct.price * currentProduct.quantity).toLocaleString(
+                  "es-CO",
+                )}
               </h1>
             </div>
           </div>
@@ -189,20 +196,23 @@ export default function MenuSection() {
           <div className="flex flex-col sm:flex-row w-full max-w-[720px] items-center justify-center gap-3 sm:gap-6">
             <Link href={"/cart"}>
               <Button
+                variant="primary"
+                size="lg"
+                leftIcon={<HamburgerIcon className="w-6 h-6" />}
+                className="w-[199px] transition-all hover:scale-105 active:scale-95"
                 onClick={() => {
                   handleAddToCart(currentProduct);
                   showFoodToast(currentProduct.name);
                   resetCurrentProduct();
                 }}
-                className="text-white leading-[18px]! font-semibold rounded-[30px] flex items-center gap-2 text-[16px] w-[199px] h-[48px] transition-all hover:scale-105 active:scale-95"
               >
-                <HamburgerIcon className="w-6 h-6" />
                 PAGAR AHORA
               </Button>
             </Link>
             <Button
-              variant="ghost"
-              className="bg-accent-yellow-40 hover:bg-accent-yellow-60 active:bg-accent-yellow-60 rounded-[30px] flex items-center gap-2 text-[16px] w-[215px] h-[48px] transition-all hover:scale-105 active:scale-95"
+              variant="primary-light"
+              size="lg"
+              className="w-[215px] transition-all hover:scale-105 active:scale-95"
               onClick={() => {
                 handleAddToCart(currentProduct);
                 showFoodToast(currentProduct.name);
@@ -219,8 +229,7 @@ export default function MenuSection() {
       <section className="grid lg:gap-y-14 grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 items-center justify-center lg:gap-6 gap-2 gap-x-4 py-14 relative">
         {/* Cada tarjeta representa un producto (ejemplo producto 0) */}
         <div
-          className={`w-[160px] h-[160px] lg:w-[280px] lg:h-40 ${actualProduct === 0 ? "bg-accent-yellow-40" : "bg-accent-yellow-20"
-            } rounded-2xl border-0 overflow-visible`}
+          className={`w-[160px] h-[160px] lg:w-[280px] lg:h-40 ${actualProduct === 0 ? "bg-accent-yellow-40" : "bg-accent-yellow-20"} rounded-2xl border-0 overflow-visible`}
         >
           <div
             className={` flex relative flex-col items-center justify-center gap-[4.47px] overflow-visible p-0 h-full`}
@@ -239,9 +248,9 @@ export default function MenuSection() {
             />
 
             <Button
-              size="icon"
-              className={`absolute top-[5px] z-200 right-[5px] lg:top-[7px] lg:left-[232px] w-8 h-8 lg:w-10 lg:h-10 rounded-[30px] p-0 ${actualProduct === 0 ? "hidden" : ""
-                }`}
+              variant="primary"
+              size="icon-sm"
+              className={`absolute top-[5px] z-200 right-[5px] lg:top-[7px] lg:left-[232px] lg:w-10 lg:h-10 ${actualProduct === 0 ? "hidden" : ""}`}
               onClick={() => {
                 handleAddToCart(products[0]);
                 showFoodToast(products[0].name);
@@ -253,8 +262,7 @@ export default function MenuSection() {
           </div>
         </div>
         <div
-          className={`w-[160px] h-[160px] lg:w-[280px] lg:h-40 ${actualProduct === 1 ? "bg-accent-yellow-40" : "bg-accent-yellow-20"
-            } rounded-2xl border-0 overflow-visible`}
+          className={`w-[160px] h-[160px] lg:w-[280px] lg:h-40 ${actualProduct === 1 ? "bg-accent-yellow-40" : "bg-accent-yellow-20"} rounded-2xl border-0 overflow-visible`}
         >
           <div
             className={`${"relative gap-[4.47px]"} p-0 h-full`}
@@ -280,9 +288,9 @@ export default function MenuSection() {
             />
 
             <Button
-              size="icon"
-              className={`absolute z-200 top-[5px] right-[5px] lg:top-[7px] lg:left-[232px] w-8 h-8 lg:w-10 lg:h-10 rounded-[30px] p-0 ${actualProduct === 1 ? "hidden" : ""
-                }`}
+              variant="primary"
+              size="icon-sm"
+              className={`absolute z-200 top-[5px] right-[5px] lg:top-[7px] lg:left-[232px] lg:w-10 lg:h-10 ${actualProduct === 1 ? "hidden" : ""}`}
               onClick={() => {
                 handleAddToCart(products[1]);
                 showFoodToast(products[1].name);
@@ -294,8 +302,7 @@ export default function MenuSection() {
           </div>
         </div>
         <div
-          className={`w-[160px] h-[160px] lg:w-[280px] lg:h-40 ${actualProduct === 2 ? "bg-accent-yellow-40" : "bg-accent-yellow-20"
-            } rounded-2xl border-0 overflow-visible`}
+          className={`w-[160px] h-[160px] lg:w-[280px] lg:h-40 ${actualProduct === 2 ? "bg-accent-yellow-40" : "bg-accent-yellow-20"} rounded-2xl border-0 overflow-visible`}
           onClick={() => {
             handleChangeProduct(2);
             if (emblaApi) emblaApi.scrollTo(2);
@@ -312,9 +319,9 @@ export default function MenuSection() {
             />
 
             <Button
-              size="icon"
-              className={`absolute z-200 top-[5px] right-[5px] lg:top-[7px] lg:left-[232px] w-8 h-8 lg:w-10 lg:h-10 rounded-[30px] p-0 ${actualProduct === 2 ? "hidden" : ""
-                }`}
+              variant="primary"
+              size="icon-sm"
+              className={`absolute z-200 top-[5px] right-[5px] lg:top-[7px] lg:left-[232px] lg:w-10 lg:h-10 ${actualProduct === 2 ? "hidden" : ""}`}
               onClick={() => {
                 handleAddToCart(products[2]);
                 showFoodToast(products[2].name);
@@ -327,8 +334,7 @@ export default function MenuSection() {
         </div>
         {/* Papas Vaquera */}
         <div
-          className={`w-[160px] h-[160px] lg:w-[280px] lg:h-40 ${actualProduct === 3 ? "bg-accent-yellow-40" : "bg-accent-yellow-20"
-            } rounded-2xl border-0 overflow-visible`}
+          className={`w-[160px] h-[160px] lg:w-[280px] lg:h-40 ${actualProduct === 3 ? "bg-accent-yellow-40" : "bg-accent-yellow-20"} rounded-2xl border-0 overflow-visible`}
           onClick={() => {
             handleChangeProduct(3);
             if (emblaApi) emblaApi.scrollTo(3);
@@ -344,9 +350,9 @@ export default function MenuSection() {
             />
 
             <Button
-              size="icon"
-              className={`absolute z-200 top-[5px] right-[5px] lg:top-[7px] lg:left-[232px] w-8 h-8 lg:w-10 lg:h-10 rounded-[30px] p-0 ${actualProduct === 3 ? "hidden" : ""
-                }`}
+              variant="primary"
+              size="icon-sm"
+              className={`absolute z-200 top-[5px] right-[5px] lg:top-[7px] lg:left-[232px] lg:w-10 lg:h-10 ${actualProduct === 3 ? "hidden" : ""}`}
               onClick={(e) => {
                 e.stopPropagation();
                 handleAddToCart(products[3]);
@@ -360,8 +366,7 @@ export default function MenuSection() {
         </div>
         {/* Papas Troyana */}
         <div
-          className={`w-[160px] h-[160px] lg:w-[280px] lg:h-40 ${actualProduct === 4 ? "bg-accent-yellow-40" : "bg-accent-yellow-20"
-            } rounded-2xl border-0 overflow-visible`}
+          className={`w-[160px] h-[160px] lg:w-[280px] lg:h-40 ${actualProduct === 4 ? "bg-accent-yellow-40" : "bg-accent-yellow-20"} rounded-2xl border-0 overflow-visible`}
           onClick={() => {
             handleChangeProduct(4);
             if (emblaApi) emblaApi.scrollTo(4);
@@ -377,9 +382,9 @@ export default function MenuSection() {
             />
 
             <Button
-              size="icon"
-              className={`absolute z-200 top-[5px] right-[5px] lg:top-[7px] lg:left-[232px] w-8 h-8 lg:w-10 lg:h-10 rounded-[30px] p-0 ${actualProduct === 4 ? "hidden" : ""
-                }`}
+              variant="primary"
+              size="icon-sm"
+              className={`absolute z-200 top-[5px] right-[5px] lg:top-[7px] lg:left-[232px] lg:w-10 lg:h-10 ${actualProduct === 4 ? "hidden" : ""}`}
               onClick={(e) => {
                 e.stopPropagation();
                 handleAddToCart(products[4]);
@@ -394,8 +399,7 @@ export default function MenuSection() {
 
         {/* Postre Cheesecake de fresa */}
         <div
-          className={`w-[160px] h-[160px] lg:w-[280px] lg:h-40 ${actualProduct === 5 ? "bg-accent-yellow-40" : "bg-accent-yellow-20"
-            } rounded-2xl border-0 overflow-visible`}
+          className={`w-[160px] h-[160px] lg:w-[280px] lg:h-40 ${actualProduct === 5 ? "bg-accent-yellow-40" : "bg-accent-yellow-20"} rounded-2xl border-0 overflow-visible`}
           onClick={() => {
             handleChangeProduct(5);
             if (emblaApi) emblaApi.scrollTo(5);
@@ -411,9 +415,9 @@ export default function MenuSection() {
             />
 
             <Button
-              size="icon"
-              className={`absolute z-200 top-[5px] right-[5px] lg:top-[7px] lg:left-[232px] w-8 h-8 lg:w-10 lg:h-10 rounded-[30px] p-0 ${actualProduct === 5 ? "hidden" : ""
-                }`}
+              variant="primary"
+              size="icon-sm"
+              className={`absolute z-200 top-[5px] right-[5px] lg:top-[7px] lg:left-[232px] lg:w-10 lg:h-10 ${actualProduct === 5 ? "hidden" : ""}`}
               onClick={(e) => {
                 e.stopPropagation();
                 handleAddToCart(products[5]);
@@ -428,8 +432,7 @@ export default function MenuSection() {
 
         {/* Jugo Natural de Mora */}
         <div
-          className={`w-[160px] h-[160px] lg:w-[280px] lg:h-40 ${actualProduct === 6 ? "bg-accent-yellow-40" : "bg-accent-yellow-20"
-            } rounded-2xl border-0 overflow-visible`}
+          className={`w-[160px] h-[160px] lg:w-[280px] lg:h-40 ${actualProduct === 6 ? "bg-accent-yellow-40" : "bg-accent-yellow-20"} rounded-2xl border-0 overflow-visible`}
           onClick={() => {
             handleChangeProduct(6);
             if (emblaApi) emblaApi.scrollTo(6);
@@ -445,9 +448,9 @@ export default function MenuSection() {
             />
 
             <Button
-              size="icon"
-              className={`absolute z-200 top-[5px] right-[5px] lg:top-[7px] lg:left-[232px] w-8 h-8 lg:w-10 lg:h-10 rounded-[30px] p-0 ${actualProduct === 6 ? "hidden" : ""
-                }`}
+              variant="primary"
+              size="icon-sm"
+              className={`absolute z-200 top-[5px] right-[5px] lg:top-[7px] lg:left-[232px] lg:w-10 lg:h-10 ${actualProduct === 6 ? "hidden" : ""}`}
               onClick={(e) => {
                 e.stopPropagation();
                 handleAddToCart(products[6]);
@@ -459,35 +462,6 @@ export default function MenuSection() {
             </Button>
           </div>
         </div>
-
-        {/* <div
-          className={`w-[160px] h-[160px] lg:w-[280px] lg:h-40 ${
-            actualProduct === 3 ? "bg-accent-yellow-40" : "bg-accent-yellow-20"
-          } rounded-2xl border-0 overflow-visible`}
-          onClick={() => {
-            handleChangeProduct(3);
-            if (emblaApi) emblaApi.scrollTo(3);
-          }}
-        >
-          <div className={`${"relative gap-[4.47px]"} p-0 h-full`}>
-            <Image
-              src="/DomiburgerPapitas2.png"
-              alt="Burger"
-              width={153}
-              height={230}
-              className="absolute top-[-0px] left-[26px] lg:top-[-38px] lg:left-[69px] w-[110px] h-[166px] lg:w-[153px] lg:h-[230px] object-cover"
-            />
-
-            <Button
-              size="icon"
-              className={`absolute top-[5px] right-[5px] lg:top-[7px] lg:left-[232px] w-8 h-8 lg:w-10 lg:h-10 rounded-[30px] p-0 ${
-                actualProduct === 3 ? "hidden" : ""
-              }`}
-            >
-              <Plus className="text-white" />
-            </Button>
-          </div>
-        </div> */}
       </section>
 
       <CustomizationModalSection

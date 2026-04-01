@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 
 const quantityWrapperVariants = cva(
-  "flex items-center justify-center border rounded-[50px]",
+  "flex items-center justify-center border rounded-full",
   {
     variants: {
       size: {
@@ -15,22 +15,7 @@ const quantityWrapperVariants = cva(
     defaultVariants: {
       size: "sm",
     },
-  }
-);
-
-const quantityButtonVariants = cva(
-  "bg-accent-yellow-40 hover:bg-accent-yellow-60 active:bg-accent-yellow-60",
-  {
-    variants: {
-      size: {
-        sm: "w-[24px] h-[24px] p-0 rounded-[40px]",
-        lg: "w-[38px] h-[38px] rounded-[30px]",
-      },
-    },
-    defaultVariants: {
-      size: "sm",
-    },
-  }
+  },
 );
 
 export interface QuantitySelectorProps
@@ -50,17 +35,19 @@ export function QuantitySelector({
     <div
       className={cn(
         quantityWrapperVariants({ size }),
-        size === "lg" && (value < 10 ? "w-[142px]" : "w-[153px]")
+        size === "lg" && (value < 10 ? "w-[142px]" : "w-[153px]"),
       )}
     >
       <Button
         type="button"
-        variant="ghost"
-        size="sm"
+        variant="primary-light"
+        size={size === "sm" ? "icon-sm" : "icon"}
         onClick={onDecrease}
-        className={cn(quantityButtonVariants({ size }))}
+        className={cn(size === "sm" && "w-[24px] h-[24px]", size === "lg" && "w-[38px] h-[38px]")}
       >
-        <Minus className={cn(size === "sm" ? "w-[16px] h-[16px]" : "w-5 h-5")} />
+        <Minus
+          className={cn(size === "sm" ? "w-[16px] h-[16px]" : "w-5 h-5")}
+        />
       </Button>
 
       <span
@@ -68,7 +55,7 @@ export function QuantitySelector({
           "font-bold text-neutrosblack-80 tracking-[0] whitespace-nowrap",
           size === "sm"
             ? "text-xs leading-[18px] font-montserrat"
-            : "label-font text-base"
+            : "label-font text-base",
         )}
       >
         {size === "sm" ? String(value).padStart(2, "0") : value}
@@ -76,10 +63,10 @@ export function QuantitySelector({
 
       <Button
         type="button"
-        variant="ghost"
-        size="sm"
+        variant="primary-light"
+        size={size === "sm" ? "icon-sm" : "icon"}
         onClick={onIncrease}
-        className={cn(quantityButtonVariants({ size }))}
+        className={cn(size === "sm" && "w-[24px] h-[24px]", size === "lg" && "w-[38px] h-[38px]")}
       >
         <Plus className={cn(size === "sm" ? "w-4 h-4" : "w-5 h-5")} />
       </Button>

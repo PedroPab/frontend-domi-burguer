@@ -57,10 +57,10 @@ export function InstallBanner() {
         <div className="flex items-center gap-2">
           <Button
             onClick={handleInstall}
+            variant="primary"
             size="sm"
-            className="h-9 px-4 rounded-[20px] gap-2"
+            leftIcon={<Download className="w-4 h-4" />}
           >
-            <Download className="w-4 h-4" />
             <span className="hidden sm:inline">Instalar</span>
           </Button>
 

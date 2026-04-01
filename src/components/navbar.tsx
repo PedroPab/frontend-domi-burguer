@@ -18,12 +18,12 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 // Lazy load modales
 const LogInModal = dynamic(
-  () => import("./login/logInModal").then(mod => mod.LogInModal),
-  { ssr: false }
+  () => import("./login/logInModal").then((mod) => mod.LogInModal),
+  { ssr: false },
 );
 const WorkingOnModal = dynamic(
-  () => import("./ui/workingOnModal").then(mod => mod.WorkingOnModal),
-  { ssr: false }
+  () => import("./ui/workingOnModal").then((mod) => mod.WorkingOnModal),
+  { ssr: false },
 );
 
 export const Navbar = () => {
@@ -32,12 +32,13 @@ export const Navbar = () => {
   const { items } = useCartStore();
   const { user } = useAuth();
   const router = useRouter();
-  const itemsCount = items.map((item) => item.quantity).reduce((a, b) => a + b, 0);
+  const itemsCount = items
+    .map((item) => item.quantity)
+    .reduce((a, b) => a + b, 0);
   return (
     <>
       <nav
-        className={`fixed top-0 left-0  ${isAcountModalOpen || isKitchenModalOpen ? "z-600" : "z-300"
-          } w-full px-4`}
+        className={`fixed top-0 left-0  ${isAcountModalOpen || isKitchenModalOpen ? "z-600" : "z-300"} w-full px-4`}
       >
         <div className="max-w-[828px] md:h-[80px] h-[62px] gap-2 py-0 mt-[20px] mb-[10px] rounded-[60px] border border-solid border-[#e6e6e6] flex items-center justify-between w-full mx-auto px-4! sm:px-6 lg:px-8 bg-[#ffffff]">
           <div className="flex w-[300px] h-14 px-0 py-3 rounded-[50px] overflow-hidden items-center">
@@ -50,13 +51,18 @@ export const Navbar = () => {
                 }
               }}
               variant="ghost"
-              className={`inline-flex h-10 lg:h-12 justify-center px-[10px] lg:px-5 lg:py-2  mt-[-8.00px] mb-[-8.00px] rounded-[30px] items-center bg-transparent outline-none border-none focus:outline-0! focus:ring-0! focus:bg-accent-yellow-20 ${isAcountModalOpen ? "bg-accent-yellow-20" : ""
-                }`}
+              size="md"
+              className={`lg:h-12 lg:px-5 ${isAcountModalOpen ? "bg-neutral-black-10" : ""}`}
             >
               {user && user.photoURL ? (
-                <Avatar className="w-7 h-7 md:w-8 md:h-8 mr-1">
-                  <AvatarImage src={user.photoURL} alt={user.displayName || "Usuario"} />
-                  <AvatarFallback>{user.displayName?.charAt(0) || "U"}</AvatarFallback>
+                <Avatar className="w-7 h-7 md:w-8 md:h-8">
+                  <AvatarImage
+                    src={user.photoURL}
+                    alt={user.displayName || "Usuario"}
+                  />
+                  <AvatarFallback>
+                    {user.displayName?.charAt(0) || "U"}
+                  </AvatarFallback>
                 </Avatar>
               ) : (
                 <UserIcon className="w-5 h-5 md:w-6 md:h-6" />
@@ -68,10 +74,10 @@ export const Navbar = () => {
             <Button
               onClick={() => setIsKitchenModalOpen(true)}
               variant="ghost"
-              className={`inline-flex h-10 lg:h-12 justify-center px-3 lg:px-5 py-2 mt-[-8.00px] mb-[-8.00px] rounded-[30px] items-center bg-transparent focus:outline-0! focus:ring-0! focus:bg-accent-yellow-20 ${isKitchenModalOpen ? "bg-accent-yellow-20" : ""
-                }`}
+              size="md"
+              className={`lg:h-12 lg:px-5 ${isKitchenModalOpen ? "bg-neutral-black-10" : ""}`}
             >
-              <span className="text-neutrosblack-80 font-label font-[number:var(--label-font-weight)] text-[length:var(--label-font-size)] tracking-[var(--label-letter-spacing)] leading-[var(--label-line-height)] whitespace-nowrap [font-style:var(--label-font-style)]">
+              <span className="text-neutrosblack-80 font-label whitespace-nowrap">
                 COCINA
               </span>
             </Button>
@@ -99,32 +105,25 @@ export const Navbar = () => {
               rel="noopener noreferrer"
               className="focus:outline-0! focus:ring-0!"
             >
-              <Button
-                variant="ghost"
-                size="icon"
-                className="flex w-10.5 h-10.5 px-3 py-2 bg-accent-yellow-20 hover:bg-accent-yellow-40 active:bg-accent-yellow-40 focus:bg-accent-yellow-40 cursor-pointer items-center justify-center gap-2 rounded-[30px] focus:outline-0! focus:ring-0!"
-              >
+              <Button variant="primary-light" size="icon">
                 <WhatsAppIcon className="w-5 h-5 md:w-6 md:h-6" />
               </Button>
             </Link>
             <Link
               href={"/cart"}
               tabIndex={-1}
-              className="focus:outline-0! focus:ring-0! focus:bg-[#E10300] rounded-[30px]"
+              className="focus:outline-0! focus:ring-0! focus:bg-[#E10300] rounded-full"
             >
               <Button
-                variant="default"
-                className="h-[44px] min-w-16 lg:h-12 py-2 ps-3 pe-[7px] lg:pl-5 lg:pr-2 lg:py-2 items-center justify-center gap-2 rounded-[30px] cursor-pointer focus:outline-0! focus:ring-0! focus:bg-[#E10300]"
+                variant="primary"
+                size="lg"
+                leftIcon={
+                  <HamburgerIcon className="w-5 h-5 md:w-6 md:h-6 text-white" />
+                }
+                badge={itemsCount}
+                className="h-[44px] lg:h-12 ps-3 pe-[7px] lg:pl-5 lg:pr-2"
               >
-                <HamburgerIcon className="w-5 h-5 md:w-6 md:h-6 text-white" />
-                <span className="text-white whitespace-nowrap font-bold hidden md:block">
-                  ORDENAR
-                </span>
-                <div className="flex flex-col w-8 h-8 items-center justify-center gap-2 rounded-[20px]">
-                  <span className="text-black whitespace-nowrap font-bold text-[16px] bg-amber-50 h-8 w-8 rounded-[20px] text-center flex items-center justify-center">
-                    {itemsCount}
-                  </span>
-                </div>
+                <span className="hidden md:block">ORDENAR</span>
               </Button>
             </Link>
           </div>
@@ -135,16 +134,8 @@ export const Navbar = () => {
           isOpen={isAcountModalOpen}
           onClose={() => setIsAcountModalOpen(false)}
         />
-        {/* <WorkingOnModal
-          isOpen={isAcountModalOpen}
-          onClose={() => setIsAcountModalOpen(false)}
-        /> */}
       </div>
       <div>
-        {/* <KitchenModal
-          isOpen={isKitchenModalOpen}
-          onClose={() => setIsKitchenModalOpen(false)}
-        /> */}
         <WorkingOnModal
           isOpen={isKitchenModalOpen}
           onClose={() => setIsKitchenModalOpen(false)}

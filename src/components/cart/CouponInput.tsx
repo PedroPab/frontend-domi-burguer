@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Loader2, Plus, X, Check } from "lucide-react";
+import { Plus, X, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Code } from "@/types/codes";
@@ -39,10 +39,10 @@ export const CouponInput = ({
           {onRemoveCoupon && (
             <Button
               type="button"
-              size="icon"
               variant="ghost"
+              size="icon-sm"
               onClick={onRemoveCoupon}
-              className="w-8 h-8 rounded-full p-0 hover:bg-green-100"
+              className="hover:bg-green-100"
             >
               <X className="w-4 h-4 text-green-600" />
             </Button>
@@ -83,22 +83,16 @@ export const CouponInput = ({
         />
         <Button
           type="button"
+          variant="primary-light"
           size="icon"
           onClick={onApplyCoupon}
-          disabled={isLoading || !couponCode.trim()}
-          className="w-10 h-10 rounded-full p-0 bg-accent-yellow-40 hover:bg-accent-yellow-60 text-neutral-black-80"
-        >
-          {isLoading ? (
-            <Loader2 className="w-5 h-5 animate-spin" />
-          ) : (
-            <Plus className="w-5 h-5" />
-          )}
-        </Button>
+          disabled={!couponCode.trim()}
+          loading={isLoading}
+          leftIcon={!isLoading ? <Plus className="w-5 h-5" /> : undefined}
+        />
       </div>
 
-      {error && (
-        <p className="text-red-500 text-sm mt-1">{error}</p>
-      )}
+      {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
     </div>
   );
 };

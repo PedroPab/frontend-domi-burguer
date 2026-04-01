@@ -76,6 +76,11 @@
   --color-foreground: #171717;
   --color-primary-red: #e73533;
   --color-primary-red-60: #ed6866;
+  --color-primary-red-hover: #E10300;
+  --color-primary-red-active: #C40200;
+  --color-primary-light: #FECECE;
+  --color-primary-light-hover: #FDB5B5;
+  --color-primary-light-active: #FC9C9C;
   --color-accent-yellow-10: #fff9e6;
   --color-accent-yellow-20: #fff3cd;
   --color-accent-yellow-40: #ffe79b;

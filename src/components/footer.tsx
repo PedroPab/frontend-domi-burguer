@@ -12,12 +12,12 @@ export const Footer = () => {
   const navigationLinks = [
     { name: "COBERTURA", link: "/cobertura" },
     { name: "MENU", link: "/#products" },
-    { name: "HORARIOS", link: "/horarios" }
+    { name: "HORARIOS", link: "/horarios" },
   ];
 
   const legalLinks = [
     { name: "TÉRMINOS DE SERVICIO", link: "/legal#terminos" },
-    { name: "POLÍTICAS DE PRIVACIDAD", link: "/legal#politicas" }
+    { name: "POLÍTICAS DE PRIVACIDAD", link: "/legal#politicas" },
   ];
 
   return (
@@ -72,38 +72,16 @@ export const Footer = () => {
         </nav>
 
         <div className="flex lg:w-[394px] w-full items-center gap-3 justify-center">
-          {/* <Button
-            variant="ghost"
-            className="flex w-12 h-12 px-3 pl-4 pt-[10px] relative items-center justify-center gap-2 rounded-[30px]"
-          >
-            <TiktokIcon />
-          </Button> */}
           <Link
             href="https://www.instagram.com/domiburguer_"
             target="_blank"
             rel="noopener noreferrer"
             className="focus:outline-0! focus:ring-0!"
           >
-            <Button
-              variant="ghost"
-              className="flex w-12 h-12 px-3 py-2 relative items-center justify-center gap-2 rounded-[30px]"
-            >
+            <Button variant="ghost" size="icon-lg">
               <InstagramIcon />
             </Button>
           </Link>
-          {/* <Link
-            href="mailto:info@domiburguer.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="focus:outline-0! focus:ring-0!"
-          >
-            <Button
-              variant="ghost"
-              className="flex w-12 h-12 px-3 py-2 relative items-center justify-center gap-2 rounded-[30px]"
-            >
-              <EmailIcon />
-            </Button>
-          </Link> */}
           <Link
             href={`https://wa.me/573506186772?text=${encodeURIComponent("Hola, estaba en la pagina de Domi Burger y quiero más información")}`}
             target="_blank"
@@ -112,22 +90,16 @@ export const Footer = () => {
           >
             <Button
               variant="ghost"
-              className="inline-flex h-12 px-5 py-2 relative items-center justify-center gap-2 rounded-[30px]  text-black"
+              size="lg"
+              rightIcon={<WhatsAppIcon />}
+              className="text-black"
             >
-              <div className=" relative w-fit whitespace-nowrap ">
-                CONTÁCTANOS
-              </div>
-
-              <WhatsAppIcon />
+              CONTÁCTANOS
             </Button>
           </Link>
         </div>
       </div>
       <div className="flex flex-col md:flex-row h-[90px] items-center justify-between px-20 py-4 relative self-stretch w-full bg-primary-red">
-        {/* <a className="relative w-fit mb-5 md:mb-0 font-semibold text-base tracking-[0] leading-5 whitespace-nowrap h-auto p-0 hover:bg-transparent">
-          Cookies
-        </a> */}
-
         <div className="items-start flex-1 grow flex justify-end gap-2 relative">
           <div className="relative w-fit mt-[-1.00px] font-semibold text-base tracking-[0] leading-5 whitespace-nowrap">
             2025, Todos los derechos reservados

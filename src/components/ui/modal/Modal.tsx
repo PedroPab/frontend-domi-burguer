@@ -391,7 +391,7 @@ export function ModalFooter({ config, onClose: propOnClose, className, children 
   const renderButton = (buttonConfig: ModalButtonConfig, key: string, isCancel = false) => {
     const {
       label,
-      variant = isCancel ? "ghost" : "default",
+      variant = isCancel ? "outline" : "primary",
       onClick,
       loading = false,
       loadingText,
@@ -445,7 +445,7 @@ export function ModalFooter({ config, onClose: propOnClose, className, children 
         cancel &&
         renderButton(
           {
-            variant: "ghost",
+            variant: "outline",
             onClick: onClose,
             ...cancel,
           },
