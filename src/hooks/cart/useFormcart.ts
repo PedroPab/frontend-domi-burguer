@@ -157,7 +157,7 @@ function useFormCart() {
         complements: item.complements.map((comp) => ({
           id: comp.id.toString(),
           quantity: comp.quantity,
-          codes: [comp?.rewardCode],
+          ...(comp?.rewardCode ? { codes: [comp.rewardCode] } : {}),
         })),
       })),
       paymentMethod: formData.paymentMethod,
