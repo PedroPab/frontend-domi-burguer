@@ -118,10 +118,10 @@ export const Navbar = () => {
                 variant="primary"
                 size="lg"
                 leftIcon={
-                  <HamburgerIcon className="w-5 h-5 md:w-6 md:h-6 text-white" />
+                  <HamburgerIcon className="w-6 h-6 md:w-7 md:h-7 text-white" />
                 }
                 badge={itemsCount}
-                className="h-[44px] lg:h-12 ps-3 pe-[7px] lg:pl-5 lg:pr-2"
+                className="h-12 lg:h-14 ps-4 pe-2 lg:pl-6 lg:pr-3 text-base lg:text-lg"
               >
                 <span className="hidden md:block">ORDENAR</span>
               </Button>

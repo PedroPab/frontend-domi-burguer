@@ -250,7 +250,7 @@ export default function MenuSection() {
             <Button
               variant="primary"
               size="icon-sm"
-              className={`absolute top-[5px] z-200 right-[5px] lg:top-[7px] lg:left-[232px] lg:w-10 lg:h-10 ${actualProduct === 0 ? "hidden" : ""}`}
+              className={`absolute top-[5px] z-10 right-[5px] lg:top-[7px] lg:left-[232px] lg:w-10 lg:h-10 ${actualProduct === 0 ? "hidden" : ""}`}
               onClick={() => {
                 handleAddToCart(products[0]);
                 showFoodToast(products[0].name);
@@ -290,7 +290,7 @@ export default function MenuSection() {
             <Button
               variant="primary"
               size="icon-sm"
-              className={`absolute z-200 top-[5px] right-[5px] lg:top-[7px] lg:left-[232px] lg:w-10 lg:h-10 ${actualProduct === 1 ? "hidden" : ""}`}
+              className={`absolute z-10 top-[5px] right-[5px] lg:top-[7px] lg:left-[232px] lg:w-10 lg:h-10 ${actualProduct === 1 ? "hidden" : ""}`}
               onClick={() => {
                 handleAddToCart(products[1]);
                 showFoodToast(products[1].name);
@@ -321,7 +321,7 @@ export default function MenuSection() {
             <Button
               variant="primary"
               size="icon-sm"
-              className={`absolute z-200 top-[5px] right-[5px] lg:top-[7px] lg:left-[232px] lg:w-10 lg:h-10 ${actualProduct === 2 ? "hidden" : ""}`}
+              className={`absolute z-10 top-[5px] right-[5px] lg:top-[7px] lg:left-[232px] lg:w-10 lg:h-10 ${actualProduct === 2 ? "hidden" : ""}`}
               onClick={() => {
                 handleAddToCart(products[2]);
                 showFoodToast(products[2].name);
@@ -352,7 +352,7 @@ export default function MenuSection() {
             <Button
               variant="primary"
               size="icon-sm"
-              className={`absolute z-200 top-[5px] right-[5px] lg:top-[7px] lg:left-[232px] lg:w-10 lg:h-10 ${actualProduct === 3 ? "hidden" : ""}`}
+              className={`absolute z-10 top-[5px] right-[5px] lg:top-[7px] lg:left-[232px] lg:w-10 lg:h-10 ${actualProduct === 3 ? "hidden" : ""}`}
               onClick={(e) => {
                 e.stopPropagation();
                 handleAddToCart(products[3]);
@@ -384,7 +384,7 @@ export default function MenuSection() {
             <Button
               variant="primary"
               size="icon-sm"
-              className={`absolute z-200 top-[5px] right-[5px] lg:top-[7px] lg:left-[232px] lg:w-10 lg:h-10 ${actualProduct === 4 ? "hidden" : ""}`}
+              className={`absolute z-10 top-[5px] right-[5px] lg:top-[7px] lg:left-[232px] lg:w-10 lg:h-10 ${actualProduct === 4 ? "hidden" : ""}`}
               onClick={(e) => {
                 e.stopPropagation();
                 handleAddToCart(products[4]);
@@ -417,7 +417,7 @@ export default function MenuSection() {
             <Button
               variant="primary"
               size="icon-sm"
-              className={`absolute z-200 top-[5px] right-[5px] lg:top-[7px] lg:left-[232px] lg:w-10 lg:h-10 ${actualProduct === 5 ? "hidden" : ""}`}
+              className={`absolute z-10 top-[5px] right-[5px] lg:top-[7px] lg:left-[232px] lg:w-10 lg:h-10 ${actualProduct === 5 ? "hidden" : ""}`}
               onClick={(e) => {
                 e.stopPropagation();
                 handleAddToCart(products[5]);
@@ -450,7 +450,7 @@ export default function MenuSection() {
             <Button
               variant="primary"
               size="icon-sm"
-              className={`absolute z-200 top-[5px] right-[5px] lg:top-[7px] lg:left-[232px] lg:w-10 lg:h-10 ${actualProduct === 6 ? "hidden" : ""}`}
+              className={`absolute z-10 top-[5px] right-[5px] lg:top-[7px] lg:left-[232px] lg:w-10 lg:h-10 ${actualProduct === 6 ? "hidden" : ""}`}
               onClick={(e) => {
                 e.stopPropagation();
                 handleAddToCart(products[6]);
