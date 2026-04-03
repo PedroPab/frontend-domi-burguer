@@ -1,7 +1,10 @@
 import { UserProfile } from '@/types/user';
+import { getApiUrl } from '@/utils/apiUrl';
 
 export class UserService {
-  private static readonly API_URL = `${process.env.NEXT_PUBLIC_API_URL}`;
+  private static get API_URL(): string {
+    return getApiUrl();
+  }
 
   static async getUserById(userId: string, token: string): Promise<{ body: UserProfile }> {
     try {

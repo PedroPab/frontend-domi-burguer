@@ -12,11 +12,11 @@ import { useRouter } from "next/navigation";
 
 function useFormCart() {
   const { items, address, getSubtotal, getTotal } = useCartStore();
-  const { formData, setFormData, setFormField, error, setError } = useCheckoutFormStore();
+  const { formData, setFormData, setFormField, error, setError, isSubmitting, setIsSubmitting } = useCheckoutFormStore();
   const { resetForm } = useCheckoutFormStore();
   const { clearCart } = useCartStore();
   const router = useRouter();
-  const { submitOrder, isSubmitting } = useOrderSubmit(
+  const { submitOrder } = useOrderSubmit(
     (result) => {
       console.log("Order submitted successfully:", result);
 
@@ -186,7 +186,13 @@ function useFormCart() {
 
     const token = await user?.getIdToken();
     console.log(orderPayload, "Submitting order with token:");
-    await submitOrder({ orderPayload, token });
+
+    setIsSubmitting(true);
+    try {
+      await submitOrder({ orderPayload, token });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return {

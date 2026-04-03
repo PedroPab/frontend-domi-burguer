@@ -9,8 +9,9 @@ import { ProfileHeader } from "./ProfileHeader";
 import { PointsSection } from "./PointsSection";
 import { AddressesSection } from "./AddressesSection";
 import { PhoneSection } from "./PhoneSection";
-import { ComingSoonSection } from "./ComingSoonSection";
+import { OrdersSection } from "./OrdersSection";
 import { CodesSection } from "./CodesSection";
+import { ComingSoonSection } from "./ComingSoonSection";
 
 export default function ProfilePage() {
     const { user, loading } = useAuth();
@@ -37,6 +38,7 @@ export default function ProfilePage() {
                     <ProfileHeader />
                     <AddressesSection />
                     <PhoneSection />
+                    {/* <OrdersSection /> */}
                     <ComingSoonSection title="MIS PEDIDOS" />
                     <CodesSection />
                     <PointsSection />

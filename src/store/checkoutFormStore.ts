@@ -10,9 +10,11 @@ interface CheckoutFormData {
 interface CheckoutFormStore {
   formData: CheckoutFormData;
   error: string | null;
+  isSubmitting: boolean;
   setFormField: <K extends keyof CheckoutFormData>(field: K, value: CheckoutFormData[K]) => void;
   setFormData: (data: Partial<CheckoutFormData>) => void;
   setError: (error: string | null) => void;
+  setIsSubmitting: (isSubmitting: boolean) => void;
   resetForm: () => void;
 }
 
@@ -26,6 +28,7 @@ const initialFormData: CheckoutFormData = {
 export const useCheckoutFormStore = create<CheckoutFormStore>()((set) => ({
   formData: initialFormData,
   error: null,
+  isSubmitting: false,
 
   setFormField: (field, value) =>
     set((state) => ({
@@ -40,5 +43,7 @@ export const useCheckoutFormStore = create<CheckoutFormStore>()((set) => ({
 
   setError: (error) => set({ error }),
 
-  resetForm: () => set({ formData: initialFormData, error: null }),
+  setIsSubmitting: (isSubmitting) => set({ isSubmitting }),
+
+  resetForm: () => set({ formData: initialFormData, error: null, isSubmitting: false }),
 }));

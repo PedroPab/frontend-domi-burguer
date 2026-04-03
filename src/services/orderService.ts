@@ -1,7 +1,10 @@
 import { Order, OrderStatus } from '@/types/orders';
+import { getApiUrl } from '@/utils/apiUrl';
 
 export class OrderService {
-  private static readonly API_URL = `${process.env.NEXT_PUBLIC_API_URL}`;
+  private static get API_URL(): string {
+    return getApiUrl();
+  }
 
   static async getUserOrders(token: string): Promise<{ body: Order[] }> {
     try {

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { OrderPayload } from "@/types/OrderPayload";
+import { getApiUrl } from "@/utils/apiUrl";
 
 interface OrderResult {
   id: number;
@@ -17,7 +18,7 @@ export const useOrderSubmit = (
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const API_URL = `${process.env.NEXT_PUBLIC_API_URL}`;
+  const API_URL = getApiUrl();
 
   
   // const saveLastOrder = (): void => {
