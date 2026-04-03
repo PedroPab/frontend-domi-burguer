@@ -6,10 +6,11 @@ import { Code } from "@/types/codes";
 import { CartItem } from "@/store/cartStore";
 import { Complement } from "@/types/products";
 
-// Utilidad para formatear moneda
+// Utilidad para formatear moneda de manera consistente entre servidor y cliente
 const formatCurrency = (value: number): string => {
   if (isNaN(value)) return "0";
-  return value.toLocaleString("es-CO");
+  // Usar formateo manual para evitar diferencias de locale entre servidor/cliente
+  return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 };
 
 // Componente para mostrar un complemento/adición
@@ -18,7 +19,7 @@ const ComplementItem = ({ complement }: { complement: Complement }) => (
     <span>
       + {complement.name} {complement.quantity && complement.quantity > 1 ? `x${complement.quantity}` : ""}
     </span>
-    <span>${formatCurrency((complement.price ?? 0) * (complement.quantity || 1))}</span>
+    <span suppressHydrationWarning>${formatCurrency((complement.price ?? 0) * (complement.quantity || 1))}</span>
   </div>
 );
 
@@ -29,7 +30,7 @@ const ProductItem = ({ item }: { item: CartItem }) => (
       <p className="body-font text-neutral-black-80">
         {item.name} <span className="text-neutral-black-60">x{item.quantity}</span>
       </p>
-      <p className="body-font font-medium">
+      <p className="body-font font-medium" suppressHydrationWarning>
         ${formatCurrency(item.price * item.quantity)}
       </p>
     </div>
@@ -60,7 +61,7 @@ const SummaryRow = ({
   return (
     <div className="flex items-center justify-between w-full">
       <p className={`flex-1 body-font ${textColor}`}>{label}</p>
-      <p className={`w-fit body-font ${textColor} ${fontWeight}`}>
+      <p className={`w-fit body-font ${textColor} ${fontWeight}`} suppressHydrationWarning>
         {variant === "discount" ? "-" : ""}${formatCurrency(value)}
       </p>
     </div>
@@ -71,7 +72,7 @@ const SummaryRow = ({
 const TotalRow = ({ total }: { total: number }) => (
   <div className="flex items-center justify-between w-full">
     <p className="flex-1 body-font font-bold">Total</p>
-    <h2 className="w-fit">${formatCurrency(total)}</h2>
+    <h2 className="w-fit" suppressHydrationWarning>${formatCurrency(total)}</h2>
   </div>
 );
 

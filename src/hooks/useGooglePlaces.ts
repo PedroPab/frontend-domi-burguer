@@ -19,10 +19,10 @@ export const useGooglePlaces = (
 
   const onPlaceChanged = useCallback(() => {
     if (!autocompleteRef.current) return;
-    
+
     const place = autocompleteRef.current.getPlace();
-    
-    if (place.geometry && place.geometry.location) {
+
+    if (place?.geometry?.location) {
       onPlaceSelected(place);
     }
   }, [onPlaceSelected]);
