@@ -21,8 +21,8 @@ const LogInModal = dynamic(
   () => import("./login/logInModal").then((mod) => mod.LogInModal),
   { ssr: false },
 );
-const WorkingOnModal = dynamic(
-  () => import("./ui/workingOnModal").then((mod) => mod.WorkingOnModal),
+const KitchenModal = dynamic(
+  () => import("./kitchen/kitchenModal").then((mod) => mod.KitchenModal),
   { ssr: false },
 );
 
@@ -136,7 +136,7 @@ export const Navbar = () => {
         />
       </div>
       <div>
-        <WorkingOnModal
+        <KitchenModal
           isOpen={isKitchenModalOpen}
           onClose={() => setIsKitchenModalOpen(false)}
         />

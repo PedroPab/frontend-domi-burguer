@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Button } from "@/components/ui/button";
-import { InstagramIcon, MapPinIcon, WhatsAppIcon } from "../ui/icons";
+import { InstagramIcon, WhatsAppIcon, TiktokIcon } from "../ui/icons";
 import {
   Select,
   SelectContent,
@@ -10,14 +10,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import { Card, CardContent } from "../ui/card";
-import { Calendar, Clock } from "lucide-react";
-import { Separator } from "../ui/separator";
-import { MapComponent } from "../map/map";
-import { AddressService } from "@/services/kitchenService";
-import { Kitchen } from "@/types/kitchens";
-import { LocationService } from "@/services/locationService";
 import { Modal } from "@/components/ui/modal";
+import { Loader2, Mail } from "lucide-react";
+
+import { useKitchenModal } from "@/hooks/kitchen/useKitchenModal";
+import { KitchenHoursCard } from "./KitchenHoursCard";
+import { DeliveryPriceCard } from "./DeliveryPriceCard";
+import { UserLocationSelector } from "./UserLocationSelector";
+import { MultiMarkerMap, MapMarker } from "@/components/map/MultiMarkerMap";
 
 interface KitchenModalProps {
   isOpen: boolean;
@@ -25,46 +25,35 @@ interface KitchenModalProps {
 }
 
 export const KitchenModal = ({ isOpen, onClose }: KitchenModalProps) => {
-  const [kitchens, setKitchens] = useState<Kitchen[]>([]);
-  const [selectedKitchen, setSelectedKitchen] = useState<Kitchen | null>(null);
-  const [loading, setLoading] = useState(false);
+  const {
+    kitchens,
+    selectedKitchen,
+    userLocations,
+    selectedLocation,
+    isLoadingKitchens,
+    isLoadingLocations,
+    isLoadingDelivery,
+    isAuthenticated,
+    error,
+    selectKitchen,
+    selectLocation,
+    formattedDeliveryPrice,
+    parsedHours,
+    countdownText,
+  } = useKitchenModal({ isOpen });
 
-  useEffect(() => {
-    const fetchKitchens = async () => {
-      if (!isOpen) return;
+  const mapMarkers: MapMarker[] = kitchens
+    .filter(k => k.location?.coordinates?.lat && k.location?.coordinates?.lng)
+    .map(k => ({
+      id: k.id,
+      position: {
+        lat: k.location!.coordinates.lat,
+        lng: k.location!.coordinates.lng,
+      },
+      label: k.name,
+    }));
 
-      try {
-        setLoading(true);
-        const response = await AddressService.findKitchens();
-        if (response.body.length > 0) {
-          setSelectedKitchen(response.body[0]);
-        }
-        const listKitchens: Kitchen[] = [];
-        response.body.forEach(async (kitchen) => {
-          const locationResponse = await LocationService.getLocationId(
-            kitchen.locationId
-          );
-          if (locationResponse && locationResponse.body) {
-            console.log("locationResponse.body", locationResponse.body);
-            kitchen.location = locationResponse.body;
-          }
-          listKitchens.push(kitchen);
-        });
-        setKitchens(listKitchens);
-      } catch (error) {
-        console.error("Error al cargar las cocinas:", error);
-        setKitchens([]);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchKitchens();
-  }, [isOpen]);
-
-  useEffect(() => {
-    console.log("selectedKitchen", selectedKitchen);
-  }, [selectedKitchen]);
+  const selectedCoordinates = selectedKitchen?.location?.coordinates;
 
   return (
     <Modal
@@ -73,24 +62,30 @@ export const KitchenModal = ({ isOpen, onClose }: KitchenModalProps) => {
       title="INFORMACIÓN DE LA COCINA"
       size="xl"
       footer={false}
-      ariaLabel="seleccionar direccion"
+      ariaLabel="informacion de cocinas"
       bodyClassName="px-5 pb-8 lg:px-8"
     >
+      {error && (
+        <div className="mb-4 p-3 bg-red-50 text-red-600 rounded-lg text-sm">
+          {error}
+        </div>
+      )}
+
       <div className="flex flex-col-reverse lg:flex-row gap-2 lg:gap-6 h-full">
         <div className="flex flex-1 flex-col">
           <div className="flex flex-col gap-3 lg:gap-4">
+            {/* Selector de cocina */}
             <Select
-              onValueChange={(value) => {
-                const kitchen = kitchens.find((k) => k.id === value);
-                setSelectedKitchen(kitchen || null);
-              }}
+              value={selectedKitchen?.id}
+              onValueChange={selectKitchen}
+              disabled={isLoadingKitchens}
             >
               <SelectTrigger className="text-neutral-black-50! body-font">
                 <SelectValue
                   placeholder={
-                    loading
+                    isLoadingKitchens
                       ? "Cargando cocinas..."
-                      : selectedKitchen?.name || "Seleccionar cocina"
+                      : "Seleccionar cocina"
                   }
                 />
               </SelectTrigger>
@@ -100,74 +95,105 @@ export const KitchenModal = ({ isOpen, onClose }: KitchenModalProps) => {
                     {kitchen.name}
                   </SelectItem>
                 ))}
-                {!loading && kitchens.length === 0 && (
-                  <SelectItem key="no-kitchens" value="no-kitchens" disabled>
-                    Cocinas no encontradas
+                {!isLoadingKitchens && kitchens.length === 0 && (
+                  <SelectItem value="no-kitchens" disabled>
+                    No hay cocinas disponibles
                   </SelectItem>
                 )}
               </SelectContent>
             </Select>
 
-            <Card className="bg-[#F7F7F7] shadow-none rounded-2xl border-0">
-              <CardContent className="p-6 flex flex-col gap-5">
-                <div className="flex items-center gap-2">
-                  <Calendar className="w-5 h-5" />
-                  <span className="body-font font-bold">Horarios</span>
-                </div>
+            {/* Indicador de estado Abierto/Cerrado */}
+            <div className="flex items-center justify-between px-4 py-2 rounded-full border border-gray-200">
+              {parsedHours?.isCurrentlyOpen ? (
+                <>
+                  <span className="text-green-600 font-medium body-font">Abierto</span>
+                  {countdownText && (
+                    <span className="text-neutral-black-60 body-font">
+                      Cerramos en <span className="font-bold">{countdownText}</span>
+                    </span>
+                  )}
+                </>
+              ) : (
+                <span className="text-red-500 font-medium body-font">Cerrado</span>
+              )}
+            </div>
 
-                <Separator className="bg-gray-300" />
+            {/* Tarjeta de horarios */}
+            <KitchenHoursCard
+              parsedHours={parsedHours}
+              isLoading={isLoadingKitchens}
+            />
 
-                <div className="flex items-center gap-2">
-                  <Clock className="w-5 h-5" />
-                  <div className="flex items-start gap-1 flex-1">
-                    <span className="flex-1 body-font">Lunes a Sabado</span>
-                    <span className="body-font font-bold">4:30 pm / 10 pm</span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+            {/* Tarjeta de precio de domicilio */}
+            <DeliveryPriceCard
+              price={formattedDeliveryPrice}
+              isLoading={isLoadingDelivery}
+            />
 
-            <Card className="bg-[#F7F7F7] shadow-none h-[68px] rounded-2xl border-0">
-              <CardContent className="px-6 py-6">
-                <div className="flex items-center gap-2">
-                  <MapPinIcon className="w-5 h-5" />
-                  <span className="flex-1 body-font">Valor domicilio aprox.</span>
-                  <span className="body-font font-bold">$3.500</span>
-                </div>
-              </CardContent>
-            </Card>
+            {/* Selector de ubicacion del usuario (solo si esta logueado) */}
+            {isAuthenticated && (
+              <UserLocationSelector
+                locations={userLocations}
+                selectedLocationId={selectedLocation?.id}
+                onSelect={selectLocation}
+                isLoading={isLoadingLocations}
+              />
+            )}
 
+            {/* Botones de redes sociales */}
             <div className="flex gap-4 w-full">
               <Button
                 variant="ghost"
                 className="flex w-12 h-12 px-3 py-2 relative items-center justify-center gap-2 rounded-[30px]"
+                aria-label="TikTok"
+              >
+                <TiktokIcon />
+              </Button>
+              <Button
+                variant="ghost"
+                className="flex w-12 h-12 px-3 py-2 relative items-center justify-center gap-2 rounded-[30px]"
+                aria-label="Instagram"
               >
                 <InstagramIcon />
               </Button>
               <Button
                 variant="ghost"
                 className="flex w-12 h-12 px-3 py-2 relative items-center justify-center gap-2 rounded-[30px]"
+                aria-label="Correo"
               >
-                <MapPinIcon className="w-5 h-5" />
+                <Mail className="w-5 h-5" />
               </Button>
               <Button
                 variant="ghost"
                 className="inline-flex h-12 px-5 py-2 relative items-center justify-center gap-2 rounded-[30px] text-black"
               >
-                <div className="relative w-fit whitespace-nowrap">CONTÁCTANOS</div>
+                <span className="relative w-fit whitespace-nowrap">CONTÁCTANOS</span>
                 <WhatsAppIcon />
               </Button>
             </div>
           </div>
         </div>
+
+        {/* Mapa con todas las cocinas */}
         <div className="flex-1 min-h-[200px] w-full bg-accent-yellow-40 rounded-xl overflow-hidden">
-          <MapComponent
-            coordinates={{
-              lat: selectedKitchen?.location?.coordinates?.lat ?? 6.3017314,
-              lng: selectedKitchen?.location?.coordinates?.lng ?? -75.5743796,
-            }}
-            minHeight="200px"
-          />
+          {isLoadingKitchens ? (
+            <div className="flex items-center justify-center h-full min-h-[200px]">
+              <Loader2 className="w-8 h-8 animate-spin text-neutral-black-50" />
+            </div>
+          ) : (
+            <MultiMarkerMap
+              markers={mapMarkers}
+              selectedMarkerId={selectedKitchen?.id}
+              center={
+                selectedCoordinates?.lat && selectedCoordinates?.lng
+                  ? { lat: selectedCoordinates.lat, lng: selectedCoordinates.lng }
+                  : undefined
+              }
+              onMarkerClick={selectKitchen}
+              minHeight="200px"
+            />
+          )}
         </div>
       </div>
     </Modal>
