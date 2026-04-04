@@ -10,6 +10,7 @@ import { metadataConfig, viewportConfig } from "./metadata";
 import Script from "next/script";
 import { InstallBanner } from "@/components/pwa/InstallBanner";
 import { ServiceWorkerRegistration } from "@/components/pwa/ServiceWorkerRegistration";
+import { GoogleSignInBanner } from "@/components/auth/GoogleSignInBanner";
 
 const montserrat = Montserrat({
   subsets: ['latin'],
@@ -53,6 +54,7 @@ export default function RootLayout({
             </div>
           </HeroUIProvider>
           <Footer />
+          <GoogleSignInBanner />
         </AuthProvider>
         <Script
           defer
