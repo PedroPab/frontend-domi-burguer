@@ -1,6 +1,7 @@
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useCartStore } from '@/store/cartStore';
 import { useCartModalItemDeleteStore } from '@/store/cartModalItemDeleteStore';
+import { useAppliedCodeStore } from '@/store/appliedCodeStore';
 import { Code } from '@/types/codes';
 import { Complement } from '@/types/products';
 import { generateCartItemId, calculateTotalPrice } from '@/lib/utils';
@@ -19,6 +20,8 @@ export const useCartActions = () => {
     openDeleteModal,
     closeDeleteModal,
   } = useCartModalItemDeleteStore();
+
+  const { appliedCode, isRewardApplied } = useAppliedCodeStore();
 
   const handleIncrease = (id: string, quantity: number) => {
     updateQuantity(id, quantity + 1);
@@ -62,20 +65,26 @@ export const useCartActions = () => {
     console.log('Items actuales en el carrito:', currentItems);
 
     // Verificamos que hay items en el carrito
-    if (currentItems.length === 0) return;
+    if (currentItems.length === 0) {
+      console.log('No hay items en el carrito, el reward se aplicará cuando se agregue un producto');
+      // Marcar que el reward NO está aplicado para que se aplique cuando haya productos
+      useAppliedCodeStore.getState().setRewardApplied(false);
+      return;
+    }
 
-    const firstItem = currentItems[0];
-    console.log('Primer item del carrito:', firstItem);
-
-    // Verificar si ya existe un complemento con este código de referido (evitar duplicados)
-    const alreadyHasComplement = firstItem.complements.some(
-      (c) => c.rewardCode === appliedCoupon.code
+    // Verificar si ya existe el complemento en algún item del carrito
+    const alreadyHasComplement = currentItems.some((item) =>
+      item.complements.some((c) => c.rewardCode === appliedCoupon.code)
     );
 
     if (alreadyHasComplement) {
-      console.log('El complemento de referido ya existe en el item, no se agrega de nuevo.');
+      console.log('El complemento de referido ya existe en algún item, no se agrega de nuevo.');
+      useAppliedCodeStore.getState().setRewardApplied(true);
       return;
     }
+
+    const firstItem = currentItems[0];
+    console.log('Primer item del carrito:', firstItem);
 
     // Crear el complemento con los datos del reward
     const newComplement: Complement = {
@@ -117,6 +126,9 @@ export const useCartActions = () => {
       const updatedComplements = [...firstItem.complements, newComplement];
       useCartStore.getState().updateItemComplements(firstItem.id, updatedComplements);
     }
+
+    // Marcar que el reward ya fue aplicado
+    useAppliedCodeStore.getState().setRewardApplied(true);
   }, []);
 
   const removeCodeFromItems = useCallback((appliedCoupon: Code) => {
@@ -145,7 +157,68 @@ export const useCartActions = () => {
         break;
       }
     }
+
+    // Marcar que el reward ya no está aplicado
+    useAppliedCodeStore.getState().setRewardApplied(false);
   }, []);
+
+  // Función para verificar si el reward del código sigue aplicado en el carrito
+  const checkAndReapplyReward = useCallback(() => {
+    const { appliedCode } = useAppliedCodeStore.getState();
+
+    // Si no hay código aplicado, no hay nada que hacer
+    if (!appliedCode || appliedCode.type !== 'referral') return;
+    if (appliedCode.reward?.typeAddReward !== 'complement') return;
+
+    const currentItems = useCartStore.getState().items;
+
+    // Si no hay items, marcar que el reward no está aplicado
+    if (currentItems.length === 0) {
+      useAppliedCodeStore.getState().setRewardApplied(false);
+      return;
+    }
+
+    // Verificar si el reward sigue en algún item
+    const rewardStillExists = currentItems.some((item) =>
+      item.complements.some((c) => c.rewardCode === appliedCode.code)
+    );
+
+    if (!rewardStillExists) {
+      console.log('El reward del código se perdió, re-aplicándolo al primer item disponible');
+      // Re-aplicar el reward
+      addCodeInItems(appliedCode);
+    }
+  }, [addCodeInItems]);
+
+  // Efecto para detectar cambios en los items y re-aplicar el reward si se perdió
+  useEffect(() => {
+    // Solo verificar si hay un código aplicado
+    if (!appliedCode) return;
+
+    // Usar setTimeout para asegurar que el estado del store esté actualizado
+    // después de cualquier operación de eliminación/modificación
+    const timeoutId = setTimeout(() => {
+      const currentItems = useCartStore.getState().items;
+
+      if (currentItems.length === 0) {
+        // No hay items, marcar que el reward no está aplicado
+        useAppliedCodeStore.getState().setRewardApplied(false);
+        return;
+      }
+
+      const rewardExists = currentItems.some((item) =>
+        item.complements.some((c) => c.rewardCode === appliedCode.code)
+      );
+
+      if (!rewardExists) {
+        console.log('El reward se perdió o no existe, re-aplicándolo al primer item disponible...');
+        // La función addCodeInItems ya maneja la separación de items con quantity > 1
+        addCodeInItems(appliedCode);
+      }
+    }, 0);
+
+    return () => clearTimeout(timeoutId);
+  }, [items, appliedCode, addCodeInItems]);
 
   return {
     items,
@@ -159,5 +232,6 @@ export const useCartActions = () => {
     isDeleteModalOpen,
     addCodeInItems,
     removeCodeFromItems,
+    checkAndReapplyReward,
   };
 };

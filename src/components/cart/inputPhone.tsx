@@ -22,8 +22,11 @@ const InputPhone = () => {
         handlePhoneChange,
     } = useFormCart();
 
-    const handlePhoneVerified = async () => {
+    const handlePhoneVerified = async (phoneNumber: string) => {
         await reloadUser();
+        // Actualizar el formData con el número verificado
+        handlePhoneChange(phoneNumber);
+        setPhoneModalOpen(false);
     };
 
     // Usuario autenticado con teléfono verificado

@@ -1,8 +1,9 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { Code } from "@/types/codes";
 import { CodesService } from "@/services/codesService";
 import { getIdToken } from "firebase/auth";
 import { useAuth } from "@/contexts/AuthContext";
+import { useAppliedCodeStore } from "@/store/appliedCodeStore";
 
 interface UseCouponReturn {
   couponCode: string;
@@ -16,11 +17,21 @@ interface UseCouponReturn {
 
 export const useCoupon = (): UseCouponReturn => {
   const [couponCode, setCouponCode] = useState("");
-  const [appliedCoupon, setAppliedCoupon] = useState<Code | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const { user } = useAuth();
+
+  // Usar el store persistente para el código aplicado
+  const { appliedCode, setAppliedCode, removeAppliedCode } =
+    useAppliedCodeStore();
+
+  // Sincronizar el estado local del input con el código guardado
+  useEffect(() => {
+    if (appliedCode && !couponCode) {
+      setCouponCode(appliedCode.code);
+    }
+  }, [appliedCode, couponCode]);
 
   const applyCoupon = useCallback(async () => {
     if (!couponCode.trim()) {
@@ -42,13 +53,14 @@ export const useCoupon = (): UseCouponReturn => {
       const code = response.body[0];
 
       if (code.status !== "active") {
-
         setError("Este código no está activo");
         return;
       }
 
       if (code.expirationDate && new Date(code.expirationDate) < new Date()) {
-        setError("Este código ya expiró. Mantente atento a nuestras próximas promos");
+        setError(
+          "Este código ya expiró. Mantente atento a nuestras próximas promos"
+        );
         return;
       }
 
@@ -57,28 +69,29 @@ export const useCoupon = (): UseCouponReturn => {
         return;
       }
 
-      setAppliedCoupon(code);
+      // Guardar el código validado en el store persistente
+      setAppliedCode(code);
       setError(null);
     } catch (err) {
-      const message = err instanceof Error ? err.message : "Error al validar el cupón";
+      const message =
+        err instanceof Error ? err.message : "Error al validar el cupón";
       setError(message);
-      setAppliedCoupon(null);
     } finally {
       setIsLoading(false);
     }
-  }, [couponCode, user]);
+  }, [couponCode, user, setAppliedCode]);
 
   const removeCoupon = useCallback(() => {
     console.log("Removiendo cupón aplicado");
-    setAppliedCoupon(null);
+    removeAppliedCode();
     setCouponCode("");
     setError(null);
-  }, []);
+  }, [removeAppliedCode]);
 
   return {
     couponCode,
     setCouponCode,
-    appliedCoupon,
+    appliedCoupon: appliedCode, // Usar el código del store persistente
     isLoading,
     error,
     applyCoupon,

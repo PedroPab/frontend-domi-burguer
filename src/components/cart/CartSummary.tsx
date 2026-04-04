@@ -46,25 +46,15 @@ export const CartSummary = ({}) => {
     removeCoupon,
   } = useCoupon();
 
+  // El hook useCartActions ahora maneja automáticamente la aplicación y re-aplicación
+  // del reward del código cuando hay cambios en los items del carrito.
+  // Solo necesitamos aplicar el código cuando se valida por primera vez.
   useEffect(() => {
-    console.log("appliedCoupon:", appliedCoupon);
-    //debemos agregar el producto o complemento al agregar el codigo
-    if (appliedCoupon) addCodeInItems(appliedCoupon);
-  }, [addCodeInItems, appliedCoupon]);
-
-  //cuando se remueve el cupón, debemos de activar la función que remueve el complemento asociado al código de referido
-  useEffect(() => {
-    if (!appliedCoupon) {
-      console.log(
-        "Cupón removido, verificando si es un código de referido para eliminar complemento asociado",
-      );
-      if (couponCode) {
-        console.log("Código de cupón previo:", couponCode);
-        // Aquí podríamos verificar si el código removido era un código de referido y eliminar el complemento asociado
-        // Esto depende de cómo estés manejando la relación entre códigos y complementos en tu lógica
-      }
+    if (appliedCoupon) {
+      console.log("Código aplicado:", appliedCoupon.code);
+      addCodeInItems(appliedCoupon);
     }
-  }, [appliedCoupon, couponCode]);
+  }, [addCodeInItems, appliedCoupon]);
 
   return (
     <div className="flex flex-col gap-8 max-w-[500px] justify-center w-full h-full">

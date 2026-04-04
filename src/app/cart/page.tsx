@@ -12,6 +12,7 @@ import { CheckoutForm } from "@/components/cart/CheckoutForm";
 import { CartSummary } from "@/components/cart/CartSummary";
 import { CartModals } from "@/components/cart/CartModals";
 import { useAuth } from "@/contexts/AuthContext";
+import { useCheckoutFormStore } from "@/store/checkoutFormStore";
 
 // Lazy load modal pesado
 const PhoneVerificationModal = dynamic(
@@ -27,6 +28,7 @@ export default function Cart() {
 
   // Verificación de teléfono integrada
   const { user, reloadUser } = useAuth();
+  const { setFormData } = useCheckoutFormStore();
   const [phoneModalOpen, setPhoneModalOpen] = useState(false);
   const [hasCheckedPhone, setHasCheckedPhone] = useState(false);
 
@@ -41,8 +43,10 @@ export default function Cart() {
   }, [user, hasCheckedPhone]);
 
   // Callback cuando el teléfono se verifica exitosamente
-  const handlePhoneVerified = async () => {
+  const handlePhoneVerified = async (phoneNumber: string) => {
     await reloadUser();
+    // Actualizar el formData con el número verificado
+    setFormData({ phone: phoneNumber });
     setPhoneModalOpen(false);
   };
 

@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { BancolombiaIcon, MoneyIcon, NequiIcon } from "@/components/ui/icons";
 import { useCartStore } from "@/store/cartStore";
 import { useCheckoutFormStore } from "@/store/checkoutFormStore";
+import { useAppliedCodeStore } from "@/store/appliedCodeStore";
 import { useOrderSubmit } from "@/hooks/cart/useOrderSubmit";
 import { useAuth } from "@/contexts/AuthContext";
 import { PaymentMethod } from "@/types/paymentMethod";
@@ -15,6 +16,7 @@ function useFormCart() {
   const { formData, setFormData, setFormField, error, setError, isSubmitting, setIsSubmitting } = useCheckoutFormStore();
   const { resetForm } = useCheckoutFormStore();
   const { clearCart } = useCartStore();
+  const { clearAll: clearAppliedCode } = useAppliedCodeStore();
   const router = useRouter();
   const { submitOrder } = useOrderSubmit(
     (result) => {
@@ -35,9 +37,10 @@ function useFormCart() {
       };
       localStorage.setItem("lastOrder", JSON.stringify(lastOrder));
 
-      // Limpiar carrito y formulario
+      // Limpiar carrito, formulario y código aplicado
       clearCart();
       resetForm();
+      clearAppliedCode();
 
       // Redirigir a la página de confirmación
       router.push("/thankyou");
