@@ -41,7 +41,7 @@ export const KitchenModal = ({ isOpen, onClose }: KitchenModalProps) => {
     parsedHours,
     countdownText,
   } = useKitchenModal({ isOpen });
-
+  console.log("KitchenModal renderizado parsed:", parsedHours);
   const mapMarkers: MapMarker[] = kitchens
     .filter(k => k.location?.coordinates?.lat && k.location?.coordinates?.lng)
     .map(k => ({

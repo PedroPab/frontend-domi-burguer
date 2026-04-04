@@ -100,7 +100,7 @@ export function useKitchenModal({ isOpen }: UseKitchenModalOptions): UseKitchenM
       const kitchensWithLocations = await Promise.all(
         kitchensList.map(async (kitchen) => {
           try {
-            const locationResponse = await LocationService.getLocationId(kitchen.locationId);
+            const locationResponse = await LocationService.getLocationByIdPublic(kitchen.locationId);
             return { ...kitchen, location: locationResponse.body };
           } catch {
             return kitchen;

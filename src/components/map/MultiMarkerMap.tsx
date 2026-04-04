@@ -35,6 +35,7 @@ export const MultiMarkerMap: React.FC<MultiMarkerMapProps> = ({
   defaultZoom = 13,
   selectedZoom = 15,
 }) => {
+  console.log("Markers en MultiMarkerMap:", markers);
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY as string,
     libraries,

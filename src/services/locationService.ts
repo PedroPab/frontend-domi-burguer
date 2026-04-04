@@ -19,6 +19,19 @@ export class LocationService {
     }
   }
 
+  static async getLocationByIdPublic(id: string): Promise<{ body: Location }> {
+    try {
+      const response = await fetch(`${this.API_URL}api/v2/locations/public/${id}`);
+      if (!response.ok) {
+        throw new Error("Error fetching public location");
+      }
+      return await response.json();
+    } catch (error) {
+      console.error("Error fetching public location:", error);
+      throw error;
+    }
+  }
+
   //add location 
   static async addLocation({ token, location }: { token: string | null, location: object }): Promise<{ body: Location }> {
     try {

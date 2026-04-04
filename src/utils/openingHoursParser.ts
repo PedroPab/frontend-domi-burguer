@@ -1,9 +1,9 @@
 /**
  * Parser para el formato OpenStreetMap de opening_hours
- * Formato: "Mo-Fr 15:00-20:00; Sa-Su 11:00-23:00"
- *
- * Documentacion OSM: https://wiki.openstreetmap.org/wiki/Key:opening_hours
+ * Usa la librería opening_hours.js para análisis robusto
  */
+
+import OpeningHours from "opening_hours";
 
 const DAY_MAP: Record<string, string> = {
   Mo: "Lunes",
@@ -32,6 +32,17 @@ export interface OpeningHoursResult {
   timeUntilClose: { hours: number; minutes: number } | null;
 }
 
+// Configuración para Colombia (Bogotá)
+const NOMINATIM_DATA = {
+  lat: 4.6097,
+  lon: -74.0817,
+  address: {
+    country_code: "co",
+    country: "Colombia",
+    state: "Bogotá",
+  },
+};
+
 function formatTime24to12(time24: string): string {
   const [hours, minutes] = time24.split(":").map(Number);
   const period = hours >= 12 ? "pm" : "am";
@@ -49,7 +60,7 @@ function expandDayRange(dayRange: string): string[] {
     }
   }
   if (dayRange.includes(",")) {
-    return dayRange.split(",").filter(d => DAY_ORDER.includes(d));
+    return dayRange.split(",").filter((d) => DAY_ORDER.includes(d));
   }
   if (DAY_ORDER.includes(dayRange)) {
     return [dayRange];
@@ -62,58 +73,52 @@ function formatDaysToSpanish(days: string[]): string {
   if (days.length === 1) return DAY_MAP[days[0]];
   if (days.length === 7) return "Todos los días";
 
-  const indices = days.map(d => DAY_ORDER.indexOf(d));
-  const isConsecutive = indices.every((val, i, arr) =>
-    i === 0 || val === arr[i - 1] + 1
+  const indices = days.map((d) => DAY_ORDER.indexOf(d));
+  const isConsecutive = indices.every(
+    (val, i, arr) => i === 0 || val === arr[i - 1] + 1
   );
 
   if (isConsecutive && days.length > 2) {
     return `${DAY_MAP[days[0]]} a ${DAY_MAP[days[days.length - 1]]}`;
   }
 
-  return days.map(d => DAY_MAP[d]).join(", ");
+  return days.map((d) => DAY_MAP[d]).join(", ");
 }
 
-function getCurrentColombiaTime(): { day: string; hour: number; minute: number } {
-  const now = new Date();
-  const colombiaOptions: Intl.DateTimeFormatOptions = {
-    timeZone: "America/Bogota",
-    weekday: "short",
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: false,
-  };
-
-  const formatter = new Intl.DateTimeFormat("en-US", colombiaOptions);
-  const parts = formatter.formatToParts(now);
-
-  const weekdayMap: Record<string, string> = {
-    Mon: "Mo", Tue: "Tu", Wed: "We", Thu: "Th", Fri: "Fr", Sat: "Sa", Sun: "Su"
-  };
-
-  const day = weekdayMap[parts.find(p => p.type === "weekday")?.value || ""] || "";
-  const hour = parseInt(parts.find(p => p.type === "hour")?.value || "0");
-  const minute = parseInt(parts.find(p => p.type === "minute")?.value || "0");
-
-  return { day, hour, minute };
+function formatTimeFromDate(date: Date): string {
+  const hours = date.getHours().toString().padStart(2, "0");
+  const minutes = date.getMinutes().toString().padStart(2, "0");
+  return `${hours}:${minutes}`;
 }
 
-function parseTimeToMinutes(time: string): number {
-  const [hours, minutes] = time.split(":").map(Number);
-  return hours * 60 + minutes;
-}
-
-export function parseOpeningHours(openingHours: string): OpeningHoursResult {
+export function parseOpeningHours(openingHoursStr: string): OpeningHoursResult {
   const schedules: ParsedSchedule[] = [];
+  const emptyResult: OpeningHoursResult = {
+    schedules,
+    isCurrentlyOpen: false,
+    closingTime: null,
+    timeUntilClose: null,
+  };
 
-  if (!openingHours || openingHours.trim() === "") {
-    return { schedules, isCurrentlyOpen: false, closingTime: null, timeUntilClose: null };
+  if (!openingHoursStr || openingHoursStr.trim() === "") {
+    return emptyResult;
   }
 
-  const rules = openingHours.split(";").map(r => r.trim());
+  let oh: InstanceType<typeof OpeningHours>;
+  try {
+    oh = new OpeningHours(openingHoursStr, NOMINATIM_DATA);
+  } catch (error) {
+    console.error("Error parsing opening_hours:", error);
+    return emptyResult;
+  }
+
+  // Extraer horarios para mostrar en la UI
+  const rules = openingHoursStr.split(";").map((r) => r.trim());
 
   for (const rule of rules) {
-    const match = rule.match(/^([A-Za-z,\-]+)\s+(\d{1,2}:\d{2})-(\d{1,2}:\d{2})$/);
+    const match = rule.match(
+      /^([A-Za-z,\-]+)\s+(\d{1,2}:\d{2})-(\d{1,2}:\d{2})$/
+    );
 
     if (match) {
       const [, daysPart, startTime, endTime] = match;
@@ -129,36 +134,35 @@ export function parseOpeningHours(openingHours: string): OpeningHoursResult {
     }
   }
 
-  const { day, hour, minute } = getCurrentColombiaTime();
-  const currentMinutes = hour * 60 + minute;
+  // Usar la librería para determinar estado actual
+  const now = new Date();
+  const isCurrentlyOpen = oh.getState(now);
 
-  let isCurrentlyOpen = false;
   let closingTime: string | null = null;
   let timeUntilClose: { hours: number; minutes: number } | null = null;
 
-  for (const schedule of schedules) {
-    if (schedule.daysArray.includes(day)) {
-      const startMinutes = parseTimeToMinutes(schedule.startTime);
-      const endMinutes = parseTimeToMinutes(schedule.endTime);
+  if (isCurrentlyOpen) {
+    const nextChange = oh.getNextChange(now);
 
-      if (currentMinutes >= startMinutes && currentMinutes < endMinutes) {
-        isCurrentlyOpen = true;
-        closingTime = schedule.endTime;
+    if (nextChange) {
+      closingTime = formatTimeFromDate(nextChange);
 
-        const minutesUntilClose = endMinutes - currentMinutes;
-        timeUntilClose = {
-          hours: Math.floor(minutesUntilClose / 60),
-          minutes: minutesUntilClose % 60,
-        };
-        break;
-      }
+      const diffMs = nextChange.getTime() - now.getTime();
+      const diffMinutes = Math.floor(diffMs / (1000 * 60));
+
+      timeUntilClose = {
+        hours: Math.floor(diffMinutes / 60),
+        minutes: diffMinutes % 60,
+      };
     }
   }
 
   return { schedules, isCurrentlyOpen, closingTime, timeUntilClose };
 }
 
-export function formatTimeUntilClose(time: { hours: number; minutes: number } | null): string {
+export function formatTimeUntilClose(
+  time: { hours: number; minutes: number } | null
+): string {
   if (!time) return "";
   const { hours, minutes } = time;
   return `${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}`;
