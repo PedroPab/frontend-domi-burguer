@@ -3,7 +3,7 @@
 import React from "react";
 import { Location } from "@/types/locations";
 import { useCheckoutForm } from "@/contexts/CheckoutFormContext";
-import { MapPin, Home, Building } from "lucide-react";
+import { Heart } from "lucide-react";
 import { ListModal } from "@/components/ui/modal";
 
 interface ModalLocationsListProps {
@@ -17,26 +17,11 @@ export function ModalLocationsList({
   onClose,
   locations,
 }: ModalLocationsListProps) {
-  const { setLocation } = useCheckoutForm();
+  const { setLocation, location: selectedLocation } = useCheckoutForm();
 
   const handleSelectAddress = (location: Location) => {
     setLocation(location);
     onClose();
-  };
-
-  const getPropertyIcon = (propertyType?: string) => {
-    if (!propertyType) return <Home className="w-5 h-5 text-neutral-black-60" />;
-
-    switch (propertyType.toLowerCase()) {
-      case "casa":
-      case "house":
-        return <Home className="w-5 h-5 text-neutral-black-60" />;
-      case "apartamento":
-      case "apartment":
-        return <Building className="w-5 h-5 text-neutral-black-60" />;
-      default:
-        return <MapPin className="w-5 h-5 text-neutral-black-60" />;
-    }
   };
 
   return (
@@ -49,34 +34,51 @@ export function ModalLocationsList({
       items={locations}
       keyExtractor={(loc) => loc.id}
       emptyMessage="No tienes direcciones guardadas"
-      renderItem={(loc) => (
-        <button
-          key={loc.id}
-          type="button"
-          onClick={() => handleSelectAddress(loc)}
-          className="w-full text-left p-4 rounded-xl border-2 border-neutral-black-20 bg-white hover:bg-accent-yellow-20 hover:border-accent-yellow-80 active:bg-accent-yellow-40 focus:outline-none focus:ring-2 focus:ring-accent-yellow-80 focus:border-accent-yellow-80 transition-all duration-200 group"
-        >
-          <div className="flex items-start gap-3">
-            <div className="mt-1 flex-shrink-0">{getPropertyIcon(loc.propertyType)}</div>
-            <div className="flex-1 min-w-0">
-              <h5 className="body-font font-bold text-neutral-black-100 mb-1.5 group-hover:text-accent-yellow-100">
-                {loc.name}
-              </h5>
-              <div className="body-font flex flex-col gap-0.5 text-sm text-neutral-black-80">
-                <span className="line-clamp-2">{loc.address}</span>
-                <span className="text-neutral-black-60">
-                  {loc.city}, {loc.country}
-                </span>
-                {loc.propertyType && (
-                  <span className="text-xs text-neutral-black-60 mt-0.5">
-                    {loc.propertyType}
-                  </span>
+      renderItem={(loc) => {
+        const isSelected = selectedLocation?.id === loc.id;
+
+        return (
+          <button
+            key={loc.id}
+            type="button"
+            onClick={() => handleSelectAddress(loc)}
+            className={`w-full text-left p-4 rounded-xl border-2 transition-all duration-200 ${
+              isSelected
+                ? "border-accent-yellow-80 bg-accent-yellow-10"
+                : "border-gray-200 bg-white hover:bg-gray-50"
+            }`}
+          >
+            <div className="flex items-start justify-between gap-3">
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2">
+                  <h3 className="font-semibold text-neutral-800 text-base">
+                    {loc.name}
+                  </h3>
+                  {loc.favorite && (
+                    <Heart className="w-4 h-4 fill-red-500 text-red-500" />
+                  )}
+                </div>
+                <p className="text-sm text-neutral-600 mt-1">
+                  {loc.address}
+                </p>
+                {loc.floor && (
+                  <p className="text-sm text-neutral-600">
+                    Piso/Apto: {loc.floor}
+                  </p>
+                )}
+                <p className="text-sm text-neutral-500">
+                  {loc.city}{loc.state ? `, ${loc.state}` : ""}
+                </p>
+                {loc.comment && (
+                  <p className="text-sm text-neutral-400 italic mt-1">
+                    {loc.comment}
+                  </p>
                 )}
               </div>
             </div>
-          </div>
-        </button>
-      )}
+          </button>
+        );
+      }}
     />
   );
 }
