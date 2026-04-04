@@ -198,12 +198,12 @@ export const PhoneVerificationModal: React.FC<PhoneVerificationModalProps> = ({
 
       setSuccessMsg("Teléfono verificado y vinculado exitosamente.");
 
-      // Esperar un momento para mostrar el mensaje de éxito y luego notificar al padre
-      // El padre se encarga de cerrar el modal llamando onOpenChange(false)
+      // Esperar un momento para mostrar el mensaje de éxito y luego cerrar el modal
       setTimeout(() => {
         if (onSuccess) {
           onSuccess(normalizePhone(phone));
         }
+        onOpenChange(false);
       }, 1500);
     } catch (e: unknown) {
       if (
