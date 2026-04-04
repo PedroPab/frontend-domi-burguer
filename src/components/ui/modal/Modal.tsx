@@ -3,8 +3,7 @@
 import * as React from "react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
-import { motion, useMotionValue, animate } from "framer-motion";
-import { useDrag } from "react-use-gesture";
+import { motion, useMotionValue, animate, PanInfo } from "framer-motion";
 import { X, Loader2 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -142,39 +141,43 @@ export function Modal({
     onOpenChange(false);
   }, [onBeforeClose, onOpenChange]);
 
-  // Drag to dismiss (mobile)
-  const bind = useDrag(
-    ({ down, movement: [, my], direction: [, dy] }) => {
+  // Drag to dismiss usando Framer Motion (más confiable que react-use-gesture)
+  const handleDrag = React.useCallback(
+    (_: unknown, info: PanInfo) => {
+      if (!enableDragToDismiss || !isMobile) return;
+      // Solo permitir arrastrar hacia abajo
+      const newY = Math.max(0, info.offset.y);
+      y.set(newY);
+    },
+    [enableDragToDismiss, isMobile, y]
+  );
+
+  const handleDragEnd = React.useCallback(
+    (_: unknown, info: PanInfo) => {
       if (!enableDragToDismiss || !isMobile) return;
 
-      if (down) {
-        // Mientras arrastra - solo permitir hacia abajo
-        y.set(Math.max(0, my));
+      const offsetY = info.offset.y;
+      const velocityY = info.velocity.y;
+
+      // Cerrar si arrastró suficiente o con velocidad alta hacia abajo
+      const shouldClose = offsetY > dragThreshold || (offsetY > 50 && velocityY > 500);
+
+      if (shouldClose) {
+        animate(y, window.innerHeight, {
+          type: "spring",
+          stiffness: 300,
+          damping: 30,
+          onComplete: handleClose,
+        });
       } else {
-        // Al soltar
-        if (my > dragThreshold && dy > 0.5) {
-          // Cerrar con animacion
-          animate(y, window.innerHeight, {
-            type: "spring",
-            stiffness: 300,
-            damping: 30,
-            onComplete: handleClose,
-          });
-        } else {
-          // Volver a posicion original
-          animate(y, 0, {
-            type: "spring",
-            stiffness: 300,
-            damping: 30,
-          });
-        }
+        animate(y, 0, {
+          type: "spring",
+          stiffness: 300,
+          damping: 30,
+        });
       }
     },
-    {
-      initial: () => [0, y.get()],
-      bounds: { top: 0 },
-      rubberband: true,
-    }
+    [enableDragToDismiss, isMobile, dragThreshold, y, handleClose]
   );
 
   // Handler para click fuera
@@ -238,8 +241,7 @@ export function Modal({
             aria-describedby={ariaDescribedBy}
           >
             <motion.div
-              {...(isMobile && enableDragToDismiss ? bind() : {})}
-              style={isMobile && enableDragToDismiss ? { y } : {}}
+              style={isMobile && enableDragToDismiss && mobileBottomSheet ? { y } : {}}
               initial={isMobile && mobileBottomSheet ? { y: "100%" } : { opacity: 0, scale: 0.95 }}
               animate={isMobile && mobileBottomSheet ? { y: 0 } : { opacity: 1, scale: 1 }}
               exit={isMobile && mobileBottomSheet ? { y: "100%" } : { opacity: 0, scale: 0.95 }}
@@ -268,7 +270,14 @@ export function Modal({
             >
               {/* Drag Handle (mobile only) */}
               {isMobile && mobileBottomSheet && enableDragToDismiss && (
-                <div className={cn(modalDragHandleVariants())} />
+                <motion.div
+                  onPan={handleDrag}
+                  onPanEnd={handleDragEnd}
+                  style={{ touchAction: "none" }}
+                  className="w-full py-4 cursor-grab active:cursor-grabbing select-none flex justify-center"
+                >
+                  <div className={cn(modalDragHandleVariants())} />
+                </motion.div>
               )}
 
               {/* Close Button */}

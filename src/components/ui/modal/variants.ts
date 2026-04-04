@@ -8,7 +8,7 @@ export const modalOverlayVariants = cva([
   "fixed inset-0",
   "bg-black/60",
   "backdrop-blur-[2px]",
-  "z-[100]",
+  "z-[400]",
   "data-[state=open]:animate-in data-[state=closed]:animate-out",
   "data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
 ]);
@@ -20,7 +20,7 @@ export const modalOverlayVariants = cva([
 export const modalContentVariants = cva(
   [
     "fixed",
-    "z-[100]",
+    "z-[500]",
     "bg-background",
     "shadow-lg",
     "focus:outline-none",
@@ -204,8 +204,7 @@ export const modalCloseButtonVariants = cva([
 
 export const modalDragHandleVariants = cva([
   "mx-auto",
-  "mt-3 mb-2",
-  "h-1.5 w-16",
+  "h-1.5 w-12",
   "rounded-full",
   "bg-neutral-black-20",
   "sm:hidden",

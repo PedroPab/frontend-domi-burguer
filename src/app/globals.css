@@ -243,3 +243,7 @@ h4 {
     }
   }
 }
+
+.firebase-emulator-warning{
+  height: 1 px;
+}
