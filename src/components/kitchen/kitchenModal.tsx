@@ -108,11 +108,11 @@ export const KitchenModal = ({ isOpen, onClose }: KitchenModalProps) => {
               {parsedHours?.isCurrentlyOpen ? (
                 <>
                   <span className="text-green-600 font-medium body-font">Abierto</span>
-                  {countdownText && (
+                  {/* {countdownText && (
                     <span className="text-neutral-black-60 body-font">
                       Cerramos en <span className="font-bold">{countdownText}</span>
                     </span>
-                  )}
+                  )} */}
                 </>
               ) : (
                 <span className="text-red-500 font-medium body-font">Cerrado</span>

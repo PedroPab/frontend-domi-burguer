@@ -42,7 +42,7 @@ export const KitchenHoursCard = ({ parsedHours, isLoading }: KitchenHoursCardPro
                 <Clock className="w-5 h-5 flex-shrink-0" />
                 <div className="flex items-start gap-1 flex-1">
                   <span className="flex-1 body-font">{schedule.days}</span>
-                  <span className="body-font font-bold">{schedule.hours}</span>
+                  {/* <span className="body-font font-bold">{schedule.hours}</span> */}
                 </div>
               </div>
             ))}
