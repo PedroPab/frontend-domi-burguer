@@ -4,56 +4,11 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Loader2, Star, ChevronDown, ChevronRight, Plus, Minus } from "lucide-react";
 import { useUserProfile } from "@/hooks/useUserProfile";
+import { useUserPoints } from "@/hooks/useUserPoints";
+import { POINT_FLOW_TYPES, Point, FirebaseTimestamp } from "@/types/points";
 
-interface PointsRecord {
-    id: string;
-    date: string;
-    description: string;
-    pointsIn: number | null;
-    pointsOut: number | null;
-}
-
-// Mock data para pruebas
-const mockPointsHistory: PointsRecord[] = [
-    {
-        id: "1",
-        date: "2026-04-02",
-        description: "Compra de Combo DomiBurguer",
-        pointsIn: 150,
-        pointsOut: null,
-    },
-    {
-        id: "2",
-        date: "2026-03-28",
-        description: "Canje por papas gratis",
-        pointsIn: null,
-        pointsOut: 100,
-    },
-    {
-        id: "3",
-        date: "2026-03-25",
-        description: "Compra de 2 hamburguesas clásicas",
-        pointsIn: 80,
-        pointsOut: null,
-    },
-    {
-        id: "4",
-        date: "2026-03-20",
-        description: "Bono de bienvenida",
-        pointsIn: 200,
-        pointsOut: null,
-    },
-    {
-        id: "5",
-        date: "2026-03-15",
-        description: "Compra de combo familiar",
-        pointsIn: 250,
-        pointsOut: null,
-    },
-];
-
-function formatDate(dateString: string): string {
-    const date = new Date(dateString);
+function formatDate(timestamp: FirebaseTimestamp): string {
+    const date = new Date(timestamp._seconds * 1000);
     return date.toLocaleDateString("es-ES", {
         day: "2-digit",
         month: "short",
@@ -62,9 +17,11 @@ function formatDate(dateString: string): string {
 }
 
 export function PointsSection() {
-    const { userProfile, loading } = useUserProfile();
+    const { userProfile, loading: loadingProfile } = useUserProfile();
+    const { points, loading: loadingPoints } = useUserPoints();
     const [isExpanded, setIsExpanded] = useState(false);
 
+    const loading = loadingProfile || loadingPoints;
     return (
         <div className="mb-8">
             <h2 className="text-sm font-bold text-neutral-400 uppercase tracking-wide mb-4">
@@ -128,13 +85,13 @@ export function PointsSection() {
                             }}
                             className="border-t border-gray-200 overflow-hidden"
                         >
-                            {mockPointsHistory.length === 0 ? (
+                            {points.length === 0 ? (
                                 <p className="p-4 text-sm text-neutral-500 text-center">
                                     No hay registros de puntos
                                 </p>
                             ) : (
                                 <div className="divide-y divide-gray-100">
-                                    {mockPointsHistory.map((record, index) => (
+                                    {points.map((record: Point, index: number) => (
                                         <motion.div
                                             key={record.id}
                                             initial={{ opacity: 0, x: -20 }}
@@ -151,7 +108,7 @@ export function PointsSection() {
                                                     {record.description}
                                                 </p>
                                                 <p className="text-xs text-neutral-500">
-                                                    {formatDate(record.date)}
+                                                    {formatDate(record.createdAt)}
                                                 </p>
                                             </div>
                                             <motion.div
@@ -163,16 +120,16 @@ export function PointsSection() {
                                                 }}
                                                 className="flex items-center gap-1 ml-4"
                                             >
-                                                {record.pointsIn !== null && (
+                                                {record.flowType === POINT_FLOW_TYPES.INPUT && (
                                                     <span className="flex items-center gap-1 text-sm font-medium text-green-600">
                                                         <Plus className="w-3 h-3" />
-                                                        {record.pointsIn}
+                                                        {record.points}
                                                     </span>
                                                 )}
-                                                {record.pointsOut !== null && (
+                                                {record.flowType === POINT_FLOW_TYPES.OUTPUT && (
                                                     <span className="flex items-center gap-1 text-sm font-medium text-red-500">
                                                         <Minus className="w-3 h-3" />
-                                                        {record.pointsOut}
+                                                        {record.points}
                                                     </span>
                                                 )}
                                             </motion.div>
