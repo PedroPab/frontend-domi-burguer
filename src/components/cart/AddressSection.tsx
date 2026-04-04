@@ -24,7 +24,9 @@ export function AddressSection() {
         listLocationsClient,
         location,
         isLoadingDeliveryPrice,
-        setLocation
+        deliveryError,
+        setLocation,
+        retryDeliveryPrice
     } = useCheckoutForm();
     const {
         isModalOpen,
@@ -101,7 +103,9 @@ export function AddressSection() {
                     }}
                     isFavorite={location?.favorite}
                     isLoadingPrice={isLoadingDeliveryPrice}
-                    onDelete={user ? handleRemoveSelection : undefined}
+                    deliveryError={deliveryError}
+                    onDelete={handleRemoveSelection}
+                    onRetry={retryDeliveryPrice}
                 />
             )}
 

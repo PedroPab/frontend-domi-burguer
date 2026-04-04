@@ -11,7 +11,6 @@ import { useCheckoutForm } from "@/contexts/CheckoutFormContext";
 import CreateAddressInputSection from "./createAddressInputSection";
 import { useAddressForm } from "@/hooks/address/useAddressForm";
 import ActionsButtons from "./ActionsButtons";
-import { useCartStore } from "@/store/cartStore";
 import { Modal } from "@/components/ui/modal";
 import { modalErrorVariants } from "@/components/ui/modal/variants";
 import { cn } from "@/lib/utils";
@@ -25,9 +24,7 @@ interface ModalAddressProps {
 export const ModalAddress = ({ isOpen, onClose }: ModalAddressProps) => {
   const { user } = useAuth();
 
-  const { setAddress } = useCartStore();
   const {
-    setAddressClient,
     setLocation,
     setListLocationsClient,
     listLocationsClient,
@@ -36,11 +33,10 @@ export const ModalAddress = ({ isOpen, onClose }: ModalAddressProps) => {
   const { formState, updateField, resetForm, isFormValid } = useAddressForm();
 
   const { submitAddress, isSubmitting, error } = useAddressSubmit(
-    ({ location, address }) => {
+    (location) => {
+      // Solo agregamos la location, el cálculo del delivery se hace en el contexto
       setListLocationsClient([...listLocationsClient, location]);
       setLocation(location);
-      setAddressClient(address);
-      setAddress(address);
       onClose();
       resetForm();
     },
@@ -70,13 +66,13 @@ export const ModalAddress = ({ isOpen, onClose }: ModalAddressProps) => {
         token = await getIdToken(user);
         console.log("Usuario autenticado, manejando dirección con autenticación");
       } else {
-        console.log("momo Usuario invitado , manejando dirección sin autenticación");
+        console.log("Usuario invitado, manejando dirección sin autenticación");
       }
-      const address = await submitAddress(
+      const location = await submitAddress(
         createLocationData(),
-        token as unknown as null | undefined
+        token
       );
-      console.log("Dirección confirmada:", address);
+      console.log("Dirección creada:", location);
     } catch (error) {
       console.error("Error al confirmar dirección:", error);
     }

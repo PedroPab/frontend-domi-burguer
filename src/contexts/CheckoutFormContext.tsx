@@ -21,6 +21,8 @@ interface CheckoutFormData {
     location: Location | null;
     setLocation: (location: Location | null) => void;
     isLoadingDeliveryPrice: boolean;
+    deliveryError: string | null;
+    retryDeliveryPrice: () => void;
 }
 
 const CheckoutFormContext = createContext<CheckoutFormData | undefined>(undefined);
@@ -54,37 +56,53 @@ export const CheckoutFormProvider = ({ children }: { children: React.ReactNode }
     //la location seleccionada actualmente, o la se creo recientemente
     const [location, setLocation] = useState<Location | null>(null);
     const [isLoadingDeliveryPrice, setIsLoadingDeliveryPrice] = useState(false);
+    const [deliveryError, setDeliveryError] = useState<string | null>(null);
+
+    const fetchDeliveryPrice = async (loc: Location) => {
+        setIsLoadingDeliveryPrice(true);
+        setDeliveryError(null);
+
+        // Crear address parcial con los datos de location mientras carga
+        const partialAddress: Address = {
+            ...loc,
+            distance: 0,
+            fullAddress: loc.address,
+            deliveryPrice: undefined,
+        };
+        setAddressClient(partialAddress);
+
+        try {
+            // Consultamos el precio del delivery
+            const { delivery, kitchen } = await AddressService.createDelivery(loc.id);
+            console.log('Datos de delivery obtenidos para la ubicación seleccionada:', { kitchen });
+            const rta: Address = {
+                ...loc,
+                distance: delivery.distance,
+                fullAddress: loc.address,
+                deliveryPrice: delivery.price,
+            };
+            console.log('Datos de delivery obtenidos para la ubicación seleccionada:', rta);
+            setAddressClient(rta);
+        } catch (error) {
+            console.error("Error al obtener datos de delivery:", error);
+            setDeliveryError("No hay cocinas abiertas intenta mas tarde");
+        }
+        setIsLoadingDeliveryPrice(false);
+    };
+
+    const retryDeliveryPrice = () => {
+        if (location) {
+            fetchDeliveryPrice(location);
+        }
+    };
 
     useEffect(() => {
-        const fetchAddressData = async () => {
-            if (location) {
-                setIsLoadingDeliveryPrice(true);
-                try {
-                    // Consultamos el Address del location seleccionado
-                    const { delivery, kitchen } = await AddressService.createDelivery(location.id);
-                    console.log('Datos de delivery obtenidos para la ubicación seleccionada:', { kitchen });
-                    const rta: Address = {
-                        ...location,
-                        distance: delivery.distance,
-                        fullAddress: location.address,
-                        deliveryPrice: delivery.price,
-                        // kitchen: kitchen,//por alguna razon da error si lo descomento
-
-                    };
-                    console.log('Datos de delivery obtenidos para la ubicación seleccionada:', rta);
-                    setAddressClient(rta);
-                } catch (error) {
-                    console.error("Error al obtener datos de delivery:", error);
-                    setAddressClient(null);
-                } finally {
-                    setIsLoadingDeliveryPrice(false);
-                }
-            } else {
-                setAddressClient(null);
-            }
-        };
-
-        fetchAddressData();
+        if (location) {
+            fetchDeliveryPrice(location);
+        } else {
+            setAddressClient(null);
+            setDeliveryError(null);
+        }
     }, [location]);
 
     useEffect(() => {
@@ -121,7 +139,9 @@ export const CheckoutFormProvider = ({ children }: { children: React.ReactNode }
             addressClient, setAddressClient,
             listLocationsClient, setListLocationsClient,
             location, setLocation,
-            isLoadingDeliveryPrice
+            isLoadingDeliveryPrice,
+            deliveryError,
+            retryDeliveryPrice
         }}>
             {children}
         </CheckoutFormContext.Provider>

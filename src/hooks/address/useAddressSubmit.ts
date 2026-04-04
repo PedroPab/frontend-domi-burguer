@@ -1,44 +1,24 @@
 import { useState } from 'react';
-import { AddressService } from '@/services/addressService';
-// import { AddressFormState } from './useAddressForm';
-import { Address } from '@/types/address';
-import { LocationService } from '@/services/locationService';
-import { Kitchen } from '@/types/kitchens';
-import { Delivery } from '@/types/orders';
 import { Location } from '@/types/locations';
+import { LocationService } from '@/services/locationService';
 
 export const useAddressSubmit = (
-  onSuccess: (data: { location: Location; address: Address; kitchen: Kitchen; delivery: Delivery }) => void,
+  onSuccess: (location: Location) => void,
   onError: (error: Error) => void
 ) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-
-  const submitAddress = async (locationData: object, token: string | null = null): Promise<{ location: Location, address: Address, kitchen: Kitchen, delivery: Delivery }> => {
-
-
+  const submitAddress = async (locationData: object, token: string | null = null): Promise<Location> => {
     setIsSubmitting(true);
     setError(null);
 
     try {
-
+      // Solo crear la location, el cálculo del delivery se hace en el contexto
       const { body: location } = await LocationService.addLocation({ token, location: locationData });
 
-      const { delivery, kitchen } = await AddressService.createDelivery(location.id);
-
-      const address: Address = {
-        ...location,
-        fullAddress: location.address,
-        deliveryPrice: delivery.price,
-        distance: delivery.distance,
-        // kitchen: kitchen
-      };
-
-      const data = { location, address, kitchen, delivery };
-
-      onSuccess(data);
-      return data;
+      onSuccess(location);
+      return location;
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Error al crear la dirección';
       setError(errorMessage);
