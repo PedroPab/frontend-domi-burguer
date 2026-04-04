@@ -5,6 +5,7 @@ import { getIdToken } from "firebase/auth";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { useAuth } from "./AuthContext";
 import { AddressService } from "@/services/addressService";
+import { useCartStore } from "@/store/cartStore";
 
 // Define aquí los campos que necesitas compartir
 export interface FormValues {
@@ -30,6 +31,7 @@ const CheckoutFormContext = createContext<CheckoutFormData | undefined>(undefine
 export const CheckoutFormProvider = ({ children }: { children: React.ReactNode }) => {
 
     const { user } = useAuth();
+    const { setAddress, removeAddress } = useCartStore();
     const [token, setToken] = useState<string>("");
 
     // Obtener el token del usuario autenticado
@@ -102,8 +104,16 @@ export const CheckoutFormProvider = ({ children }: { children: React.ReactNode }
         } else {
             setAddressClient(null);
             setDeliveryError(null);
+            removeAddress();
         }
     }, [location]);
+
+    // Sincronizar addressClient con el cartStore
+    useEffect(() => {
+        if (addressClient) {
+            setAddress(addressClient);
+        }
+    }, [addressClient, setAddress]);
 
     useEffect(() => {
         setListLocationsClient(locations);
