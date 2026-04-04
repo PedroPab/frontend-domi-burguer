@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import dynamic from "next/dynamic";
-import { Plus } from "lucide-react";
+import { Plus, List } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import AddressCard from "../AddressCard";
 import { useCheckoutForm } from "@/contexts/CheckoutFormContext";
@@ -19,7 +19,13 @@ const ModalAddress = dynamic(
 export function AddressSection() {
 
     //si no es usuario autenticado , miramos si tiene direccion en el local storage
-    const { addressClient, listLocationsClient } = useCheckoutForm();
+    const {
+        addressClient,
+        listLocationsClient,
+        location,
+        isLoadingDeliveryPrice,
+        setLocation
+    } = useCheckoutForm();
     const {
         isModalOpen,
         addressToEdit,
@@ -31,6 +37,12 @@ export function AddressSection() {
     const [isListModalOpen, setIsListModalOpen] = useState(false);
 
     const hasMultipleLocations = listLocationsClient && listLocationsClient.length > 0;
+    const hasSelectedLocation = addressClient || (location && isLoadingDeliveryPrice);
+
+    // Solo deselecciona la location de esta sección (no la elimina del backend)
+    const handleRemoveSelection = () => {
+        setLocation(null);
+    };
 
     return (
         <div className="flex flex-col gap-4 w-full">
@@ -51,24 +63,47 @@ export function AddressSection() {
                 )}
             </div>
 
+            {/* Mostrar botones cuando NO hay location seleccionada */}
+            {!hasSelectedLocation && (
+                <div className="flex flex-col gap-3">
+                    <Button
+                        type="button"
+                        variant="ghost"
+                        className="bg-accent-yellow-20 hover:bg-accent-yellow-40 active:bg-accent-yellow-40 rounded-[30px] flex items-center gap-2 xl:w-[260px] xl:h-[48px] h-[40px] w-full label-font"
+                        onClick={handleOpenModal}
+                    >
+                        <Plus />
+                        {user ? "AGREGAR DIRECCIÓN" : "AGREGAR DIRECCIÓN"}
+                    </Button>
 
-            <Button
-                type="button"
-                variant="ghost"
-                className="bg-accent-yellow-20 hover:bg-accent-yellow-40 active:bg-accent-yellow-40 rounded-[30px] flex items-center gap-2 xl:w-[260px] xl:h-[48px] h-[40px] w-full label-font"
-                onClick={handleOpenModal}
-            >
-                <Plus />
-                {user ? "AGREGAR DIRECCIÓN PERSONAL" : "AGREGAR DIRECCIÓN"}
-            </Button>
-
-
-            {addressClient !== null && addressClient !== undefined && (
-                <AddressCard
-                    address={addressClient}
-                />
+                    {user && hasMultipleLocations && (
+                        <Button
+                            type="button"
+                            variant="outline"
+                            className="rounded-[30px] flex items-center gap-2 xl:w-[260px] xl:h-[48px] h-[40px] w-full label-font border-[1.5px] border-solid border-[#313131]"
+                            onClick={() => setIsListModalOpen(true)}
+                        >
+                            <List className="w-4 h-4" />
+                            SELECCIONAR DIRECCIÓN
+                        </Button>
+                    )}
+                </div>
             )}
 
+            {/* Mostrar card cuando HAY location seleccionada */}
+            {hasSelectedLocation && (
+                <AddressCard
+                    address={addressClient || {
+                        ...location!,
+                        distance: 0,
+                        fullAddress: location!.address,
+                        deliveryPrice: undefined,
+                    }}
+                    isFavorite={location?.favorite}
+                    isLoadingPrice={isLoadingDeliveryPrice}
+                    onDelete={user ? handleRemoveSelection : undefined}
+                />
+            )}
 
             <ModalAddress
                 isOpen={isModalOpen}

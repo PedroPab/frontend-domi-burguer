@@ -20,7 +20,7 @@ interface CheckoutFormData {
     setListLocationsClient: (locations: Location[]) => void;
     location: Location | null;
     setLocation: (location: Location | null) => void;
-    // Puedes agregar más estados y funciones según sea necesario
+    isLoadingDeliveryPrice: boolean;
 }
 
 const CheckoutFormContext = createContext<CheckoutFormData | undefined>(undefined);
@@ -53,10 +53,12 @@ export const CheckoutFormProvider = ({ children }: { children: React.ReactNode }
 
     //la location seleccionada actualmente, o la se creo recientemente
     const [location, setLocation] = useState<Location | null>(null);
+    const [isLoadingDeliveryPrice, setIsLoadingDeliveryPrice] = useState(false);
 
     useEffect(() => {
         const fetchAddressData = async () => {
             if (location) {
+                setIsLoadingDeliveryPrice(true);
                 try {
                     // Consultamos el Address del location seleccionado
                     const { delivery, kitchen } = await AddressService.createDelivery(location.id);
@@ -74,6 +76,8 @@ export const CheckoutFormProvider = ({ children }: { children: React.ReactNode }
                 } catch (error) {
                     console.error("Error al obtener datos de delivery:", error);
                     setAddressClient(null);
+                } finally {
+                    setIsLoadingDeliveryPrice(false);
                 }
             } else {
                 setAddressClient(null);
@@ -85,12 +89,27 @@ export const CheckoutFormProvider = ({ children }: { children: React.ReactNode }
 
     useEffect(() => {
         setListLocationsClient(locations);
+
+        // Seleccionar location por defecto solo si no hay una seleccionada
+        if (locations.length > 0 && !location) {
+            // Buscar la favorita
+            const favoriteLocation = locations.find(loc => loc.favorite);
+
+            if (favoriteLocation) {
+                setLocation(favoriteLocation);
+            } else {
+                // Si no hay favorita, usar la última actualizada
+                const sortedByDate = [...locations].sort(
+                    (a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
+                );
+                setLocation(sortedByDate[0]);
+            }
+        }
     }, [locations]);
 
     useEffect(() => {
         if (token) {
             fetchLocations();
-            setListLocationsClient(locations);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [token]);
@@ -101,7 +120,8 @@ export const CheckoutFormProvider = ({ children }: { children: React.ReactNode }
             formData, setFormData,
             addressClient, setAddressClient,
             listLocationsClient, setListLocationsClient,
-            location, setLocation
+            location, setLocation,
+            isLoadingDeliveryPrice
         }}>
             {children}
         </CheckoutFormContext.Provider>

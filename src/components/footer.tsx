@@ -78,7 +78,7 @@ export const Footer = () => {
             rel="noopener noreferrer"
             className="focus:outline-0! focus:ring-0!"
           >
-            <Button variant="ghost" size="icon-lg">
+            <Button variant="yellow" size="icon-lg">
               <InstagramIcon />
             </Button>
           </Link>
@@ -89,7 +89,7 @@ export const Footer = () => {
             className="focus:outline-0! focus:ring-0!"
           >
             <Button
-              variant="ghost"
+              variant="yellow"
               size="lg"
               rightIcon={<WhatsAppIcon />}
               className="text-black"
