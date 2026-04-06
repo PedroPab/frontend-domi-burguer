@@ -25,6 +25,7 @@ export interface Code {
     code: string;
     userId?: string;
     userCreateId?: string;
+    productIds?: Array<number | string> | null;
     type: CodeType;
     description?: string;
     usageLimit?: number | null;

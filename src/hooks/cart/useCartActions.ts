@@ -2,6 +2,7 @@ import { useCallback, useEffect } from 'react';
 import { useCartStore } from '@/store/cartStore';
 import { useCartModalItemDeleteStore } from '@/store/cartModalItemDeleteStore';
 import { useAppliedCodeStore } from '@/store/appliedCodeStore';
+import { useCheckoutFormStore } from '@/store/checkoutFormStore';
 import { Code } from '@/types/codes';
 import { Complement } from '@/types/products';
 import { generateCartItemId, calculateTotalPrice } from '@/lib/utils';
@@ -21,7 +22,43 @@ export const useCartActions = () => {
     closeDeleteModal,
   } = useCartModalItemDeleteStore();
 
-  const { appliedCode, isRewardApplied } = useAppliedCodeStore();
+  const { appliedCode } = useAppliedCodeStore();
+
+  const isProductAllowedForCode = useCallback((code: Code, productId: number) => {
+    if (!code.productIds || code.productIds.length === 0) return true;
+
+    return code.productIds.some((allowedProductId) => String(allowedProductId) === String(productId));
+  }, []);
+
+  const getEligibleItemsForCode = useCallback((code: Code) => {
+    const currentItems = useCartStore.getState().items;
+    return currentItems.filter((item) => isProductAllowedForCode(code, item.productId));
+  }, [isProductAllowedForCode]);
+
+  const getReferralProductRestrictionMessage = useCallback(() => {
+    return 'Este código de referido solo aplica a productos seleccionados. Agrega uno de los productos permitidos para usarlo.';
+  }, []);
+
+  const clearInvalidReferralCode = useCallback((code: Code) => {
+    const currentItems = useCartStore.getState().items;
+
+    for (const item of currentItems) {
+      const hasReferralComplement = item.complements.some(
+        (complement) => complement.rewardCode === code.code
+      );
+
+      if (!hasReferralComplement) continue;
+
+      const updatedComplements = item.complements.filter(
+        (complement) => complement.rewardCode !== code.code
+      );
+
+      useCartStore.getState().updateItemComplements(item.id, updatedComplements);
+    }
+
+    useAppliedCodeStore.getState().removeAppliedCode();
+    useCheckoutFormStore.getState().setError(getReferralProductRestrictionMessage());
+  }, [getReferralProductRestrictionMessage]);
 
   const handleIncrease = (id: string, quantity: number) => {
     updateQuantity(id, quantity + 1);
@@ -72,8 +109,16 @@ export const useCartActions = () => {
       return;
     }
 
+    const eligibleItems = getEligibleItemsForCode(appliedCoupon);
+
+    if (eligibleItems.length === 0) {
+      console.log('No hay productos permitidos para aplicar el código de referido');
+      clearInvalidReferralCode(appliedCoupon);
+      return;
+    }
+
     // Verificar si ya existe el complemento en algún item del carrito
-    const alreadyHasComplement = currentItems.some((item) =>
+    const alreadyHasComplement = eligibleItems.some((item) =>
       item.complements.some((c) => c.rewardCode === appliedCoupon.code)
     );
 
@@ -83,7 +128,7 @@ export const useCartActions = () => {
       return;
     }
 
-    const firstItem = currentItems[0];
+    const firstItem = eligibleItems[0];
     console.log('Primer item del carrito:', firstItem);
 
     // Crear el complemento con los datos del reward
@@ -129,7 +174,7 @@ export const useCartActions = () => {
 
     // Marcar que el reward ya fue aplicado
     useAppliedCodeStore.getState().setRewardApplied(true);
-  }, []);
+  }, [clearInvalidReferralCode, getEligibleItemsForCode]);
 
   const removeCodeFromItems = useCallback((appliedCoupon: Code) => {
     // Solo manejamos códigos de referidos
@@ -178,8 +223,8 @@ export const useCartActions = () => {
       return;
     }
 
-    // Verificar si el reward sigue en algún item
     const rewardStillExists = currentItems.some((item) =>
+      isProductAllowedForCode(appliedCode, item.productId) &&
       item.complements.some((c) => c.rewardCode === appliedCode.code)
     );
 
@@ -188,7 +233,7 @@ export const useCartActions = () => {
       // Re-aplicar el reward
       addCodeInItems(appliedCode);
     }
-  }, [addCodeInItems]);
+  }, [addCodeInItems, isProductAllowedForCode]);
 
   // Efecto para detectar cambios en los items y re-aplicar el reward si se perdió
   useEffect(() => {
@@ -207,6 +252,7 @@ export const useCartActions = () => {
       }
 
       const rewardExists = currentItems.some((item) =>
+        isProductAllowedForCode(appliedCode, item.productId) &&
         item.complements.some((c) => c.rewardCode === appliedCode.code)
       );
 
@@ -218,7 +264,7 @@ export const useCartActions = () => {
     }, 0);
 
     return () => clearTimeout(timeoutId);
-  }, [items, appliedCode, addCodeInItems]);
+  }, [items, appliedCode, addCodeInItems, isProductAllowedForCode]);
 
   return {
     items,
