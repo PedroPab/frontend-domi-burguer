@@ -1,9 +1,11 @@
 # Términos y Condiciones del Programa de Códigos Referidos – Domi Burguer
 
 ## 1. Objeto del programa
+
 El programa de códigos referidos de Domi Burguer permite que los clientes inviten a otras personas a realizar su primer pedido en la página web. Cuando un nuevo cliente usa correctamente un código referido en su primera compra, puede recibir un beneficio promocional, y la persona dueña del código puede acumular puntos en su cuenta.
 
 ## 2. Requisitos para crear un código referido
+
 Para poder crear un código referido, el cliente debe cumplir con estas condiciones:
 
 - Haber realizado al menos un pedido en la página web de Domi Burguer.
@@ -13,6 +15,7 @@ Para poder crear un código referido, el cliente debe cumplir con estas condicio
 Estos requisitos se validan dentro de la plataforma y son necesarios para habilitar la creación del código referido.
 
 ## 3. Uso del código referido
+
 El código referido podrá ser compartido por su titular con otras personas para que lo usen en la página web de Domi Burguer.
 
 El código referido solo podrá ser utilizado por clientes que:
@@ -24,11 +27,13 @@ El código referido solo podrá ser utilizado por clientes que:
 El código debe ingresarse al momento de realizar el pedido y estará sujeto a validación por parte de la plataforma.
 
 ## 4. Canales válidos
+
 El código referido solo es válido para pedidos realizados directamente en la página web de Domi Burguer.
 
 No aplica para pedidos hechos por otros medios, incluyendo, entre otros, WhatsApp, llamadas, mensajes directos o atención presencial.
 
 ## 5. Beneficios para el cliente nuevo
+
 El cliente nuevo que use un código referido válido en su primera compra podrá recibir un beneficio promocional definido por Domi Burguer.
 
 Este beneficio:
@@ -38,17 +43,18 @@ Este beneficio:
 - No puede ser canjeado por dinero, saldo, reembolso ni compensación económica.
 
 ## 6. Productos sobre los que aplica
+
 El beneficio otorgado por el uso del código referido aplica únicamente sobre las siguientes categorías o productos definidos por Domi Burguer:
 
 - Hamburguesas
 - Combos
-- Papas
-- Papas vaqueras
-- Papas tolanas
+- Papas Vaqueras
+- Papas Troyanas
 
 Domi Burguer podrá modificar en cualquier momento los productos participantes, limitar referencias específicas o excluir productos del programa.
 
 ## 7. Asignación de puntos al titular del código
+
 Cada vez que un cliente nuevo realice una compra exitosa usando el código referido de otro cliente, el titular del código podrá recibir puntos en su cuenta.
 
 La asignación de puntos estará sujeta a que:
@@ -58,6 +64,7 @@ La asignación de puntos estará sujeta a que:
 - No exista fraude, duplicidad, uso indebido o incumplimiento de estas condiciones.
 
 ## 8. Naturaleza de los puntos
+
 Los puntos otorgados dentro del programa:
 
 - No tienen valor comercial ni equivalencia en dinero.
@@ -68,6 +75,7 @@ Los puntos otorgados dentro del programa:
 Domi Burguer podrá aumentar, disminuir, pausar o eliminar la asignación de puntos en cualquier momento.
 
 ## 9. Redención de puntos
+
 Los puntos acumulados podrán ser cambiados por regalos, premios o beneficios definidos por Domi Burguer.
 
 Las opciones de redención:
@@ -79,6 +87,7 @@ Las opciones de redención:
 Domi Burguer se reserva el derecho de modificar, reemplazar, limitar o retirar los premios o beneficios disponibles dentro del programa.
 
 ## 10. Restricciones de uso
+
 No está permitido:
 
 - Crear cuentas falsas.
@@ -90,6 +99,7 @@ No está permitido:
 Si Domi Burguer detecta alguna irregularidad, podrá suspender o cancelar el código, anular puntos, retirar beneficios o bloquear la participación del usuario en el programa, sin obligación de compensación.
 
 ## 11. Modificaciones, suspensión o cancelación
+
 Domi Burguer podrá, en cualquier momento y sin previo aviso:
 
 - Modificar estos términos y condiciones.
@@ -102,6 +112,7 @@ Domi Burguer podrá, en cualquier momento y sin previo aviso:
 Cualquier cambio entrará en vigencia desde su publicación en la página web o desde el momento en que Domi Burguer lo determine.
 
 ## 12. Limitación de responsabilidad
+
 Domi Burguer no será responsable por:
 
 - Errores del usuario al ingresar el código.
@@ -110,4 +121,5 @@ Domi Burguer no será responsable por:
 - Cambios, suspensión o finalización del programa.
 
 ## 13. Aceptación
+
 Al participar en el programa de códigos referidos, ya sea creando, compartiendo o usando un código, el usuario acepta estos términos y condiciones en su totalidad.
