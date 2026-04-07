@@ -120,8 +120,16 @@ export function UserCodeModal({ isOpen, onClose, onSuccess }: UserCodeModalProps
         </div>
 
         <p className="text-xs text-center text-neutral-400">
-          Al crear tu código, aceptas los términos y condiciones del programa de
-          referidos.
+          Al crear tu código, aceptas los{" "}
+          <a
+            href="/legal#referidos"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline hover:text-neutral-600 transition-colors"
+          >
+            términos y condiciones
+          </a>{" "}
+          del programa de referidos.
         </p>
       </div>
     </Modal>
