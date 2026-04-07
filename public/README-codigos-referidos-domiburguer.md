@@ -22,7 +22,6 @@ El código referido solo podrá ser utilizado por clientes que:
 
 - Se registren en la página web.
 - Realicen su primera compra en la plataforma.
-- No hayan hecho pedidos anteriormente en la página web.
 
 El código debe ingresarse al momento de realizar el pedido y estará sujeto a validación por parte de la plataforma.
 
@@ -95,10 +94,25 @@ No está permitido:
 - Usar datos falsos o de terceros sin autorización.
 - Aprovechar errores de la plataforma.
 - Usar el programa de forma abusiva, engañosa o fraudulenta.
+- Crear códigos con contenido ofensivo o inapropiado
 
 Si Domi Burguer detecta alguna irregularidad, podrá suspender o cancelar el código, anular puntos, retirar beneficios o bloquear la participación del usuario en el programa, sin obligación de compensación.
 
-## 11. Modificaciones, suspensión o cancelación
+## 11. Derechos sobre los códigos
+
+Domi Burguer se reserva el derecho de, en cualquier momento y a su exclusivo criterio:
+
+- Denegar la creación de un código.
+- Modificar un código existente.
+- Suspender temporalmente un código.
+- Eliminar o borrar un código de forma permanente.
+- Vetar o bloquear un código sin previo aviso.
+
+Estas acciones podrán tomarse por cualquier motivo que Domi Burguer considere conveniente, incluyendo, pero no limitado a: contenido inapropiado, uso indebido, sospecha de fraude, inactividad prolongada, o cualquier otra razón operativa o comercial.
+
+El usuario no tendrá derecho a compensación, reembolso ni reclamo alguno por las acciones tomadas sobre su código.
+
+## 12. Modificaciones, suspensión o cancelación
 
 Domi Burguer podrá, en cualquier momento y sin previo aviso:
 
@@ -111,7 +125,7 @@ Domi Burguer podrá, en cualquier momento y sin previo aviso:
 
 Cualquier cambio entrará en vigencia desde su publicación en la página web o desde el momento en que Domi Burguer lo determine.
 
-## 12. Limitación de responsabilidad
+## 13. Limitación de responsabilidad
 
 Domi Burguer no será responsable por:
 
@@ -120,6 +134,6 @@ Domi Burguer no será responsable por:
 - Beneficios o puntos no aplicados por incumplimiento de las condiciones del programa.
 - Cambios, suspensión o finalización del programa.
 
-## 13. Aceptación
+## 14. Aceptación
 
 Al participar en el programa de códigos referidos, ya sea creando, compartiendo o usando un código, el usuario acepta estos términos y condiciones en su totalidad.
