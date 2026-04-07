@@ -109,6 +109,10 @@ export default function ReferralPage() {
                     <p className="text-gray-600">
                         Usa este código de referido en tu primer pedido
                     </p>
+                    <div className="mt-4 inline-flex items-center gap-2 bg-yellow-100 border border-yellow-300 rounded-full px-4 py-2">
+                        <span className="text-2xl">🍟</span>
+                        <span className="text-yellow-800 font-semibold">¡Papas gratis con tu primer pedido!</span>
+                    </div>
                 </div>
 
                 {/* Tarjeta del código */}
@@ -193,7 +197,7 @@ export default function ReferralPage() {
                                 <div>
                                     <p className="font-medium text-gray-800">Ingresa el código</p>
                                     <p className="text-gray-600 text-sm">
-                                        Escribe <span className="font-bold text-primary-red">{code.code}</span> y aplícalo para obtener tu beneficio.
+                                        Escribe <span className="font-bold text-primary-red">{code.code}</span> y aplícalo para recibir <span className="font-bold text-yellow-600">¡papas gratis!</span>
                                     </p>
                                 </div>
                             </li>

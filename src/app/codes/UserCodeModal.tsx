@@ -44,9 +44,7 @@ export function UserCodeModal({ isOpen, onClose, onSuccess }: UserCodeModalProps
       handleClose();
     } catch (err) {
       console.error("Error creando código:", err);
-      setError(
-        "No se pudo crear el código. Es posible que ya tengas uno asignado o el código ya existe."
-      );
+      setError((err as Error).message);
     } finally {
       setIsSubmitting(false);
     }

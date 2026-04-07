@@ -96,7 +96,6 @@ export class CodesService {
             }
             return await response.json();
         } catch (error) {
-            console.error("Error creating code:", error);
             throw error;
         }
     }
@@ -111,11 +110,11 @@ export class CodesService {
                 },
             });
             if (!response.ok) {
-                throw new Error("Error creating code");
+                const errorData = await response.json().catch(() => ({}));
+                throw new Error(errorData.message || "Error al crear el código");
             }
             return await response.json();
         } catch (error) {
-            console.error("Error creating code:", error);
             throw error;
         }
     }
