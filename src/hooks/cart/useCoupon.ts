@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { Code } from "@/types/codes";
 import { CodesService } from "@/services/codesService";
 import { getIdToken } from "firebase/auth";
@@ -19,6 +19,7 @@ export const useCoupon = (): UseCouponReturn => {
   const [couponCode, setCouponCode] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const hasAttemptedAutoApply = useRef(false);
 
   const { user } = useAuth();
 
@@ -32,6 +33,54 @@ export const useCoupon = (): UseCouponReturn => {
       setCouponCode(appliedCode.code);
     }
   }, [appliedCode, couponCode]);
+
+  // Auto-aplicar código de referido guardado en localStorage
+  useEffect(() => {
+    const autoApplyPendingCode = async () => {
+      // Solo intentar una vez y si hay usuario autenticado
+      if (hasAttemptedAutoApply.current || !user || appliedCode) return;
+
+      const pendingCode = localStorage.getItem("pendingReferralCode");
+      if (!pendingCode) return;
+
+      hasAttemptedAutoApply.current = true;
+
+      try {
+        setIsLoading(true);
+        const token = await getIdToken(user);
+        const response = await CodesService.getCodeId(token, pendingCode);
+        const code = response.body[0];
+
+        // Validaciones
+        if (code.status !== "active") {
+          localStorage.removeItem("pendingReferralCode");
+          return;
+        }
+
+        if (code.expirationDate && new Date(code.expirationDate) < new Date()) {
+          localStorage.removeItem("pendingReferralCode");
+          return;
+        }
+
+        if (code.usageLimit && code.usageCount >= code.usageLimit) {
+          localStorage.removeItem("pendingReferralCode");
+          return;
+        }
+
+        // Código válido - aplicarlo automáticamente
+        setAppliedCode(code);
+        setCouponCode(code.code);
+        localStorage.removeItem("pendingReferralCode");
+      } catch {
+        // Si hay error, simplemente no aplicamos el código
+        localStorage.removeItem("pendingReferralCode");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    autoApplyPendingCode();
+  }, [user, appliedCode, setAppliedCode]);
 
   const applyCoupon = useCallback(async () => {
     if (!couponCode.trim()) {

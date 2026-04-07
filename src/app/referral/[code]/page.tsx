@@ -32,6 +32,15 @@ export default function ReferralPage() {
                 setError(null);
                 const response = await CodesService.getCodeByIdPublic(codeParam);
                 setCode(response.body);
+
+                // Guardar el código en localStorage si es válido y activo
+                const fetchedCode = response.body;
+                const isCodeExpired = fetchedCode.expirationDate && new Date(fetchedCode.expirationDate) < new Date();
+                const isCodeInactive = fetchedCode.status !== "active";
+
+                if (!isCodeExpired && !isCodeInactive) {
+                    localStorage.setItem("pendingReferralCode", fetchedCode.code);
+                }
             } catch (err) {
                 const errorMessage = err instanceof Error ? err.message : "Código no encontrado";
                 setError(errorMessage);
@@ -186,8 +195,8 @@ export default function ReferralPage() {
                                     2
                                 </span>
                                 <div>
-                                    <p className="font-medium text-gray-800">Ve al carrito</p>
-                                    <p className="text-gray-600 text-sm">Revisa tu pedido y busca la opción de aplicar código.</p>
+                                    <p className="font-medium text-gray-800">Inicia sesión</p>
+                                    <p className="text-gray-600 text-sm">Crea tu cuenta o inicia sesión para continuar.</p>
                                 </div>
                             </li>
                             <li className="flex gap-3">
@@ -195,9 +204,9 @@ export default function ReferralPage() {
                                     3
                                 </span>
                                 <div>
-                                    <p className="font-medium text-gray-800">Ingresa el código</p>
+                                    <p className="font-medium text-gray-800">¡Código aplicado automáticamente!</p>
                                     <p className="text-gray-600 text-sm">
-                                        Escribe <span className="font-bold text-primary-red">{code.code}</span> y aplícalo para recibir <span className="font-bold text-yellow-600">¡papas gratis!</span>
+                                        Al ir al carrito, tu código <span className="font-bold text-primary-red">{code.code}</span> se aplicará solo y recibirás <span className="font-bold text-yellow-600">¡papas gratis!</span>
                                     </p>
                                 </div>
                             </li>
@@ -207,7 +216,7 @@ export default function ReferralPage() {
                                 </span>
                                 <div>
                                     <p className="font-medium text-gray-800">¡Disfruta!</p>
-                                    <p className="text-gray-600 text-sm">Completa tu pedido y disfruta de tus deliciosas hamburguesas.</p>
+                                    <p className="text-gray-600 text-sm">Completa tu pedido y disfruta de tus deliciosas hamburguesas con tus papas gratis.</p>
                                 </div>
                             </li>
                         </ol>
