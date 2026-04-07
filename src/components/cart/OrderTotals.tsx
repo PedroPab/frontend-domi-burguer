@@ -10,7 +10,8 @@ import { Complement } from "@/types/products";
 const formatCurrency = (value: number): string => {
   if (isNaN(value)) return "0";
   // Usar formateo manual para evitar diferencias de locale entre servidor/cliente
-  return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  if (value === 0) return "GRATIS";
+  return '$' + value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 };
 
 // Componente para mostrar un complemento/adición
@@ -19,7 +20,7 @@ const ComplementItem = ({ complement }: { complement: Complement }) => (
     <span>
       + {complement.name} {complement.quantity && complement.quantity > 1 ? `x${complement.quantity}` : ""}
     </span>
-    <span suppressHydrationWarning>${formatCurrency((complement.price ?? 0) * (complement.quantity || 1))}</span>
+    <span suppressHydrationWarning>{formatCurrency((complement.price ?? 0) * (complement.quantity || 1))}</span>
   </div>
 );
 
@@ -31,7 +32,7 @@ const ProductItem = ({ item }: { item: CartItem }) => (
         {item.name} <span className="text-neutral-black-60">x{item.quantity}</span>
       </p>
       <p className="body-font font-medium" suppressHydrationWarning>
-        ${formatCurrency(item.price * item.quantity)}
+        {formatCurrency(item.price * item.quantity)}
       </p>
     </div>
 
@@ -62,7 +63,7 @@ const SummaryRow = ({
     <div className="flex items-center justify-between w-full">
       <p className={`flex-1 body-font ${textColor}`}>{label}</p>
       <p className={`w-fit body-font ${textColor} ${fontWeight}`} suppressHydrationWarning>
-        {variant === "discount" ? "-" : ""}${formatCurrency(value)}
+        {variant === "discount" ? "-" : ""}{formatCurrency(value)}
       </p>
     </div>
   );
@@ -72,7 +73,7 @@ const SummaryRow = ({
 const TotalRow = ({ total }: { total: number }) => (
   <div className="flex items-center justify-between w-full">
     <p className="flex-1 body-font font-bold">Total</p>
-    <h2 className="w-fit" suppressHydrationWarning>${formatCurrency(total)}</h2>
+    <h2 className="w-fit" suppressHydrationWarning>{formatCurrency(total)}</h2>
   </div>
 );
 

@@ -20,7 +20,7 @@ import { OrderTotals } from "@/components/cart/OrderTotals";
 import { ErrorCard } from "@/components/cart/ErrorCard";
 import { useCheckoutFormStore } from "@/store/checkoutFormStore";
 
-export const CartSummary = ({}) => {
+export const CartSummary = ({ }) => {
   // Context & Store
   const { getSubtotal, getTotal, getDeliveryFee, removeComplement, addItem } =
     useCartStore();
@@ -124,61 +124,62 @@ export const CartSummary = ({}) => {
               {!items.some((item) =>
                 item.name.toLowerCase().includes("salsa"),
               ) && (
-                <>
-                  <h2 className="">ACOMPAÑA TU BURGER</h2>
+                  <>
+                    <h2 className="">ACOMPAÑA TU BURGER</h2>
 
-                  <Card className="flex w-full h-28 items-start gap-4 pl-2 pr-4 py-2 bg-[#FFFFFF] rounded-[12px] overflow-hidden border-0">
-                    <CardContent className="p-0 flex w-full gap-4">
-                      <div className="w-24 h-24 bg-accent-yellow-40 rounded-[7.66px] relative">
-                        <Image
-                          src="/salsaSmall.png"
-                          alt="Salsa"
-                          width={118}
-                          height={85}
-                          className="absolute top-[5px] left-[3px] w-[118px] h-[85px] object-cover overflow-visible"
-                        />
-                      </div>
+                    <Card className="flex w-full h-28 items-start gap-4 pl-2 pr-4 py-2 bg-[#FFFFFF] rounded-[12px] overflow-hidden border-0">
+                      <CardContent className="p-0 flex w-full gap-4">
+                        <div className="w-24 h-24 bg-accent-yellow-40 rounded-[7.66px] relative">
+                          <Image
+                            src="/salsaSmall.png"
+                            alt="Salsa"
+                            width={118}
+                            height={85}
+                            className="absolute top-[5px] left-[3px] w-[118px] h-[85px] object-cover overflow-visible"
+                          />
+                        </div>
 
-                      <div className="justify-center gap-3 pt-1 pb-0 px-0 flex-1 grow flex flex-col items-start self-stretch">
-                        <div className="flex gap-3 self-stretch w-full rounded-[80.62px] flex-col items-start">
-                          <div className="gap-3 self-stretch w-full flex items-center">
-                            <div className="flex-1 font-h4">
-                              SALSA DE AJO DE LA CASA
+                        <div className="justify-center gap-3 pt-1 pb-0 px-0 flex-1 grow flex flex-col items-start self-stretch">
+                          <div className="flex gap-3 self-stretch w-full rounded-[80.62px] flex-col items-start">
+                            <div className="gap-3 self-stretch w-full flex items-center">
+                              <div className="flex-1 font-h4">
+                                SALSA DE AJO DE LA CASA
+                              </div>
                             </div>
                           </div>
-                        </div>
 
-                        <div className="flex h-8 items-center justify-between w-full rounded-[50px]">
-                          <h4 className="">$25.000</h4>
+                          <div className="flex h-8 items-center justify-between w-full rounded-[50px]">
+                            {/* esto debe de estar sincronizado con los precios de los productos , pero bueno   */}
+                            <h4 className="">$27.000</h4>
 
-                          <Button
-                            type="button"
-                            variant="primary"
-                            size="icon"
-                            onClick={() => {
-                              const salsaItem: CartItem = {
-                                id: "product-38",
-                                productId: 38,
-                                name: "SALSA DE AJO DE LA CASA",
-                                price: 27000,
-                                basePrice: 27000,
-                                quantity: 1,
-                                image1: "/salsaSmall.png",
-                                complements: [],
-                                allowCustomization: false,
-                                customizationType: "none",
-                              };
-                              addItem(salsaItem);
-                            }}
-                          >
-                            <Plus className="text-white" />
-                          </Button>
+                            <Button
+                              type="button"
+                              variant="primary"
+                              size="icon"
+                              onClick={() => {
+                                const salsaItem: CartItem = {
+                                  id: "product-38",
+                                  productId: 38,
+                                  name: "SALSA DE AJO DE LA CASA",
+                                  price: 27000,
+                                  basePrice: 27000,
+                                  quantity: 1,
+                                  image1: "/salsaSmall.png",
+                                  complements: [],
+                                  allowCustomization: false,
+                                  customizationType: "none",
+                                };
+                                addItem(salsaItem);
+                              }}
+                            >
+                              <Plus className="text-white" />
+                            </Button>
+                          </div>
                         </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </>
-              )}
+                      </CardContent>
+                    </Card>
+                  </>
+                )}
             </div>
 
             <div className="flex flex-col items-start gap-8 w-full">
