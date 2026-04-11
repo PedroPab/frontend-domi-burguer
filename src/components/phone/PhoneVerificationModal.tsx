@@ -55,14 +55,62 @@ export const PhoneVerificationModal: React.FC<PhoneVerificationModalProps> = ({
 
   const recaptchaContainerId = "phone-modal-recaptcha";
 
+  // Claves para sessionStorage
+  const STORAGE_KEY_VERIFICATION_ID = "phone_verification_id";
+  const STORAGE_KEY_PHONE = "phone_verification_phone";
+  const STORAGE_KEY_TIMESTAMP = "phone_verification_timestamp";
+  const CODE_VALIDITY_SECONDS = 5 * 60; // 5 minutos
+
+  // Función para guardar estado en sessionStorage
+  const saveVerificationState = (vid: string, phoneNumber: string) => {
+    sessionStorage.setItem(STORAGE_KEY_VERIFICATION_ID, vid);
+    sessionStorage.setItem(STORAGE_KEY_PHONE, phoneNumber);
+    sessionStorage.setItem(STORAGE_KEY_TIMESTAMP, Date.now().toString());
+  };
+
+  // Función para limpiar estado de sessionStorage
+  const clearVerificationState = () => {
+    sessionStorage.removeItem(STORAGE_KEY_VERIFICATION_ID);
+    sessionStorage.removeItem(STORAGE_KEY_PHONE);
+    sessionStorage.removeItem(STORAGE_KEY_TIMESTAMP);
+  };
+
+  // Función para obtener el tiempo restante desde sessionStorage
+  const getRemainingTime = (): number => {
+    const timestamp = sessionStorage.getItem(STORAGE_KEY_TIMESTAMP);
+    if (!timestamp) return 0;
+
+    const elapsed = Math.floor((Date.now() - parseInt(timestamp)) / 1000);
+    const remaining = CODE_VALIDITY_SECONDS - elapsed;
+    return remaining > 0 ? remaining : 0;
+  };
+
   useEffect(() => {
     if (open) {
-      setPhone("");
-      setCode("");
-      setStep("phone");
-      setErrorMsg(null);
-      setSuccessMsg(null);
-      setVerificationId(null);
+      // Intentar restaurar estado previo de verificación
+      const savedVerificationId = sessionStorage.getItem(STORAGE_KEY_VERIFICATION_ID);
+      const savedPhone = sessionStorage.getItem(STORAGE_KEY_PHONE);
+      const remainingTime = getRemainingTime();
+
+      if (savedVerificationId && savedPhone && remainingTime > 0) {
+        // Restaurar al paso de código si hay una verificación pendiente válida
+        setVerificationId(savedVerificationId);
+        setPhone(savedPhone);
+        setStep("code");
+        setTimeLeft(remainingTime);
+        setCode("");
+        setErrorMsg(null);
+        setSuccessMsg("Código enviado anteriormente. Ingresa el código para verificar.");
+      } else {
+        // Limpiar estado expirado y empezar de nuevo
+        clearVerificationState();
+        setPhone("");
+        setCode("");
+        setStep("phone");
+        setErrorMsg(null);
+        setSuccessMsg(null);
+        setVerificationId(null);
+      }
       clearError();
     } else {
       if (timerRef.current) {
@@ -148,6 +196,7 @@ export const PhoneVerificationModal: React.FC<PhoneVerificationModalProps> = ({
       const vid = await provider.verifyPhoneNumber(normalized, recaptchaVerifier);
 
       setVerificationId(vid);
+      saveVerificationState(vid, normalized);
       setStep("code");
       setSuccessMsg("Código enviado por SMS. Escríbelo abajo para confirmar.");
     } catch (e: unknown) {
@@ -196,6 +245,9 @@ export const PhoneVerificationModal: React.FC<PhoneVerificationModalProps> = ({
 
       await user.reload();
 
+      // Limpiar estado de verificación al completar exitosamente
+      clearVerificationState();
+
       setSuccessMsg("Teléfono verificado y vinculado exitosamente.");
 
       // Esperar un momento para mostrar el mensaje de éxito y luego cerrar el modal
@@ -235,6 +287,7 @@ export const PhoneVerificationModal: React.FC<PhoneVerificationModalProps> = ({
   };
 
   const handleResend = () => {
+    clearVerificationState();
     setCode("");
     setStep("phone");
     setVerificationId(null);
