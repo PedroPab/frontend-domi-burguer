@@ -58,16 +58,16 @@ export const CouponInput = ({
   return (
     <div className="flex flex-col items-start gap-2 w-full">
       <p className="body-font font-bold text-neutral-black-80">
-        Cupón de descuento
+        Código de referido
       </p>
       <p className="body-font text-neutral-black-60 text-sm">
-        Ingresa tu código de descuento
+        Ingresa tu código de referido y recibe papas gratis en tu primer pedido
       </p>
 
       <div className="flex items-center gap-3 w-full mt-2">
         <Input
           type="text"
-          placeholder="Ingresa el cupón"
+          placeholder="Ingresa el código"
           value={couponCode}
           onChange={(e) => onCouponChange(e.target.value.toUpperCase())}
           onKeyDown={(e) => {
