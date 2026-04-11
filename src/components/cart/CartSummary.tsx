@@ -123,7 +123,7 @@ export const CartSummary = ({ }) => {
               <Link href={"/"} className="w-full focus:outline-0! focus:ring-0!">
                 <Button
                   type="button"
-                  variant="outline"
+                  variant="default"
                   size="lg"
                   leftIcon={<Plus />}
                   className="w-full shadow-none"

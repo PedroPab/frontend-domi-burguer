@@ -70,12 +70,12 @@ export function AddressSection() {
                 <div className="flex flex-col gap-3">
                     <Button
                         type="button"
-                        variant="ghost"
-                        className="bg-accent-yellow-20 hover:bg-accent-yellow-40 active:bg-accent-yellow-40 rounded-[30px] flex items-center gap-2 xl:w-[260px] xl:h-[48px] h-[40px] w-full label-font"
+                        variant="default"
+                        className=""
                         onClick={handleOpenModal}
                     >
                         <Plus />
-                        {user ? "AGREGAR DIRECCIÓN" : "AGREGAR DIRECCIÓN"}
+                        AGREGAR DIRECCIÓN
                     </Button>
 
                     {user && hasMultipleLocations && (

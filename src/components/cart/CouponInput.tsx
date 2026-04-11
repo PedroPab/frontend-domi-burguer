@@ -78,6 +78,11 @@ export const CouponInput = ({
               }
             }
           }}
+          onBlur={() => {
+            if (couponCode.trim() && !isLoading) {
+              onApplyCoupon();
+            }
+          }}
           className={`flex-1 bg-white ${error ? "border-red-400" : ""}`}
           disabled={isLoading}
         />
