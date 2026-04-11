@@ -12,6 +12,7 @@ export interface CustomPhoneInputProps
   extends Omit<PhoneInputPropsFromLib, "inputComponent" | "className"> {
   className?: string;
   inputClassName?: string;
+  onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
 }
 
 // Props que la librería `react-phone-number-input` pasa a `inputComponent`
@@ -24,7 +25,11 @@ interface InternalInputProps extends InputProps {
 }
 
 const PhoneNumberInput = React.forwardRef<HTMLDivElement, CustomPhoneInputProps>(
-  ({ className, inputClassName, ...props }, ref) => {
+  ({ className, inputClassName, onKeyDown, ...props }, ref) => {
+    // Ref para evitar recrear el componente interno cuando onKeyDown cambia
+    const onKeyDownRef = React.useRef(onKeyDown);
+    onKeyDownRef.current = onKeyDown;
+
     // Wrapper que recibe las props del PhoneInput y las reenvía a tu Input
     const InternalInput = React.useMemo(() => {
       const InputComponent = React.forwardRef<HTMLInputElement, InternalInputProps>(
@@ -34,6 +39,7 @@ const PhoneNumberInput = React.forwardRef<HTMLDivElement, CustomPhoneInputProps>
             <Input
               ref={inputRef}
               className={cn(innerClassName, inputClassName)}
+              onKeyDown={(e) => onKeyDownRef.current?.(e)}
               {...rest}
             />
           );

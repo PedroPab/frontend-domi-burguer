@@ -3,12 +3,10 @@ import { Button } from "@/components/ui/button";
 const ActionsButtons = ({
   onClose,
   isSubmitting,
-  isFormValid,
   handleConfirm,
 }: {
   onClose: () => void;
   isSubmitting: boolean;
-  isFormValid: () => boolean;
   handleConfirm: () => Promise<void>;
 }): React.ReactNode => {
   return (
@@ -27,7 +25,7 @@ const ActionsButtons = ({
         variant="primary"
         size="lg"
         className="w-[151px] lg:w-[200px]"
-        disabled={isSubmitting || !isFormValid()}
+        disabled={isSubmitting}
         onClick={handleConfirm}
         loading={isSubmitting}
       >

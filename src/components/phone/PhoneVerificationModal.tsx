@@ -393,6 +393,12 @@ export const PhoneVerificationModal: React.FC<PhoneVerificationModalProps> = ({
                 onChange={(value: string | undefined) => setPhone(value || "")}
                 placeholder="Ej: 300 123 4567"
                 className="w-full"
+                onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
+                  if (e.key === "Enter" && !sending && phone && phone.length >= 8) {
+                    e.preventDefault();
+                    handleSendCode();
+                  }
+                }}
               />
             </div>
 
@@ -422,6 +428,12 @@ export const PhoneVerificationModal: React.FC<PhoneVerificationModalProps> = ({
               <Input
                 value={code}
                 onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && !verifying && code.length >= 6 && timeLeft > 0) {
+                    e.preventDefault();
+                    handleVerifyAndLink();
+                  }
+                }}
                 maxLength={6}
                 className="w-full h-14 text-center text-2xl tracking-[0.4em] font-semibold rounded-xl border-gray-300 focus:border-primary-red"
                 placeholder="000000"

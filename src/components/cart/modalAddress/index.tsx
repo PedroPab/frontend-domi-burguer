@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useRef } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useAddressSubmit } from "@/hooks/address/useAddressSubmit";
 import { useGooglePlaces } from "@/hooks/useGooglePlaces";
@@ -30,7 +30,12 @@ export const ModalAddress = ({ isOpen, onClose }: ModalAddressProps) => {
     listLocationsClient,
   } = useCheckoutForm();
 
-  const { formState, updateField, resetForm, isFormValid } = useAddressForm();
+  const { formState, updateField, resetForm, errors, validateAndFocus, clearError } = useAddressForm();
+
+  const addressRef = useRef<HTMLInputElement>(null);
+  const addressNameRef = useRef<HTMLInputElement>(null);
+  const floorRef = useRef<HTMLInputElement>(null);
+  const commentRef = useRef<HTMLTextAreaElement>(null);
 
   const { submitAddress, isSubmitting, error } = useAddressSubmit(
     (location) => {
@@ -58,7 +63,7 @@ export const ModalAddress = ({ isOpen, onClose }: ModalAddressProps) => {
   });
 
   const handleConfirm = async () => {
-    if (!isFormValid()) return;
+    if (!validateAndFocus({ addressRef, addressNameRef, floorRef, commentRef })) return;
 
     try {
       let token: string | null = null;
@@ -99,7 +104,6 @@ export const ModalAddress = ({ isOpen, onClose }: ModalAddressProps) => {
         <ActionsButtons
           onClose={onClose}
           isSubmitting={isSubmitting}
-          isFormValid={isFormValid}
           handleConfirm={handleConfirm}
         />
       }
@@ -124,6 +128,12 @@ export const ModalAddress = ({ isOpen, onClose }: ModalAddressProps) => {
         onPlaceChanged={onPlaceChanged}
         formState={formState}
         updateField={updateField}
+        errors={errors}
+        clearError={clearError}
+        addressRef={addressRef}
+        addressNameRef={addressNameRef}
+        floorRef={floorRef}
+        commentRef={commentRef}
       />
     </Modal>
   );
