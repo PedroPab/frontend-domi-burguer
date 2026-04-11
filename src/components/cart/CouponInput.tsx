@@ -29,7 +29,7 @@ export const CouponInput = ({
     return (
       <div className="flex flex-col items-start gap-2 w-full">
         <p className="body-font font-bold text-neutral-black-80">
-          Cupón de descuento
+          Código de referido aplicado
         </p>
         <div className="flex items-center gap-3 w-full mt-2 p-3 bg-green-50 border border-green-200 rounded-full">
           <Check className="w-5 h-5 text-green-600" />
