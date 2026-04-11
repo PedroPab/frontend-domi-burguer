@@ -21,14 +21,9 @@ const LogInModal = dynamic(
   () => import("./login/logInModal").then((mod) => mod.LogInModal),
   { ssr: false },
 );
-const KitchenModal = dynamic(
-  () => import("./kitchen/kitchenModal").then((mod) => mod.KitchenModal),
-  { ssr: false },
-);
 
 export const Navbar = () => {
   const [isAcountModalOpen, setIsAcountModalOpen] = useState(false);
-  const [isKitchenModalOpen, setIsKitchenModalOpen] = useState(false);
   const { items } = useCartStore();
   const { user } = useAuth();
   const router = useRouter();
@@ -52,7 +47,7 @@ export const Navbar = () => {
               }}
               variant="ghost"
               size="md"
-              className={`lg:h-12 lg:px-5 ${isAcountModalOpen ? "bg-neutral-black-10" : ""}`}
+              className={`rounded-full p-2 md:rounded-lg lg:h-12 lg:px-5 ${isAcountModalOpen ? "bg-neutral-black-10" : ""}`}
             >
               {user && user.photoURL ? (
                 <Avatar className="w-7 h-7 md:w-8 md:h-8">
@@ -71,16 +66,16 @@ export const Navbar = () => {
                 {user ? user.displayName?.split(" ")[0] || "CUENTA" : "CUENTA"}
               </span>
             </Button>
-            <Button
-              onClick={() => setIsKitchenModalOpen(true)}
-              variant="ghost"
-              size="md"
-              className={`lg:h-12 lg:px-5 ${isKitchenModalOpen ? "bg-neutral-black-10" : ""}`}
+            {/* <Link
+              href={`https://wa.me/573506186772?text=${encodeURIComponent("Hola, estaba en la pagina de Domi Burguer y quiero más información")}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="focus:outline-0! focus:ring-0!"
             >
-              <span className="text-neutrosblack-80 font-label whitespace-nowrap">
-                COCINA
-              </span>
-            </Button>
+              <Button variant="yellow" size="icon">
+                <WhatsAppIcon className="w-5 h-5 md:w-6 md:h-6" />
+              </Button>
+            </Link> */}
           </div>
 
           <div className="flex flex-col w-[130px] h-14 items-center justify-center gap-2">
@@ -100,30 +95,20 @@ export const Navbar = () => {
 
           <div className="w-[300px] items-center flex justify-end gap-2">
             <Link
-              href={`https://wa.me/573506186772?text=${encodeURIComponent("Hola, estaba en la pagina de Domi Burguer y quiero más información")}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="focus:outline-0! focus:ring-0!"
-            >
-              <Button variant="yellow" size="icon">
-                <WhatsAppIcon className="w-5 h-5 md:w-6 md:h-6" />
-              </Button>
-            </Link>
-            <Link
               href={"/cart"}
               tabIndex={-1}
               className="focus:outline-0! focus:ring-0! focus:bg-[#E10300] rounded-full"
             >
               <Button
                 variant="primary"
-                size="lg"
+                size="md"
                 leftIcon={
-                  <HamburgerIcon className="w-6 h-6 md:w-7 md:h-7 text-white" />
+                  <HamburgerIcon className="w-5 h-5 md:w-6 md:h-6 text-white" />
                 }
                 badge={itemsCount}
-                className="h-12 lg:h-14 ps-4 pe-2 lg:pl-6 lg:pr-3 text-base lg:text-lg"
+                className="h-10 lg:h-12 ps-3 pe-2 lg:pl-5 lg:pr-3 text-sm lg:text-base"
               >
-                <span className="hidden md:block">ORDENAR</span>
+                ORDENAR
               </Button>
             </Link>
           </div>
@@ -133,12 +118,6 @@ export const Navbar = () => {
         <LogInModal
           isOpen={isAcountModalOpen}
           onClose={() => setIsAcountModalOpen(false)}
-        />
-      </div>
-      <div>
-        <KitchenModal
-          isOpen={isKitchenModalOpen}
-          onClose={() => setIsKitchenModalOpen(false)}
         />
       </div>
     </>

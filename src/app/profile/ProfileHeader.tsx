@@ -52,7 +52,10 @@ export function ProfileHeader() {
                 {isLoggingOut ? (
                     <Loader2 className="animate-spin w-5 h-5" />
                 ) : (
-                    <LogOut className="w-5 h-5" />
+                    <>
+                        <LogOut className="w-5 h-5" />
+                        <span>Cerrar sesión</span>
+                    </>
                 )}
             </Button>
         </div>

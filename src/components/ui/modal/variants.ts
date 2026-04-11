@@ -47,19 +47,21 @@ export const modalContentVariants = cva(
           // Mobile: bottom sheet
           "bottom-0 left-0 right-0",
           "rounded-t-2xl",
-          "max-h-[90vh]",
+          "max-h-[90dvh]", // dvh respeta el teclado virtual en iOS
+          "pb-[env(safe-area-inset-bottom)]", // Safe area para iPhone con notch
           // Desktop: centered
           "sm:bottom-auto sm:left-1/2 sm:top-1/2",
           "sm:-translate-x-1/2 sm:-translate-y-1/2",
           "sm:rounded-2xl",
           "sm:w-full",
+          "sm:pb-0", // Reset safe area en desktop
         ],
         centered: [
           "left-1/2 top-1/2",
           "-translate-x-1/2 -translate-y-1/2",
           "rounded-2xl",
           "w-[calc(100%-2rem)]",
-          "max-h-[calc(100vh-2rem)]",
+          "max-h-[calc(100dvh-2rem)]", // dvh para iOS
         ],
       },
     },

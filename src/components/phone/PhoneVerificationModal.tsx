@@ -425,6 +425,7 @@ export const PhoneVerificationModal: React.FC<PhoneVerificationModalProps> = ({
                 maxLength={6}
                 className="w-full h-14 text-center text-2xl tracking-[0.4em] font-semibold rounded-xl border-gray-300 focus:border-primary-red"
                 placeholder="000000"
+                type="number "
               />
             </div>
 

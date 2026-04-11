@@ -169,7 +169,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
             {badge !== undefined && (
               <span
                 className={cn(
-                  "flex items-center justify-center min-w-[2rem] h-8 px-2 rounded-full text-base font-bold",
+                  "flex items-center justify-center min-w-[1.5rem] h-6 px-1.5 rounded-full text-sm font-bold",
                   "bg-accent-yellow-10 text-neutral-black-80",
                 )}
               >

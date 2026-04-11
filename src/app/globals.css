@@ -210,6 +210,31 @@ h4 {
   pointer-events: auto !important;
 }
 
+/* iOS keyboard fix para modales */
+@supports (-webkit-touch-callout: none) {
+  /* Solo iOS */
+  .modal-ios-fix {
+    /* Asegura que el modal se ajuste cuando aparece el teclado */
+    max-height: -webkit-fill-available;
+  }
+}
+
+/* Asegurar que el footer del modal siempre sea visible en iOS */
+@media (max-width: 639px) {
+  [data-radix-dialog-content] {
+    /* Usar dvh que respeta el teclado virtual */
+    max-height: 90dvh;
+    max-height: 90svh; /* Fallback para navegadores que no soportan dvh */
+  }
+
+  /* Cuando el teclado está abierto, el modal se ajusta automáticamente */
+  @supports (height: 100dvh) {
+    [data-radix-dialog-content] {
+      max-height: 90dvh;
+    }
+  }
+}
+
 @layer utilities {
   @keyframes slide-in-from-bottom {
     from {
@@ -245,5 +270,6 @@ h4 {
 }
 
 .firebase-emulator-warning{
-  height: 1 px;
+  height: 1 px !important;
+  display: none !important;
 }

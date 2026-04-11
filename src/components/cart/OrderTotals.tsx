@@ -10,7 +10,7 @@ import { Complement } from "@/types/products";
 const formatCurrency = (value: number): string => {
   if (isNaN(value)) return "0";
   // Usar formateo manual para evitar diferencias de locale entre servidor/cliente
-  if (value === 0) return "GRATIS";
+  if (value === 0) return "0";
   return '$' + value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 };
 
