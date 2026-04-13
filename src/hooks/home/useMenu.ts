@@ -1,17 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import {
-  CarneIcon,
-  TomateIcon,
-  QuesoIcon,
-  TocinetaIcon,
-  HamburgerIcon,
-  FrenchFriesIcon,
-  HuevoIcon,
-  AjoIcon,
-} from "@/components/ui/icons";
 import { Product, Complement } from "@/types/products";
+import { PRODUCTS } from "@/data/products";
 
 // ============================================
 // HELPER FUNCTIONS - LÓGICA DE COMPLEMENTOS
@@ -191,109 +182,7 @@ const handleRemovableComplement = (
 // ============================================
 
 export function useMenu() {
-  const [products, setProducts] = useState<Product[]>([
-    {
-      id: 2,
-      name: "HAMBURGUESA ARTESANAL",
-      basePrice: 23900,
-      price: 23900,
-      body: "Pan artesanal hecho en casa, carne jugosa, tocineta crocante, queso mozzarella lechuga fresca, tomate , pepinos, cebolla y el toque de nuestra Salsa de Ajo.",
-      bigImage: "/burgerBig.png",
-      image1: "/burgerSmall.png",
-      icons: [CarneIcon, TomateIcon, QuesoIcon, TocinetaIcon],
-      quantity: 1,
-      complements: [],
-      allowCustomization: true,
-      customizationType: 'burger',
-    },
-    {
-      id: 1,
-      name: "COMBO ESPECIAL",
-      basePrice: 28900,
-      price: 28900,
-      body: "Nuestra hamburguesa, acompañada de papas rizadas crocantes y nuestra coquitas de Salsa de Ajo y salsa roja.",
-      bigImage: "/comboEspecial.png",
-      image1: "/burgerSmall.png",
-      image2: "/papitasSmall.png",
-      icons: [HamburgerIcon, FrenchFriesIcon],
-      quantity: 1,
-      complements: [],
-      allowCustomization: true,
-      customizationType: 'burger',
-    },
-    {
-      id: 38,
-      name: "SALSA DE AJO",
-      basePrice: 27000,
-      price: 27000,
-      body: "Cremosa, intensa y perfectamente balanceada, nuestra receta familiar de Salsa de Ajo. Es el secreto que se queda en tu memoria.",
-      bigImage: "/salsaAjo.png",
-      image1: "/salsaSmall.png",
-      icons: [HuevoIcon, AjoIcon],
-      quantity: 1,
-      complements: [],
-      allowCustomization: false,
-      customizationType: 'none',
-    },
-    {
-      id: 39,
-      name: "PAPAS VAQUERA",
-      basePrice: 23900,
-      price: 23900,
-      body: "Nuestras deliciosas papas con el toque especial de la casa, crujientes por fuera y suaves por dentro.",
-      bigImage: "/papaCayendo2.png",
-      image1: "/papaCayendo2.png",
-      icons: [FrenchFriesIcon],
-      quantity: 1,
-      complements: [],
-      allowCustomization: true,
-      customizationType: 'papas',
-    },
-    {
-      id: 40,
-      name: "PAPAS TROYANA",
-      basePrice: 33900,
-      price: 33900,
-      body: "Papas premium cargadas con todos los ingredientes, una explosión de sabor en cada bocado.",
-      bigImage: "/papaTroyana3.png",
-      image1: "/papaTroyana3.png",
-      icons: [FrenchFriesIcon],
-      quantity: 1,
-      complements: [],
-      allowCustomization: true,
-      customizationType: 'papas',
-    },
-    //postre chescake
-    {
-      id: 43,
-      name: "CHEESECAKE DE FRESA",
-      basePrice: 13500,
-      price: 13500,
-      body: "Nuestro delicioso Cheesecake de fresa cremoso con base crocante y cobertura de fresas, un deleite para tu paladar.",
-      bigImage: "/cheesecakeFresa.png",
-      image1: "/cheesecakeFresa.png",
-      icons: [],
-      quantity: 1,
-      complements: [],
-      allowCustomization: false,
-      customizationType: 'none',
-    },
-    //jugo natura de mora
-    {
-      id: 44,
-      name: "JUGO NATURAL DE MORA",
-      basePrice: 7000,
-      price: 7000,
-      body: "Nuestro delicioso jugo natural de mora sin conservantes, una explosión de sabor en cada sorbo",
-      bigImage: "/JugoDeMora.png",
-      image1: "/JugoDeMora.png",
-      icons: [],
-      quantity: 1,
-      complements: [],
-      allowCustomization: false,
-      customizationType: 'none',
-    },
-  ]);
+  const [products, setProducts] = useState<Product[]>(PRODUCTS);
 
   const [actualProduct, setActualProduct] = useState(0);
 

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { CalendarIcon, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -8,7 +8,6 @@ import { SpikesIcon } from "@/components/ui/icons";
 import { Separator } from "@/components/ui/separator";
 import { useCartStore } from "@/store/cartStore";
 import Tooltip from "@/components/ui/tooltip";
-import Link from "next/link";
 import { useCartActions } from "@/hooks/cart/useCartActions";
 import { useCartSubmit } from "@/hooks/cart/useCartSubmit";
 import { useComplementsModal } from "@/hooks/cart/useComplementsModal";
@@ -18,8 +17,11 @@ import { CouponInput } from "@/components/cart/CouponInput";
 import { OrderTotals } from "@/components/cart/OrderTotals";
 import { ErrorCard } from "@/components/cart/ErrorCard";
 import { useCheckoutFormStore } from "@/store/checkoutFormStore";
+import { ProductGridModal } from "@/components/cart/ProductGridModal";
 
 export const CartSummary = ({ }) => {
+  const [isProductModalOpen, setIsProductModalOpen] = useState(false);
+
   // Context & Store
   const { getSubtotal, getTotal, getDeliveryFee, removeComplement } =
     useCartStore();
@@ -102,17 +104,16 @@ export const CartSummary = ({ }) => {
                       <h3 className="text-xl text-neutral-black-60">
                         No hay productos en el carrito
                       </h3>
-                      <Link href={"/"} className="focus:outline-0! focus:ring-0!">
-                        <Button
-                          type="button"
-                          variant="primary"
-                          size="lg"
-                          leftIcon={<Plus />}
-                          className="w-[260px] mt-4 shadow-none"
-                        >
-                          AGREGAR PRODUCTOS
-                        </Button>
-                      </Link>
+                      <Button
+                        type="button"
+                        variant="primary"
+                        size="lg"
+                        leftIcon={<Plus />}
+                        className="w-[260px] mt-4 shadow-none"
+                        onClick={() => setIsProductModalOpen(true)}
+                      >
+                        AGREGAR PRODUCTOS
+                      </Button>
                     </div>
                   </>
                 )}
@@ -120,17 +121,16 @@ export const CartSummary = ({ }) => {
 
               <Separator orientation="horizontal" className="w-full!" />
 
-              <Link href={"/"} className="w-full focus:outline-0! focus:ring-0!">
-                <Button
-                  type="button"
-                  variant="default"
-                  size="lg"
-                  leftIcon={<Plus />}
-                  className="w-full shadow-none"
-                >
-                  AGREGAR MÁS PRODUCTOS
-                </Button>
-              </Link>
+              <Button
+                type="button"
+                variant="default"
+                size="lg"
+                leftIcon={<Plus />}
+                className="w-full shadow-none"
+                onClick={() => setIsProductModalOpen(true)}
+              >
+                AGREGAR MÁS PRODUCTOS
+              </Button>
             </div>
 
             <div className="flex flex-col items-start gap-8 w-full">
@@ -178,6 +178,11 @@ export const CartSummary = ({ }) => {
         </CardContent>
         <SpikesIcon className="w-full rotate-180" />
       </Card>
+
+      <ProductGridModal
+        isOpen={isProductModalOpen}
+        onClose={() => setIsProductModalOpen(false)}
+      />
     </div>
   );
 };
