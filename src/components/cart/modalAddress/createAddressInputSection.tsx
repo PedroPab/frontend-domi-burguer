@@ -33,10 +33,6 @@ const CreateAddressInputSection = ({ isLoaded, onLoad, onPlaceChanged, formState
 
     return <div className="flex flex-col lg:flex-row gap-2 lg:gap-6 h-full">
         <div className="flex flex-1 flex-col px-[20px] lg:pl-[32px] lg:pr-0">
-            <p className="body-font mb-5">
-                Selecciona la ubicación en el mapa y completa los datos de tu
-                dirección.
-            </p>
 
             <div className="flex flex-col gap-2">
                 {isLoaded && (
@@ -82,22 +78,6 @@ const CreateAddressInputSection = ({ isLoaded, onLoad, onPlaceChanged, formState
                     </Autocomplete>
                 )}
 
-                <div className="flex flex-col">
-                    <Input
-                        ref={addressNameRef}
-                        className={`shadow-none ${errors.addressName ? 'border-red-500' : ''}`}
-                        placeholder="Nombre de la ubicación (ej: Casa, Oficina)"
-                        value={formState.addressName}
-                        onChange={(e) => {
-                            updateField("addressName", e.target.value);
-                            if (errors.addressName) clearError("addressName");
-                        }}
-                        id="name"
-                        name="name" />
-                    {errors.addressName && (
-                        <span className="text-red-500 text-sm mt-1">{errors.addressName}</span>
-                    )}
-                </div>
 
                 <div className="flex gap-2">
                     <div className="flex-1">
@@ -157,6 +137,23 @@ const CreateAddressInputSection = ({ isLoaded, onLoad, onPlaceChanged, formState
                     </div>
                     {errors.comment && (
                         <span className="text-red-500 text-sm mt-1">{errors.comment}</span>
+                    )}
+                </div>
+
+                <div className="flex flex-col">
+                    <Input
+                        ref={addressNameRef}
+                        className={`shadow-none ${errors.addressName ? 'border-red-500' : ''}`}
+                        placeholder="Opcional nombra tu dirección."
+                        value={formState.addressName}
+                        onChange={(e) => {
+                            updateField("addressName", e.target.value);
+                            if (errors.addressName) clearError("addressName");
+                        }}
+                        id="name"
+                        name="name" />
+                    {errors.addressName && (
+                        <span className="text-red-500 text-sm mt-1">{errors.addressName}</span>
                     )}
                 </div>
 

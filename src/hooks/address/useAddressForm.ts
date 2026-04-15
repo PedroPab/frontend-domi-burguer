@@ -83,10 +83,7 @@ export const useAddressForm = (initialState?: Partial<AddressFormState>) => {
       if (!firstErrorRef) firstErrorRef = refs.addressRef;
     }
 
-    if (!formState.addressName || formState.addressName.trim() === '') {
-      newErrors.addressName = 'Este campo es obligatorio';
-      if (!firstErrorRef) firstErrorRef = refs.addressNameRef;
-    } else if (formState.addressName.trim().length < 3) {
+    if (formState.addressName && formState.addressName.trim().length > 0 && formState.addressName.trim().length < 3) {
       newErrors.addressName = 'Debe tener al menos 3 caracteres';
       if (!firstErrorRef) firstErrorRef = refs.addressNameRef;
     }

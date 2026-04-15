@@ -62,7 +62,7 @@ const AddressCard = ({
                 <div className="flex justify-between gap-4 w-full">
                     <div className="flex flex-col gap-2 flex-1">
                         <div className="flex items-center gap-2">
-                            <h5 className="body-font font-bold">{address.name || "Nombre del hogar"}</h5>
+                            <h5 className="body-font font-bold">{address.name || "Dirección sin nombre"}</h5>
                             {isFavorite && (
                                 <Heart className="w-4 h-4 fill-red-500 text-red-500" />
                             )}

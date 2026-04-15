@@ -94,19 +94,30 @@ export function AddressSection() {
 
             {/* Mostrar card cuando HAY location seleccionada */}
             {hasSelectedLocation && (
-                <AddressCard
-                    address={addressClient || {
-                        ...location!,
-                        distance: 0,
-                        fullAddress: location!.address,
-                        deliveryPrice: undefined,
-                    }}
-                    isFavorite={location?.favorite}
-                    isLoadingPrice={isLoadingDeliveryPrice}
-                    deliveryError={deliveryError}
-                    onDelete={handleRemoveSelection}
-                    onRetry={retryDeliveryPrice}
-                />
+                <div className="flex flex-col gap-3">
+                    <AddressCard
+                        address={addressClient || {
+                            ...location!,
+                            distance: 0,
+                            fullAddress: location!.address,
+                            deliveryPrice: undefined,
+                        }}
+                        isFavorite={location?.favorite}
+                        isLoadingPrice={isLoadingDeliveryPrice}
+                        deliveryError={deliveryError}
+                        onDelete={handleRemoveSelection}
+                        onRetry={retryDeliveryPrice}
+                    />
+                    <Button
+                        type="button"
+                        variant="outline"
+                        className="rounded-[30px] flex items-center gap-2 h-[40px] w-full label-font border-[1.5px] border-solid border-[#313131]"
+                        onClick={handleOpenModal}
+                    >
+                        <Plus className="w-4 h-4" />
+                        CAMBIAR DIRECCIÓN
+                    </Button>
+                </div>
             )}
 
             <ModalAddress
