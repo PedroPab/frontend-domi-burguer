@@ -79,16 +79,15 @@ export function UserCodeModal({ isOpen, onClose, onSuccess }: UserCodeModalProps
           <div className="flex items-start gap-3">
             <AlertTriangle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
             <div className="text-sm text-amber-800">
-              <p className="font-semibold mb-2">Importante: Lee antes de continuar</p>
+              <p className="font-semibold mb-2">LEER ANTES DE CREAR TU CÓDIGO</p>
               <ul className="space-y-1 list-disc list-inside text-amber-700">
                 <li>
-                  Solo puedes crear <strong>un único código</strong> de referido.
+                  Debes de tener como mínimo <strong>un pedido creado</strong> en la pagina web.
                 </li>
                 <li>
-                  Una vez creado, <strong>no podrás cambiarlo</strong>.
+                  Solo puedes crear <strong>un único código</strong> de referido y <strong>NO se podrá cambiar</strong>.
                 </li>
-                <li>Elige un código que sea fácil de recordar y compartir.</li>
-                <li>Máximo {MAX_CODE_LENGTH} caracteres (letras y números).</li>
+                <li>Te recomendamos que sea fácil de recordar y compartir.</li>
               </ul>
             </div>
           </div>
