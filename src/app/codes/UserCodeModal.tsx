@@ -113,8 +113,7 @@ export function UserCodeModal({ isOpen, onClose, onSuccess }: UserCodeModalProps
 
         <div className="p-3 bg-neutral-50 rounded-lg text-sm text-neutral-600">
           <p>
-            Comparte este código con tus amigos y familiares. Cuando lo usen en su
-            primer pedido, ambos recibirán beneficios especiales.
+            La persona que use tu Código de referido obtiene una porción de papas GRATIS y tu 65 Domi puntos (con 199 Domi puntos te regalamos un combo)
           </p>
         </div>
 
