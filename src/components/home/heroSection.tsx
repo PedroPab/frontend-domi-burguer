@@ -2,31 +2,49 @@
 
 import { LogoMobileRed } from "@/components/ui/icons";
 
+const heroStyle = {
+  "--hero-fs": "clamp(3.5rem, 12vw, 7.5rem)",
+} as React.CSSProperties;
+
+const headingStyle: React.CSSProperties = {
+  fontSize: "var(--hero-fs)",
+  lineHeight: 1.05,
+};
+
 export default function HeroSection() {
   return (
-    <section className="w-full py-12 sm:py-20 md:py-[110px]">
-      <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-start md:items-start gap-8 md:gap-20">
-        <div className="flex flex-col text-left">
-          <div className="flex lg:gap-6 gap-0 lg:flex-row flex-col">
-            <h1 className="font-extrabold! text-primary-red! text-[65px]! sm:text-[100px]! md:text-[110px]! lg:text-[120px]! sm:leading-22! leading-13! md:leading-25! xl:leading-none!">
-              HOY!{" "}
+    <section className="w-full py-8 sm:py-14 md:py-20 lg:py-[110px]">
+      <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-col text-left" style={heroStyle}>
+          {/* Fila 1: HOY! COMEMOS — columna en móvil, fila en lg+ */}
+          <div className="flex flex-col lg:flex-row lg:gap-[0.5em]">
+            <h1 style={headingStyle} className="font-extrabold! text-primary-red! m-0!">
+              HOY!
             </h1>
-            <h1 className="font-extrabold! text-primary-red! text-[65px]! sm:text-[100px]! md:text-[110px]! lg:text-[120px]! sm:leading-22! leading-13! md:leading-25! xl:leading-none!">
-              {" "}
+            <h1 style={headingStyle} className="font-extrabold! text-primary-red! m-0!">
               COMEMOS
             </h1>
           </div>
 
-          <div className="flex flex-col md:flex-row md:justify-start gap-4 sm:gap-6">
-            <h2 className="font-extrabold! text-primary-red! text-[65px]! sm:text-[100px]! md:text-[110px]! lg:text-[120px]! sm:leading-22! leading-13! md:leading-25! lg:leading-30! xl:leading-none!">
+          {/* Fila 2: RICO + logos */}
+          <div className="flex flex-col sm:flex-row sm:items-center sm:gap-[0.5em]">
+            <h2 style={headingStyle} className="font-extrabold! text-primary-red! m-0!">
               RICO
             </h2>
 
-            <div className="flex items-center gap-6 sm:gap-12 md:gap-8">
-              <LogoMobileRed className="w-[66px] h-[100px]" />
-              <LogoMobileRed className="w-[66px] h-[100px]" />
-              <LogoMobileRed className="w-[66px] h-[100px]" />
-              <LogoMobileRed className="w-[66px] h-[100px]" />
+            {/* Logos escalan en proporción al texto via em */}
+            <div
+              className="flex items-center gap-[0.4em] mt-[0.15em] sm:mt-0"
+              style={{ fontSize: "var(--hero-fs)" }}
+            >
+              {[0, 1, 2, 3].map((i) => (
+                <span
+                  key={i}
+                  style={{ width: "0.55em", height: "0.83em", display: "inline-flex" }}
+                >
+                  <LogoMobileRed className="w-full h-full" />
+                </span>
+              ))}
             </div>
           </div>
         </div>
