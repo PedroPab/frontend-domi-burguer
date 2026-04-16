@@ -22,9 +22,10 @@ import { MultiMarkerMap, MapMarker } from "@/components/map/MultiMarkerMap";
 interface KitchenModalProps {
   isOpen: boolean;
   onClose: () => void;
+  handleBackButton?: boolean;
 }
 
-export const KitchenModal = ({ isOpen, onClose }: KitchenModalProps) => {
+export const KitchenModal = ({ isOpen, onClose, handleBackButton = true }: KitchenModalProps) => {
   const {
     kitchens,
     selectedKitchen,
@@ -64,6 +65,7 @@ export const KitchenModal = ({ isOpen, onClose }: KitchenModalProps) => {
       footer={false}
       ariaLabel="informacion de cocinas"
       bodyClassName="px-5 pb-8 lg:px-8"
+      handleBackButton={handleBackButton}
     >
       {error && (
         <div className="mb-4 p-3 bg-red-50 text-red-600 rounded-lg text-sm">

@@ -24,8 +24,8 @@ export default function Home() {
       <main className="flex-1 flex flex-col w-full items-center">
         <MenuSection />
         <HeroSection />
-        <ValuesSection />
-        <StorySection />
+        {/* <ValuesSection /> */}
+        {/* <StorySection /> */}
       </main>
       <ConfettiExplosion trigger={boom} />
     </div>
