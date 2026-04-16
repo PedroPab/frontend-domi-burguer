@@ -11,6 +11,8 @@ interface UseCouponReturn {
   appliedCoupon: Code | null;
   isLoading: boolean;
   error: string | null;
+  requiresLogin: boolean;
+  clearRequiresLogin: () => void;
   applyCoupon: () => Promise<void>;
   removeCoupon: () => void;
 }
@@ -19,6 +21,7 @@ export const useCoupon = (): UseCouponReturn => {
   const [couponCode, setCouponCode] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [requiresLogin, setRequiresLogin] = useState(false);
   const hasAttemptedAutoApply = useRef(false);
 
   const { user } = useAuth();
@@ -89,7 +92,8 @@ export const useCoupon = (): UseCouponReturn => {
     }
 
     if (!user) {
-      setError("Debes iniciar sesión para aplicar un cupón");
+      localStorage.setItem("pendingReferralCode", couponCode.trim());
+      setRequiresLogin(true);
       return;
     }
 
@@ -130,6 +134,10 @@ export const useCoupon = (): UseCouponReturn => {
     }
   }, [couponCode, user, setAppliedCode]);
 
+  const clearRequiresLogin = useCallback(() => {
+    setRequiresLogin(false);
+  }, []);
+
   const removeCoupon = useCallback(() => {
     console.log("Removiendo cupón aplicado");
     removeAppliedCode();
@@ -143,6 +151,8 @@ export const useCoupon = (): UseCouponReturn => {
     appliedCoupon: appliedCode, // Usar el código del store persistente
     isLoading,
     error,
+    requiresLogin,
+    clearRequiresLogin,
     applyCoupon,
     removeCoupon,
   };

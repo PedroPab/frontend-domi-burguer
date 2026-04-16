@@ -5,6 +5,7 @@ import { Plus, X, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Code } from "@/types/codes";
+import { LogInModal } from "@/components/login/logInModal";
 
 interface CouponInputProps {
   couponCode: string;
@@ -14,6 +15,8 @@ interface CouponInputProps {
   isLoading?: boolean;
   error?: string;
   appliedCoupon?: Code | null;
+  requiresLogin?: boolean;
+  onLoginClose?: () => void;
 }
 
 export const CouponInput = ({
@@ -24,6 +27,8 @@ export const CouponInput = ({
   isLoading = false,
   error,
   appliedCoupon,
+  requiresLogin = false,
+  onLoginClose,
 }: CouponInputProps) => {
   if (appliedCoupon) {
     return (
@@ -98,6 +103,12 @@ export const CouponInput = ({
       </div>
 
       {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
+
+      <LogInModal
+        isOpen={requiresLogin}
+        onClose={onLoginClose ?? (() => {})}
+        title="Para usar este código de referido debes iniciar sesión"
+      />
     </div>
   );
 };

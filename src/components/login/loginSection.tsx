@@ -8,9 +8,10 @@ import { Card, CardContent } from "@/components/ui/card";
 interface LoginSectionProps {
     onClose: () => void;
     redirectTo?: string;
+    title?: string;
 }
 
-export const LoginSection = ({ onClose, redirectTo = "/profile" }: LoginSectionProps) => {
+export const LoginSection = ({ onClose, redirectTo = "/profile", title }: LoginSectionProps) => {
     useEffect(() => {
         auth.languageCode = "es";
     }, []);
@@ -22,7 +23,7 @@ export const LoginSection = ({ onClose, redirectTo = "/profile" }: LoginSectionP
                     {/* Encabezado */}
                     <div className="flex flex-col gap-2 items-center text-center">
                         <h2 className="font-bold text-[20px] md:text-[24px] leading-[22px] md:leading-[26px] text-neutral-black-80 uppercase">
-                            Inicia sesión
+                            {title ?? "Inicia sesión"}
                         </h2>
                         <p className="body-font text-neutral-black-50">
                             Ingresa con tu cuenta de Google para continuar.

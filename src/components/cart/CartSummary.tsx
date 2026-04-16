@@ -43,6 +43,8 @@ export const CartSummary = ({ }) => {
     appliedCoupon,
     isLoading: isCouponLoading,
     error: couponError,
+    requiresLogin: couponRequiresLogin,
+    clearRequiresLogin: clearCouponRequiresLogin,
     applyCoupon,
     removeCoupon,
   } = useCoupon();
@@ -146,6 +148,8 @@ export const CartSummary = ({ }) => {
                 isLoading={isCouponLoading}
                 error={couponError ?? undefined}
                 appliedCoupon={appliedCoupon}
+                requiresLogin={couponRequiresLogin}
+                onLoginClose={clearCouponRequiresLogin}
               />
 
               <OrderTotals
