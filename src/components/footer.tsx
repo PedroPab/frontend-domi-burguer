@@ -13,6 +13,7 @@ export const Footer = () => {
     { name: "COBERTURA", link: "/cobertura" },
     { name: "MENU", link: "/#products" },
     { name: "HORARIOS", link: "/horarios" },
+    { name: "CÓDIGOS", link: "/codes" },
   ];
 
   const legalLinks = [
