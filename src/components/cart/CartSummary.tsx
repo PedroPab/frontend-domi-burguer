@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { CalendarIcon, Plus } from "lucide-react";
+import { CalendarIcon, Plus, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { SpikesIcon } from "@/components/ui/icons";
@@ -18,9 +18,13 @@ import { OrderTotals } from "@/components/cart/OrderTotals";
 import { ErrorCard } from "@/components/cart/ErrorCard";
 import { useCheckoutFormStore } from "@/store/checkoutFormStore";
 import { ProductGridModal } from "@/components/cart/ProductGridModal";
+import { useAuth } from "@/contexts/AuthContext";
+import { useRouter } from "next/navigation";
 
 export const CartSummary = ({ }) => {
   const [isProductModalOpen, setIsProductModalOpen] = useState(false);
+  const { user } = useAuth();
+  const router = useRouter();
 
   // Context & Store
   const { getSubtotal, getTotal, getDeliveryFee, removeComplement } =
@@ -164,7 +168,20 @@ export const CartSummary = ({ }) => {
                 <ErrorCard error={error} onClose={() => setError(null)} />
               )}
 
-              <div className="flex items-start justify-end gap-6 w-full">
+              <div className="flex items-center justify-end gap-3 w-full flex-wrap">
+                {!user && (
+                  <Button
+                    type="button"
+                    variant="yellow"
+                    size="lg"
+                    leftIcon={<Star className="fill-current" />}
+                    onClick={() => router.push("/login")}
+                    style={{ animation: "pulse-glow 2s ease-in-out infinite" }}
+                    className="whitespace-normal text-center h-auto py-2 leading-tight flex-1"
+                  >
+                    REGÍSTRATE PARA<br />ACUMULA PUNTOS
+                  </Button>
+                )}
                 <Button
                   type="submit"
                   variant="primary"
