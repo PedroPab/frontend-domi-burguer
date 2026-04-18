@@ -11,6 +11,7 @@ import Script from "next/script";
 import { InstallBanner } from "@/components/pwa/InstallBanner";
 import { ServiceWorkerRegistration } from "@/components/pwa/ServiceWorkerRegistration";
 import { GoogleSignInBanner } from "@/components/auth/GoogleSignInBanner";
+import { headers } from "next/headers";
 
 const montserrat = Montserrat({
   subsets: ['latin'],
@@ -22,11 +23,15 @@ const montserrat = Montserrat({
 export const metadata: Metadata = metadataConfig;
 export const viewport: Viewport = viewportConfig;
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const headersList = await headers();
+  const pathname = headersList.get("x-pathname") ?? headersList.get("next-url") ?? "";
+  const isDesignRoute = pathname.startsWith("/design");
+
   return (
     <html lang="es">
       <head>
@@ -42,19 +47,23 @@ export default function RootLayout({
         className={montserrat.variable}
       >
         <AuthProvider>
-          <Navbar />
+          {!isDesignRoute && <Navbar />}
           <HeroUIProvider>
             <ToastProvider
               placement="top-right"
               toastOffset={100}
               maxVisibleToasts={10}
             />
-            <div className="container mx-auto overflow-x-hidden px-5 sm:px-10 md:px-10 lg:px-10 xl:px-16  max-w-[1440px] h-auto">
-              {children}
-            </div>
+            {isDesignRoute ? (
+              children
+            ) : (
+              <div className="container mx-auto overflow-x-hidden px-5 sm:px-10 md:px-10 lg:px-10 xl:px-16  max-w-[1440px] h-auto">
+                {children}
+              </div>
+            )}
           </HeroUIProvider>
-          <Footer />
-          <GoogleSignInBanner />
+          {!isDesignRoute && <Footer />}
+          {!isDesignRoute && <GoogleSignInBanner />}
         </AuthProvider>
         <Script
           defer
@@ -62,7 +71,7 @@ export default function RootLayout({
           data-website-id="6449fca5-1454-49e0-8bdc-33fba01bcda4"
           strategy="afterInteractive"
         />
-        <InstallBanner />
+        {!isDesignRoute && <InstallBanner />}
         <ServiceWorkerRegistration />
       </body>
     </html>

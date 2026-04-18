@@ -63,7 +63,7 @@ export const Navbar = () => {
                 <UserIcon className="w-5 h-5 md:w-6 md:h-6" />
               )}
               <span className="text-neutrosblack-80 font-label hidden md:block">
-                {user ? user.displayName?.split(" ")[0] || "CUENTA" : "CUENTA"}
+                {user ? "CUENTA" : "REGISTRATE"}
               </span>
             </Button>
             {/* <Link
