@@ -51,9 +51,6 @@ export default function ButtonsTestPage() {
         <ButtonWithLabel label="primary">
           <Button variant="primary">Primary</Button>
         </ButtonWithLabel>
-        <ButtonWithLabel label="primary-light">
-          <Button variant="primary-light">Primary Light</Button>
-        </ButtonWithLabel>
         <ButtonWithLabel label="yellow">
           <Button variant="yellow">Yellow</Button>
         </ButtonWithLabel>
@@ -229,11 +226,6 @@ export default function ButtonsTestPage() {
         <ButtonWithLabel label="Acción principal CTA">
           <Button variant="primary" size="lg" fullWidth leftIcon={<ShoppingCart />}>
             Finalizar pedido
-          </Button>
-        </ButtonWithLabel>
-        <ButtonWithLabel label="Acción secundaria">
-          <Button variant="primary-light" size="md">
-            Ver menú completo
           </Button>
         </ButtonWithLabel>
         <ButtonWithLabel label="Confirmar eliminación">

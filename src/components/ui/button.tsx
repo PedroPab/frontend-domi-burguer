@@ -25,12 +25,6 @@ const buttonVariants = cva(
           "active:bg-primary-red-100",
           "shadow-sm",
         ],
-        // PRIMARY LIGHT - RED 20 base
-        "primary-light": [
-          "bg-primary-red-20 text-primary-red",  // RED 20 (#F9CDCC) + RED 80 text
-          "hover:bg-primary-red-40",             // RED 40 (#F39A99)
-          "active:bg-primary-red-60",            // RED 60 (#ED6866)
-        ],
         // YELLOW/ACCENT - MIKADO 40 base
         yellow: [
           "bg-accent-yellow-40 text-neutral-black-80", // MIKADO 40 (#FFE79B)
