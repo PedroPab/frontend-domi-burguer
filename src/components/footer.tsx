@@ -1,4 +1,7 @@
-import React from "react";
+"use client";
+
+import React, { useRef } from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
   LogoDesktopWhite,
@@ -9,6 +12,17 @@ import Image from "next/image";
 import Link from "next/link";
 
 export const Footer = () => {
+  const router = useRouter();
+  const clickCount = useRef(0);
+
+  const handleLogoClick = () => {
+    clickCount.current += 1;
+    if (clickCount.current >= 10) {
+      clickCount.current = 0;
+      router.push("/design/buttons");
+    }
+  };
+
   const navigationLinks = [
     { name: "COBERTURA", link: "/cobertura" },
     { name: "MENU", link: "/#products" },
@@ -40,7 +54,10 @@ export const Footer = () => {
         priority
       />
       <div className=" lg:items-start relative flex flex-col lg:flex-row justify-between px-6 py-16 lg:p-16 lg:px-10 lg:space-x-3 lg:20 self-stretch w-full bg-primary-red border-b border-solid border-[#fff9e6] h-[522px] lg:h-auto">
-        <div className="relative lg:w-[170px] h-[90px] flex items-center justify-center w-full">
+        <div
+          className="relative lg:w-[170px] h-[90px] flex items-center justify-center w-full cursor-pointer"
+          onClick={handleLogoClick}
+        >
           <LogoDesktopWhite
             width={170}
             height={90}
