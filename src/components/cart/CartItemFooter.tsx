@@ -10,14 +10,16 @@ interface CartItemFooterProps {
 
 export const CartItemFooter = ({ id, price, quantity, onDecrease, onIncrease }: CartItemFooterProps) => {
     return (
-        <div className="flex h-8 items-center justify-between w-full rounded-[50px]">
-            <h4>${price.toLocaleString("es-CO")} X {quantity}</h4>
-            <QuantitySelector
-                size="sm"
-                value={quantity}
-                onDecrease={() => onDecrease(id, quantity)}
-                onIncrease={() => onIncrease(id, quantity)}
-            />
+        <div className="flex h-8 items-center justify-between w-full gap-2 rounded-[50px]">
+            <h4 className="min-w-0 truncate">${price.toLocaleString("es-CO")} X {quantity}</h4>
+            <div className="shrink-0">
+                <QuantitySelector
+                    size="sm"
+                    value={quantity}
+                    onDecrease={() => onDecrease(id, quantity)}
+                    onIncrease={() => onIncrease(id, quantity)}
+                />
+            </div>
         </div>
     );
 };

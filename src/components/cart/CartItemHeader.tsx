@@ -8,19 +8,18 @@ interface CartItemHeaderProps {
 
 export const CartItemHeader = ({ item, onEditComplements }: CartItemHeaderProps) => {
     return (
-        <div className="flex gap-3 self-stretch w-full rounded-[80.62px] flex-col items-start">
-            <div className="gap-3 self-stretch w-full flex items-center">
-                <div className="flex-1 font-h4">{item.name}</div>
-                {item.allowCustomization && (
-                    <button
-                        className="flex items-center gap-1 cursor-pointer text-neutral-black-60 hover:text-neutral-black-80 transition-colors"
-                        onClick={() => onEditComplements(item)}
-                    >
-                        <PencilIcon className="w-4 h-4" />
-                        <span className="text-xs font-medium">Personalizar</span>
-                    </button>
-                )}
-            </div>
+        <div className="grid grid-cols-[1fr_auto] gap-x-2 w-full items-start">
+            <div className="font-h4 leading-tight line-clamp-2 break-words">{item.name}</div>
+            {item.allowCustomization ? (
+                <button
+                    type="button"
+                    className="flex items-center gap-1 cursor-pointer text-neutral-black-60 hover:text-neutral-black-80 transition-colors"
+                    onClick={() => onEditComplements(item)}
+                >
+                    <span className="text-xs font-medium">Personalizar</span>
+                    <PencilIcon className="w-4 h-4" />
+                </button>
+            ) : <span />}
         </div>
     );
 };
