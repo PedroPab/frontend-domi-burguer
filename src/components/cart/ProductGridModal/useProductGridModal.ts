@@ -1,14 +1,32 @@
 "use client";
 
-import { useCallback } from "react";
+import { useCallback, useRef } from "react";
 import { useMenu } from "@/hooks/home/useMenu";
-import { useCartStore } from "@/store/cartStore";
+import { useCartStore, CartItem } from "@/store/cartStore";
 import { Product } from "@/types/products";
 import { generateCartItemId, calculateTotalPrice } from "@/lib/utils";
 
-export function useProductGridModal() {
+export function useProductGridModal(onClose: () => void) {
   const { products } = useMenu();
   const { items, addItem, updateQuantity: updateCartQuantity } = useCartStore();
+  const snapshot = useRef<CartItem[] | null>(null);
+
+  const saveSnapshot = useCallback(() => {
+    snapshot.current = useCartStore.getState().items.map((item) => ({ ...item }));
+  }, []);
+
+  const handleCancel = useCallback(() => {
+    if (snapshot.current !== null) {
+      useCartStore.setState({ items: snapshot.current });
+      snapshot.current = null;
+    }
+    onClose();
+  }, [onClose]);
+
+  const handleSave = useCallback(() => {
+    snapshot.current = null;
+    onClose();
+  }, [onClose]);
 
   const getQuantityInCart = useCallback(
     (productId: number) => {
@@ -73,5 +91,8 @@ export function useProductGridModal() {
     getQuantityInCart,
     addProductToCart,
     removeProductFromCart,
+    saveSnapshot,
+    handleCancel,
+    handleSave,
   };
 }
