@@ -16,7 +16,7 @@ export const CartItemHeader = ({ item, onEditComplements }: CartItemHeaderProps)
                     className="flex items-center gap-1 cursor-pointer text-neutral-black-60 hover:text-neutral-black-80 transition-colors"
                     onClick={() => onEditComplements(item)}
                 >
-                    <span className="text-xs font-medium">Personalizar</span>
+                    <span className="text-xs font-medium">Adiciones</span>
                     <PencilIcon className="w-4 h-4" />
                 </button>
             ) : <span />}
