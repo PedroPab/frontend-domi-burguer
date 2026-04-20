@@ -52,6 +52,7 @@ export const PhoneVerificationModal: React.FC<PhoneVerificationModalProps> = ({
 
   const [timeLeft, setTimeLeft] = useState(0);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const otpAbortRef = useRef<AbortController | null>(null);
 
   const recaptchaContainerId = "phone-modal-recaptcha";
 
@@ -135,10 +136,31 @@ export const PhoneVerificationModal: React.FC<PhoneVerificationModalProps> = ({
           return s - 1;
         });
       }, 1000);
+
+      // WebOTP: autocompletar código desde SMS
+      if ("OTPCredential" in window) {
+        const ac = new AbortController();
+        otpAbortRef.current = ac;
+
+        navigator.credentials
+          .get({ otp: { transport: ["sms"] }, signal: ac.signal } as CredentialRequestOptions)
+          .then((credential) => {
+            if (credential && "code" in credential) {
+              setCode((credential as OTPCredential).code);
+            }
+          })
+          .catch(() => {
+            // El usuario rechazó o el SMS no llegó a tiempo — flujo manual normal
+          });
+      }
     }
 
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
+      if (otpAbortRef.current) {
+        otpAbortRef.current.abort();
+        otpAbortRef.current = null;
+      }
     };
   }, [step]);
 
@@ -437,7 +459,8 @@ export const PhoneVerificationModal: React.FC<PhoneVerificationModalProps> = ({
                 maxLength={6}
                 className="w-full h-14 text-center text-2xl tracking-[0.4em] font-semibold rounded-xl border-gray-300 focus:border-primary-red"
                 placeholder="000000"
-                type="number "
+                inputMode="numeric"
+                autoComplete="one-time-code"
               />
             </div>
 

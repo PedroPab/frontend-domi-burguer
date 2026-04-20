@@ -35,8 +35,9 @@ export const PhoneLogin = ({ onClose, onSuccess, redirectTo = "/profile" }: Phon
 
     // Mantener la referencia al resultado de confirmación
     const [confirmationResult, setConfirmationResult] = useState<ConfirmationResult | null>(null);
+    const otpAbortRef = useRef<AbortController | null>(null);
 
-    // Efecto para el temporizador
+    // Efecto para el temporizador y WebOTP
     useEffect(() => {
         if (step === "code") {
             setTimeLeft(15 * 60); // 15 minutos en segundos
@@ -51,10 +52,31 @@ export const PhoneLogin = ({ onClose, onSuccess, redirectTo = "/profile" }: Phon
                     return s - 1;
                 });
             }, 1000);
+
+            // WebOTP: autocompletar código desde SMS
+            if ("OTPCredential" in window) {
+                const ac = new AbortController();
+                otpAbortRef.current = ac;
+
+                navigator.credentials
+                    .get({ otp: { transport: ["sms"] }, signal: ac.signal } as CredentialRequestOptions)
+                    .then((credential) => {
+                        if (credential && "code" in credential) {
+                            setCode((credential as OTPCredential).code);
+                        }
+                    })
+                    .catch(() => {
+                        // El usuario rechazó o el SMS no llegó — flujo manual normal
+                    });
+            }
         }
 
         return () => {
             if (timerRef.current) clearInterval(timerRef.current);
+            if (otpAbortRef.current) {
+                otpAbortRef.current.abort();
+                otpAbortRef.current = null;
+            }
         };
     }, [step]);
 
@@ -162,6 +184,8 @@ export const PhoneLogin = ({ onClose, onSuccess, redirectTo = "/profile" }: Phon
                 disabled={step !== "code"}
                 className="gap-4 px-5 py-0 self-stretch w-full flex h-12 items-center justify-center relative rounded-[30px] border-[1.5px] border-solid border-[#cccccc] tracking-[0.8em] space-x-3 bg-transparent text-neutral-black-50! font-normal! leading-[18px] text-center text-[20px]!"
                 placeholder="000000"
+                inputMode="numeric"
+                autoComplete="one-time-code"
                 style={{ fontFamily: "Montserrat, Helvetica" }}
             />
 
