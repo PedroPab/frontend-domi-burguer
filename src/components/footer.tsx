@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
@@ -14,6 +14,16 @@ import Link from "next/link";
 export const Footer = () => {
   const router = useRouter();
   const clickCount = useRef(0);
+  const yearClickCount = useRef(0);
+  const [showAdminLink, setShowAdminLink] = useState(false);
+
+  const handleYearClick = () => {
+    yearClickCount.current += 1;
+    if (yearClickCount.current >= 10) {
+      yearClickCount.current = 0;
+      setShowAdminLink(true);
+    }
+  };
 
   const handleLogoClick = () => {
     clickCount.current += 1;
@@ -119,9 +129,20 @@ export const Footer = () => {
       </div>
       <div className="flex flex-col md:flex-row h-[90px] items-center justify-between px-20 py-4 relative self-stretch w-full bg-primary-red">
         <div className="items-start flex-1 grow flex justify-end gap-2 relative">
-          <div className="relative w-fit mt-[-1.00px] font-semibold text-base tracking-[0] leading-5 whitespace-nowrap">
+          <div
+            className="relative w-fit mt-[-1.00px] font-semibold text-base tracking-[0] leading-5 whitespace-nowrap cursor-default select-none"
+            onClick={handleYearClick}
+          >
             2025, Todos los derechos reservados
           </div>
+          {showAdminLink && (
+            <Link
+              href="/db-status"
+              className="relative w-fit mt-[-1.00px] font-semibold text-base tracking-[0] leading-5 whitespace-nowrap opacity-40 hover:opacity-100 transition-opacity"
+            >
+              ⚙
+            </Link>
+          )}
         </div>
       </div>
     </footer>
