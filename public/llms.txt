@@ -1,0 +1,36 @@
+# Domi Burguer
+
+> Aplicación web de pedidos de hamburguesas artesanales a domicilio. Colombiana, con ingredientes frescos y recetas familiares.
+
+## Descripción
+
+Domi Burguer es una plataforma de pedidos online de hamburguesas artesanales ubicada en Medellin Colombia. Permite a los clientes explorar el menú, armar su pedido y recibirlo a domicilio. La app está disponible como PWA (Progressive Web App) instalable en dispositivos móviles y de escritorio.
+
+## Funcionalidades principales
+
+- Menú de hamburguesas artesanales, combos, papas, bebidas y postres
+- Carrito de compras con gestión de cantidades y opciones
+- Autenticación de usuarios (teléfono con OTP / correo electrónico)
+- Seguimiento de pedidos en tiempo real
+- Sistema de códigos de referido
+- Zonas de cobertura de entrega con mapa interactivo
+- Horarios de atención
+- Historial de pedidos del usuario
+
+
+## Páginas públicas
+
+- `/` — Página principal con menú y productos destacados
+- `/cobertura` — Zonas de cobertura y mapa de entrega
+- `/horarios` — Horarios de atención
+- `/legal` — Términos de servicio y política de privacidad
+- `/locations` — Ubicaciones
+
+## Contacto y redes
+
+- Sitio web: https://domiburguer.com
+- Instagram: imágenes de productos disponibles en la galería del sitio
+
+## Idioma
+
+Español (Colombia) — es_CO

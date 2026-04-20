@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /db-status
+Disallow: /profile
+Disallow: /orders
+Disallow: /info-order
+Disallow: /cart
+
+Sitemap: https://domiburguer.com/sitemap.xml
+Host: https://domiburguer.com

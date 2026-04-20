@@ -1,0 +1,15 @@
+# AI Access Policy for Domi Burguer
+# https://domiburguer.com
+
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /profile
+Disallow: /orders
+Disallow: /info-order
+Disallow: /cart
+
+# Content usage
+Training: disallowed
+Indexing: allowed
+Scraping: allowed for informational purposes only
