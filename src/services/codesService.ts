@@ -155,6 +155,21 @@ export class CodesService {
         }
     }
 
+    static async claimOfPrizes(token: string): Promise<{ body: Code }> {
+        const response = await fetch(`${this.API_URL}api/v2/codes/user/claimOfPrizes`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
+        });
+        if (!response.ok) {
+            const errorData = await response.json().catch(() => ({}));
+            throw new Error(errorData.message || 'No se pudo reclamar el premio');
+        }
+        return await response.json();
+    }
+
     static async addCode({ token, code }: { token: string | null, code: object }): Promise<{ body: Code }> {
         try {
             const headers: HeadersInit = {

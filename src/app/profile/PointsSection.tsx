@@ -2,10 +2,16 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Loader2, Star, ChevronDown, ChevronRight, Plus, Minus } from "lucide-react";
+import { Loader2, Star, ChevronDown, ChevronRight, Plus, Minus, Trophy, Check, Copy } from "lucide-react";
 import { useUserProfile } from "@/hooks/useUserProfile";
 import { useUserPoints } from "@/hooks/useUserPoints";
 import { POINT_FLOW_TYPES, Point, FirebaseTimestamp } from "@/types/points";
+import { useAuth } from "@/contexts/AuthContext";
+import { getIdToken } from "firebase/auth";
+import { CodesService } from "@/services/codesService";
+import { Code } from "@/types/codes";
+import { Modal } from "@/components/ui/modal";
+import { addToast } from "@heroui/toast";
 
 function formatDate(timestamp: FirebaseTimestamp): string {
     const date = new Date(timestamp._seconds * 1000);
@@ -16,12 +22,68 @@ function formatDate(timestamp: FirebaseTimestamp): string {
     });
 }
 
+async function copyToClipboard(text: string): Promise<boolean> {
+    try {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            await navigator.clipboard.writeText(text);
+            return true;
+        }
+        const textArea = document.createElement("textarea");
+        textArea.value = text;
+        textArea.style.position = "fixed";
+        textArea.style.left = "-999999px";
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand("copy");
+        document.body.removeChild(textArea);
+        return true;
+    } catch {
+        return false;
+    }
+}
+
 export function PointsSection() {
     const { userProfile, loading: loadingProfile } = useUserProfile();
     const { points, loading: loadingPoints } = useUserPoints();
+    const { user } = useAuth();
     const [isExpanded, setIsExpanded] = useState(false);
+    const [showClaimModal, setShowClaimModal] = useState(false);
+    const [isClaiming, setIsClaiming] = useState(false);
+    const [claimedCode, setClaimedCode] = useState<Code | null>(null);
+    const [codeCopied, setCodeCopied] = useState(false);
 
     const loading = loadingProfile || loadingPoints;
+    const balance = userProfile?.pointsBalance ?? 0;
+
+    const handleClaim = async () => {
+        if (!user) return;
+        setIsClaiming(true);
+        try {
+            const token = await getIdToken(user);
+            const response = await CodesService.claimOfPrizes(token);
+            setClaimedCode(response.body);
+            setShowClaimModal(false);
+        } catch (err) {
+            addToast({
+                title: "Error",
+                description: (err as Error).message,
+                color: "danger",
+                variant: "solid",
+            });
+        } finally {
+            setIsClaiming(false);
+        }
+    };
+
+    const handleCopyCode = async () => {
+        if (!claimedCode) return;
+        const success = await copyToClipboard(claimedCode.code);
+        if (success) {
+            setCodeCopied(true);
+            setTimeout(() => setCodeCopied(false), 2000);
+        }
+    };
+
     return (
         <div className="mb-8">
             <h2 className="text-sm font-bold text-neutral-400 uppercase tracking-wide mb-4">
@@ -38,7 +100,7 @@ export function PointsSection() {
                                     {loading ? (
                                         <Loader2 className="animate-spin w-5 h-5 text-neutral-400" />
                                     ) : (
-                                        <>{userProfile?.pointsBalance ?? 0} puntos</>
+                                        <>{balance} puntos</>
                                     )}
                                 </p>
                                 <p className="text-xs text-neutral-500">
@@ -54,6 +116,58 @@ export function PointsSection() {
                             <ChevronRight className="w-5 h-5 text-neutral-400" />
                         </button>
                     </div>
+
+                    {/* Banner para reclamar combo gratis */}
+                    {!loading && balance >= 299 && !claimedCode && (
+                        <div className="mt-3 p-3 bg-amber-50 border border-amber-200 rounded-xl flex items-center justify-between gap-3">
+                            <div className="flex items-center gap-2">
+                                <Trophy className="w-5 h-5 text-amber-600 flex-shrink-0" />
+                                <p className="text-sm text-amber-800 font-medium">
+                                    ¡Tienes suficientes puntos para reclamar un combo gratis!
+                                </p>
+                            </div>
+                            <button
+                                onClick={() => setShowClaimModal(true)}
+                                className="text-xs font-bold text-white bg-amber-500 hover:bg-amber-600 px-3 py-1.5 rounded-lg transition-colors whitespace-nowrap"
+                            >
+                                RECLAMAR
+                            </button>
+                        </div>
+                    )}
+
+                    {/* Código reclamado */}
+                    {claimedCode && (
+                        <div className="mt-3 p-4 bg-green-50 border border-green-200 rounded-xl">
+                            <p className="text-sm font-semibold text-green-800 mb-2 flex items-center gap-2">
+                                <Check className="w-4 h-4" />
+                                ¡Código de combo gratis generado!
+                            </p>
+                            <div className="flex items-center justify-between bg-white border border-green-300 rounded-lg px-4 py-3">
+                                <span className="text-xl font-bold tracking-widest text-neutral-800">
+                                    {claimedCode.code}
+                                </span>
+                                <button
+                                    onClick={handleCopyCode}
+                                    className="p-1 text-neutral-500 hover:text-neutral-700 transition-colors"
+                                    aria-label="Copiar código"
+                                >
+                                    {codeCopied ? (
+                                        <Check className="w-5 h-5 text-green-500" />
+                                    ) : (
+                                        <Copy className="w-5 h-5" />
+                                    )}
+                                </button>
+                            </div>
+                            {claimedCode.expirationDate && (
+                                <p className="text-xs text-neutral-500 mt-2">
+                                    Válido hasta: {new Date(claimedCode.expirationDate).toLocaleDateString("es-ES")}
+                                </p>
+                            )}
+                            <p className="text-xs text-neutral-400 mt-1">
+                                Usa este código al finalizar tu pedido. También lo encontrarás en <strong>Mis Códigos</strong>.
+                            </p>
+                        </div>
+                    )}
                 </div>
 
                 {/* Botón desplegable para historial */}
@@ -141,6 +255,29 @@ export function PointsSection() {
                     )}
                 </AnimatePresence>
             </div>
+
+            {/* Modal de confirmación para reclamar combo */}
+            <Modal
+                open={showClaimModal}
+                onOpenChange={(open) => !open && setShowClaimModal(false)}
+                title="Reclamar combo de premio"
+                headerIcon={<Trophy className="w-8 h-8 text-amber-500" />}
+                size="md"
+                footer={{
+                    cancel: { label: "CANCELAR" },
+                    confirm: {
+                        label: "ACEPTAR Y RECLAMAR",
+                        onClick: handleClaim,
+                        loading: isClaiming,
+                        loadingText: "Reclamando...",
+                    },
+                }}
+            >
+                <div className="space-y-3 text-sm text-neutral-700">
+                    <p>¿Deseas reclamar tu <strong>combo gratis</strong> usando tus puntos acumulados?</p>
+                    <p className="text-neutral-500">Se generará un código único que podrás usar en tu próximo pedido.</p>
+                </div>
+            </Modal>
         </div>
     );
 }

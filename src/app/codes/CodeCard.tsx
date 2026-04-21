@@ -18,6 +18,7 @@ const codeTypeLabels: Record<string, string> = {
     referral: "Referido",
     promotional: "Promocional",
     loyalty: "Fidelidad",
+    claim_of_prizes: "Premio",
 };
 
 export function CodeCard({ code, onDelete, onToggleStatus }: CodeCardProps) {
@@ -156,6 +157,8 @@ export function CodeCard({ code, onDelete, onToggleStatus }: CodeCardProps) {
                             <span
                                 className={`px-2 py-0.5 rounded text-xs ${code.type === "promotional"
                                     ? "bg-purple-100 text-purple-700"
+                                    : code.type === "claim_of_prizes"
+                                    ? "bg-amber-100 text-amber-700"
                                     : "bg-orange-100 text-orange-700"
                                     }`}
                             >

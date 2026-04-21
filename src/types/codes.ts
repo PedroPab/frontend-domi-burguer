@@ -1,8 +1,8 @@
 export type CodeStatus = 'active' | 'inactive';
 
-export type CodeType = 'referral';
+export type CodeType = 'referral' | 'claim_of_prizes';
 
-export type RewardType = 'fixedPriceInElement' | 'discount' | 'freeProduct';
+export type RewardType = 'fixedPriceInElement' | 'discount' | 'freeProduct' | 'freeElement';
 
 export type RewardAddType = 'product' | 'complement';
 
