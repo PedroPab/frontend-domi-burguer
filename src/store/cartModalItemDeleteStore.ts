@@ -3,6 +3,7 @@ import { create } from "zustand";
 interface ItemToDelete {
   id: string;
   name: string;
+  rewardCode?: string;
 }
 
 interface CartModalItemDeleteStore {

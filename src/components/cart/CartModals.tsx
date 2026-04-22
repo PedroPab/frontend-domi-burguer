@@ -42,6 +42,7 @@ export function CartModals() {
                 onClose={handleCloseDeleteModal}
                 onConfirm={handleConfirmDelete}
                 productName={itemToDelete?.name ?? ""}
+                rewardCode={itemToDelete?.rewardCode}
             />
 
             <StoreClosedModal

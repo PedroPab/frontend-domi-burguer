@@ -157,14 +157,15 @@ function useFormCart() {
       orderItems: items.map((item) => ({
         id: item.productId.toString(),
         quantity: item.quantity,
+        // Si el item es un premio gratis, incluir el código a nivel de item
+        ...(item.rewardCode ? { codes: [item.rewardCode] } : {}),
         complements: item.complements.map((comp) => ({
           id: comp.id.toString(),
           quantity: comp.quantity,
-          ...(comp?.rewardCode ? { codes: [comp.rewardCode] } : {}),
+          ...(comp?.rewardCode ? { codes: [comp.rewardCode] as [string] } : {}),
         })),
       })),
       paymentMethod: formData.paymentMethod,
-      // origin: user ? "authenticated" : "public",
     };
     if (user) {
       orderPayload.userId = user.uid;

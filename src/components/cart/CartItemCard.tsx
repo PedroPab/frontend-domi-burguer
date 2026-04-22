@@ -13,6 +13,7 @@ interface CartItemCardProps {
     onRemoveComplement: (itemId: string, complementId: number | string) => void;
     onDecrease: (id: string, quantity: number) => void;
     onIncrease: (id: string, quantity: number) => void;
+    onRemoveReward: (id: string, name: string, rewardCode: string) => void;
 }
 
 export const CartItemCard = ({
@@ -21,6 +22,7 @@ export const CartItemCard = ({
     onRemoveComplement,
     onDecrease,
     onIncrease,
+    onRemoveReward,
 }: CartItemCardProps) => {
     return (
         <Card className="flex w-full xl:h-28 items-start gap-4 pl-2 pr-3 xl:pr-4 py-2 bg-[#FFFFFF] rounded-[12px] overflow-hidden border-0">
@@ -48,8 +50,12 @@ export const CartItemCard = ({
                         id={item.id}
                         price={item.price}
                         quantity={item.quantity}
+                        rewardCode={item.rewardCode}
                         onDecrease={onDecrease}
                         onIncrease={onIncrease}
+                        onRemoveReward={item.rewardCode
+                            ? () => onRemoveReward(item.id, item.name, item.rewardCode!)
+                            : undefined}
                     />
                 </div>
             </CardContent>

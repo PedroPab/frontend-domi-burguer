@@ -33,6 +33,7 @@ export const CartSummary = ({ }) => {
     items,
     handleDecrease,
     handleIncrease,
+    handleRemoveReward,
     addCodeInItems,
     removeCodeFromItems,
   } = useCartActions();
@@ -101,6 +102,7 @@ export const CartSummary = ({ }) => {
                     onRemoveComplement={removeComplement}
                     onDecrease={handleDecrease}
                     onIncrease={handleIncrease}
+                    onRemoveReward={handleRemoveReward}
                   />
                 ))}
 

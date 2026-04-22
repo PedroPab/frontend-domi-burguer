@@ -21,6 +21,13 @@ const codeTypeLabels: Record<string, string> = {
     claim_of_prizes: "Premio",
 };
 
+const codeTypeBadge: Record<string, string> = {
+    referral: "bg-blue-100 text-blue-700",
+    promotional: "bg-purple-100 text-purple-700",
+    loyalty: "bg-orange-100 text-orange-700",
+    claim_of_prizes: "bg-amber-100 text-amber-700",
+};
+
 export function CodeCard({ code, onDelete, onToggleStatus }: CodeCardProps) {
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
@@ -155,12 +162,7 @@ export function CodeCard({ code, onDelete, onToggleStatus }: CodeCardProps) {
                                 {code.code}
                             </h3>
                             <span
-                                className={`px-2 py-0.5 rounded text-xs ${code.type === "promotional"
-                                    ? "bg-purple-100 text-purple-700"
-                                    : code.type === "claim_of_prizes"
-                                    ? "bg-amber-100 text-amber-700"
-                                    : "bg-orange-100 text-orange-700"
-                                    }`}
+                                className={`px-2 py-0.5 rounded text-xs ${codeTypeBadge[code.type] ?? "bg-gray-100 text-gray-600"}`}
                             >
                                 {codeTypeLabels[code.type]}
                             </span>

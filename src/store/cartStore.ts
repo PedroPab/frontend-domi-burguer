@@ -16,6 +16,7 @@ export interface CartItem {
   complements: Complement[];
   allowCustomization: boolean;
   customizationType: CustomizationType;
+  rewardCode?: string; // Presente solo en items agregados como premio gratis
 }
 
 interface CartStore {
@@ -95,10 +96,9 @@ export const useCartStore = create<CartStore>()(
             itemToRemoveFrom.basePrice,
             updatedComplements
           );
-          const newId = generateCartItemId(
-            itemToRemoveFrom.productId,
-            updatedComplements
-          );
+          const newId = itemToRemoveFrom.rewardCode
+            ? itemToRemoveFrom.id
+            : generateCartItemId(itemToRemoveFrom.productId, updatedComplements);
 
           const existingItemIndex = state.items.findIndex(
             (i, index) => i.id === newId && index !== itemIndex
@@ -134,7 +134,9 @@ export const useCartStore = create<CartStore>()(
 
           const item = state.items[itemIndex];
           const newPrice = calculateTotalPrice(item.basePrice, newComplements);
-          const newId = generateCartItemId(item.productId, newComplements);
+          const newId = item.rewardCode
+            ? item.id
+            : generateCartItemId(item.productId, newComplements);
 
           // Verificar si ya existe un item con los mismos complementos
           const existingItemIndex = state.items.findIndex(

@@ -11,6 +11,7 @@ interface OrderPayload {
   orderItems: {
     id: string;
     quantity: number;
+    codes?: string[];
     complements: {
       id: string;
       quantity: number;
