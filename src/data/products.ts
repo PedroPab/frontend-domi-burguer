@@ -52,7 +52,7 @@ export const PRODUCTS: Product[] = [
     quantity: 1,
     complements: [],
     allowCustomization: true,
-    customizationType: "none",
+    customizationType: "burger",
   },
   {
     id: 39,
@@ -94,7 +94,7 @@ export const PRODUCTS: Product[] = [
     quantity: 1,
     complements: [],
     allowCustomization: true,
-    customizationType: "none",
+    customizationType: "burger",
   },
   {
     id: 44,
@@ -108,6 +108,6 @@ export const PRODUCTS: Product[] = [
     quantity: 1,
     complements: [],
     allowCustomization: true,
-    customizationType: "none",
+    customizationType: "burger",
   },
 ];
