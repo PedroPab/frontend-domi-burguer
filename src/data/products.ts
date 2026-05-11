@@ -51,7 +51,7 @@ export const PRODUCTS: Product[] = [
     icons: [HuevoIcon, AjoIcon],
     quantity: 1,
     complements: [],
-    allowCustomization: false,
+    allowCustomization: true,
     customizationType: "none",
   },
   {
@@ -93,7 +93,7 @@ export const PRODUCTS: Product[] = [
     icons: [],
     quantity: 1,
     complements: [],
-    allowCustomization: false,
+    allowCustomization: true,
     customizationType: "none",
   },
   {
@@ -107,7 +107,7 @@ export const PRODUCTS: Product[] = [
     icons: [],
     quantity: 1,
     complements: [],
-    allowCustomization: false,
+    allowCustomization: true,
     customizationType: "none",
   },
 ];
