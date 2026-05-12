@@ -13,7 +13,7 @@ interface UseCouponReturn {
   error: string | null;
   requiresLogin: boolean;
   clearRequiresLogin: () => void;
-  applyCoupon: () => Promise<void>;
+  applyCoupon: () => Promise<boolean>;
   removeCoupon: () => void;
 }
 
@@ -85,16 +85,16 @@ export const useCoupon = (): UseCouponReturn => {
     autoApplyPendingCode();
   }, [user, appliedCode, setAppliedCode]);
 
-  const applyCoupon = useCallback(async () => {
+  const applyCoupon = useCallback(async (): Promise<boolean> => {
     if (!couponCode.trim()) {
       setError("Ingresa un código de cupón");
-      return;
+      return false;
     }
 
     if (!user) {
       localStorage.setItem("pendingReferralCode", couponCode.trim());
       setRequiresLogin(true);
-      return;
+      return false;
     }
 
     setIsLoading(true);
@@ -107,28 +107,30 @@ export const useCoupon = (): UseCouponReturn => {
 
       if (code.status !== "active") {
         setError("Este código no está activo");
-        return;
+        return false;
       }
 
       if (code.expirationDate && new Date(code.expirationDate) < new Date()) {
         setError(
           "Este código ya expiró. Mantente atento a nuestras próximas promos"
         );
-        return;
+        return false;
       }
 
       if (code.usageLimit && code.usageCount >= code.usageLimit) {
         setError("Este código ha alcanzado su límite de uso");
-        return;
+        return false;
       }
 
       // Guardar el código validado en el store persistente
       setAppliedCode(code);
       setError(null);
+      return true;
     } catch (err) {
       const message =
         err instanceof Error ? err.message : "Error al validar el cupón";
       setError(message);
+      return false;
     } finally {
       setIsLoading(false);
     }

@@ -189,9 +189,21 @@ export const CartSummary = ({ }) => {
                   variant="primary"
                   size="lg"
                   disabled={items.length === 0}
-                  loading={isSubmitting}
+                  loading={isSubmitting || isCouponLoading}
                   loadingText="ENVIANDO..."
                   className="min-w-[128px]"
+                  onClick={async (e) => {
+                    // Si hay un código escrito pero aún no aplicado, validarlo primero
+                    if (couponCode.trim() && !appliedCoupon) {
+                      e.preventDefault();
+                      const success = await applyCoupon();
+                      if (success) {
+                        // El código es válido, enviar el formulario
+                        (e.currentTarget as HTMLButtonElement).form?.requestSubmit();
+                      }
+                      // Si falló, el error ya se muestra en el CouponInput
+                    }
+                  }}
                 >
                   COMPRAR
                 </Button>
