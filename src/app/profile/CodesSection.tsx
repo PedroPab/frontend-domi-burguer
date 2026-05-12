@@ -96,7 +96,7 @@ export function CodesSection() {
         const referralUrl = `${window.location.origin}/referral/${code.code}`;
         const shareData = {
             title: "Código de referido Domi Burguer",
-            text: `¡Usa mi código ${code.code} en tu primer pedido en Domi Burguer!`,
+            text: `¡Usa mi código ${code.code} en tu primer pedido en Domi Burguer y obtén una porción de papas GRATIS!🍟`,
             url: referralUrl,
         };
 
@@ -320,13 +320,12 @@ export function CodesSection() {
                                     <Info className="w-4 h-4" />
                                     Estado
                                 </div>
-                                <span className={`px-2 py-0.5 rounded text-xs font-medium ${
-                                    isExpired(detailCode)
-                                        ? "bg-red-100 text-red-600"
-                                        : detailCode.status === "active"
+                                <span className={`px-2 py-0.5 rounded text-xs font-medium ${isExpired(detailCode)
+                                    ? "bg-red-100 text-red-600"
+                                    : detailCode.status === "active"
                                         ? "bg-green-100 text-green-700"
                                         : "bg-gray-100 text-gray-500"
-                                }`}>
+                                    }`}>
                                     {isExpired(detailCode) ? "Expirado" : detailCode.status === "active" ? "Activo" : "Inactivo"}
                                 </span>
                             </div>

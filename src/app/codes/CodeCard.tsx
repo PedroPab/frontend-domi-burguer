@@ -60,7 +60,7 @@ export function CodeCard({ code, onDelete, onToggleStatus }: CodeCardProps) {
         const referralUrl = `${window.location.origin}/referral/${code.code}`;
         const shareData = {
             title: "Código de referido Domi Burguer",
-            text: `¡Usa mi código ${code.code} en tu primer pedido en Domi Burguer!`,
+            text: `¡Usa mi código ${code.code} en tu primer pedido en Domi Burguer y obtén una porción de papas GRATIS!🍟`,
             url: referralUrl,
         };
         console.log("Intentando compartir con datos:", shareData);
