@@ -12,6 +12,8 @@ import { InstallBanner } from "@/components/pwa/InstallBanner";
 import { ServiceWorkerRegistration } from "@/components/pwa/ServiceWorkerRegistration";
 import { GoogleSignInBanner } from "@/components/auth/GoogleSignInBanner";
 import { headers } from "next/headers";
+import { Suspense } from "react";
+import { PromoCodeDetector } from "@/components/promo/PromoCodeDetector";
 
 const montserrat = Montserrat({
   subsets: ['latin'],
@@ -54,6 +56,9 @@ export default async function RootLayout({
               toastOffset={100}
               maxVisibleToasts={10}
             />
+            <Suspense fallback={null}>
+              <PromoCodeDetector />
+            </Suspense>
             {isDesignRoute ? (
               children
             ) : (

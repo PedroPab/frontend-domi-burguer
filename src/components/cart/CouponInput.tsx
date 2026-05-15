@@ -1,11 +1,13 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Plus, X, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Code } from "@/types/codes";
 import { LogInModal } from "@/components/login/logInModal";
+import { useAuth } from "@/contexts/AuthContext";
+import { useRouter } from "next/navigation";
 
 interface CouponInputProps {
   couponCode: string;
@@ -30,6 +32,15 @@ export const CouponInput = ({
   requiresLogin = false,
   onLoginClose,
 }: CouponInputProps) => {
+  const { user } = useAuth();
+  const router = useRouter();
+  const [pendingCode, setPendingCode] = useState<string | null>(null);
+
+  useEffect(() => {
+    const code = localStorage.getItem("pendingReferralCode");
+    setPendingCode(code);
+  }, []);
+
   if (appliedCoupon) {
     return (
       <div className="flex flex-col items-start gap-2 w-full">
@@ -65,6 +76,28 @@ export const CouponInput = ({
       <p className="body-font font-bold text-neutral-black-80">
         Código de referido
       </p>
+
+      {!user && pendingCode && (
+        <button
+          type="button"
+          onClick={() => router.push("/login")}
+          className="flex items-center gap-3 w-full px-4 py-3 bg-accent-yellow-40 border-2 border-accent-yellow-60 rounded-2xl text-left hover:bg-accent-yellow-60 transition-colors"
+        >
+          <span className="text-2xl shrink-0">🎁</span>
+          <span className="flex-1">
+            <span className="block text-sm font-bold text-neutral-black-80">
+              ¡Tienes un código listo para usar!
+            </span>
+            <span className="block text-sm text-neutral-black-60">
+              Código <strong className="text-neutral-black-80">{pendingCode}</strong> · Inicia sesión para aplicarlo
+            </span>
+          </span>
+          <span className="text-xs font-bold text-primary-red underline shrink-0">
+            Entrar →
+          </span>
+        </button>
+      )}
+
       <p className="body-font text-neutral-black-60 text-sm">
         Ingresa tu código de referido y recibe papas gratis en tu primer pedido
       </p>

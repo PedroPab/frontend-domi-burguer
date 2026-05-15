@@ -20,11 +20,24 @@ import { useCheckoutFormStore } from "@/store/checkoutFormStore";
 import { ProductGridModal } from "@/components/cart/ProductGridModal";
 import { useAuth } from "@/contexts/AuthContext";
 import { useRouter } from "next/navigation";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
 
 export const CartSummary = ({ }) => {
   const [isProductModalOpen, setIsProductModalOpen] = useState(false);
+  const [showPromoDialog, setShowPromoDialog] = useState(false);
+  const [pendingPromoCode, setPendingPromoCode] = useState<string | null>(null);
   const { user } = useAuth();
   const router = useRouter();
+
+  useEffect(() => {
+    setPendingPromoCode(localStorage.getItem("pendingReferralCode"));
+  }, []);
 
   // Context & Store
   const { getSubtotal, getTotal, getDeliveryFee, removeComplement } =
@@ -193,15 +206,19 @@ export const CartSummary = ({ }) => {
                   loadingText="ENVIANDO..."
                   className="min-w-[128px]"
                   onClick={async (e) => {
+                    // Mostrar diálogo si hay código pendiente y el usuario no está registrado
+                    if (!user && pendingPromoCode && !appliedCoupon) {
+                      e.preventDefault();
+                      setShowPromoDialog(true);
+                      return;
+                    }
                     // Si hay un código escrito pero aún no aplicado, validarlo primero
                     if (couponCode.trim() && !appliedCoupon) {
                       e.preventDefault();
                       const success = await applyCoupon();
                       if (success) {
-                        // El código es válido, enviar el formulario
                         (e.currentTarget as HTMLButtonElement).form?.requestSubmit();
                       }
-                      // Si falló, el error ya se muestra en el CouponInput
                     }
                   }}
                 >
@@ -218,6 +235,53 @@ export const CartSummary = ({ }) => {
         isOpen={isProductModalOpen}
         onClose={() => setIsProductModalOpen(false)}
       />
+
+      <Dialog open={showPromoDialog} onOpenChange={setShowPromoDialog}>
+        <DialogContent onOpenChange={setShowPromoDialog}>
+          <DialogHeader>
+            <div className="flex flex-col items-center gap-3 text-center pb-2">
+              <span className="text-5xl">🎁</span>
+              <DialogTitle className="text-xl font-bold text-neutral-black-80">
+                ¡No uses tu código sin registrarte!
+              </DialogTitle>
+              <DialogDescription className="text-neutral-black-60 text-sm leading-relaxed">
+                Tienes el código{" "}
+                <strong className="text-neutral-black-80 font-bold">
+                  {pendingPromoCode}
+                </strong>{" "}
+                listo para aplicar. Si continúas sin cuenta, perderás este beneficio.
+              </DialogDescription>
+            </div>
+          </DialogHeader>
+
+          <div className="flex flex-col gap-3 px-4 pb-6">
+            <Button
+              variant="primary"
+              size="lg"
+              fullWidth
+              onClick={() => {
+                setShowPromoDialog(false);
+                router.push("/login");
+              }}
+            >
+              REGISTRARME Y USAR EL CÓDIGO
+            </Button>
+            <Button
+              variant="ghost"
+              size="lg"
+              fullWidth
+              onClick={() => {
+                setShowPromoDialog(false);
+                // Enviar el formulario sin código
+                const form = document.querySelector("form");
+                form?.requestSubmit();
+              }}
+            >
+              Continuar sin el código
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
