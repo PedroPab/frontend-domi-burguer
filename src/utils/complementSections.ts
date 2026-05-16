@@ -34,6 +34,56 @@ const iconMap: { [key: string]: React.FC<LogoProps> } = {
 // FAVORITOS - Ingredientes principales
 const favoritosData: Complement[] = [
   {
+    id: 16,
+    name: "Coquitas Blancas en las papas",
+    price: null,
+    icon: "SouceIcon",
+    quantity: 1,
+    type: "addable",
+    additionId: 16,
+    minusComplement: false,
+  },
+  // Sin Salsas
+  {
+    id: 15,
+    name: "Sin Salsas",
+    price: null,
+    icon: "CloseIcon",
+    quantity: 1,
+    type: "addable",
+    additionId: 15,
+    minusComplement: false,
+  },
+  // Sin pepino
+  {
+    id: 288,
+    name: "Pepinillos",
+    price: null,
+    icon: "PicklesIcon",
+    quantity: 0,
+    type: "special",
+    additionId: 28,
+    minusId: 13,
+    minusComplement: false,
+  },
+  // Sin cebolla
+  {
+    id: 289,
+    name: "Cebolla",
+    price: null,
+    icon: "AjoIcon",
+    quantity: 0,
+    type: "special",
+    additionId: 32,
+    minusId: 11,
+    minusComplement: false,
+  },
+];
+
+// OTROS - Ingredientes secundarios y vegetales
+const otrosData: Complement[] = [
+
+  {
     id: 1002,
     name: "Carne",
     price: 6500,
@@ -74,32 +124,6 @@ const favoritosData: Complement[] = [
     quantity: 0,
     type: "addable",
     additionId: 7,
-    minusComplement: false,
-  },
-];
-
-// OTROS - Ingredientes secundarios y vegetales
-const otrosData: Complement[] = [
-  {
-    id: 288,
-    name: "Pepinillos",
-    price: null,
-    icon: "PicklesIcon",
-    quantity: 1,
-    type: "special",
-    additionId: 28,
-    minusId: 13,
-    minusComplement: false,
-  },
-  {
-    id: 289,
-    name: "Cebolla",
-    price: null,
-    icon: "AjoIcon",
-    quantity: 1,
-    type: "special",
-    additionId: 32,
-    minusId: 11,
     minusComplement: false,
   },
   {
