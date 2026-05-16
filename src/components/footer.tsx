@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useRef, useState } from "react";
-import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
   LogoDesktopWhite,
@@ -12,10 +11,10 @@ import Image from "next/image";
 import Link from "next/link";
 
 export const Footer = () => {
-  const router = useRouter();
   const clickCount = useRef(0);
   const yearClickCount = useRef(0);
   const [showAdminLink, setShowAdminLink] = useState(false);
+  const [showDesignLink, setShowDesignLink] = useState(false);
 
   const handleYearClick = () => {
     yearClickCount.current += 1;
@@ -29,7 +28,7 @@ export const Footer = () => {
     clickCount.current += 1;
     if (clickCount.current >= 10) {
       clickCount.current = 0;
-      router.push("/design/buttons");
+      setShowDesignLink(true);
     }
   };
 
@@ -141,6 +140,14 @@ export const Footer = () => {
               className="relative w-fit mt-[-1.00px] font-semibold text-base tracking-[0] leading-5 whitespace-nowrap opacity-40 hover:opacity-100 transition-opacity"
             >
               ⚙
+            </Link>
+          )}
+          {showDesignLink && (
+            <Link
+              href="/design/buttons"
+              className="relative w-fit mt-[-1.00px] font-semibold text-base tracking-[0] leading-5 whitespace-nowrap opacity-40 hover:opacity-100 transition-opacity"
+            >
+              🎨
             </Link>
           )}
         </div>
