@@ -13,11 +13,11 @@ export const CartItemHeader = ({ item, onEditComplements }: CartItemHeaderProps)
             {item.allowCustomization ? (
                 <button
                     type="button"
-                    className="flex items-center gap-1 cursor-pointer text-neutral-black-60 hover:text-neutral-black-80 transition-colors"
+                    className="flex items-center gap-2 cursor-pointer bg-accent-yellow-100 hover:bg-accent-yellow-80 text-neutral-black-80 transition-colors rounded-full px-4 py-2 shadow-sm font-semibold"
                     onClick={() => onEditComplements(item)}
                 >
-                    <span className="text-xs font-medium">Adiciones</span>
-                    <PencilIcon className="w-4 h-4" />
+                    <span className="text-xs">Adiciones</span>
+                    <PencilIcon className="w-3.5 h-3.5" />
                 </button>
             ) : <span />}
         </div>
