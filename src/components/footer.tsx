@@ -84,6 +84,14 @@ export const Footer = () => {
               {link.name}
             </Link>
           ))}
+          <Link
+            href={`https://wa.me/573506186772?text=${encodeURIComponent("¡Hola! me gustaria contratar sus servicios para un evento😊")}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="relative self-stretch font-semibold text-accentmikado-10 text-lg tracking-[0] leading-6 h-auto p-0 hover:bg-transparent flex items-center gap-2"
+          >
+            PEDIDOS PARA EVENTOS
+          </Link>
         </nav>
 
         <nav className="inline-flex flex-col items-end gap-2 relative">
